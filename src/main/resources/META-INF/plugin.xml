@@ -1,0 +1,20 @@
+<idea-plugin>
+    <id>pl.dominikw.Windchill-Intellij-Plugin</id>
+    <name>Windchill Plugin</name>
+    <vendor email="doominikwoojciechowski@gmail.com">Dominik Wojciechowski</vendor>
+    <idea-version since-build="191"/>
+
+    <application-components>
+        <component>
+            <implementation-class>pl.dominikw.Windchill</implementation-class>
+        </component>
+    </application-components>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <toolWindow id="Windchill" anchor="right" factoryClass="pl.dominikw.ui.MainSubWindowFactory"/>
+    </extensions>
+
+    <actions>
+        <!-- Add your actions here -->
+    </actions>
+</idea-plugin>
