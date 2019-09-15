@@ -1,7 +1,15 @@
 package pl.dominikw.model
 
-enum class ServerStatus {
+import pl.dominikw.ui.PluginIcons
+import javax.swing.Icon
 
-    RUNNING,DOWN,STARTING
+enum class ServerStatus(
+    val icon: Icon,
+    val label: String
+) {
+
+    RUNNING(PluginIcons.OK, "Running"),
+    DOWN(PluginIcons.KO, "Turned Off"),
+    STARTING(PluginIcons.LOAD, "Starting");
 
 }

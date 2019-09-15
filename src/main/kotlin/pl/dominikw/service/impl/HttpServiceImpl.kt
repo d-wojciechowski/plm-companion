@@ -7,11 +7,15 @@ import pl.dominikw.service.HttpService
 class HttpServiceImpl : HttpService {
 
     override fun getStatus(targetUrl: String): ServerStatus {
-        val (request, response, result) = targetUrl.httpGet().response()
-        return when (response.statusCode) {
-            200 -> ServerStatus.RUNNING
-            404 -> ServerStatus.DOWN
-            else -> ServerStatus.STARTING
+        return try {
+            val (request, response, result) = targetUrl.httpGet().response()
+            when (response.statusCode) {
+                200 -> ServerStatus.RUNNING
+                404 -> ServerStatus.DOWN
+                else -> ServerStatus.STARTING
+            }
+        } catch (e: Exception) {
+            ServerStatus.DOWN
         }
     }
 
