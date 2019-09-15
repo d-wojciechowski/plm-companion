@@ -5,7 +5,6 @@ buildscript {
         mavenCentral()
         maven("https://oss.sonatype.org/content/repositories/snapshots/")
         maven("https://dl.bintray.com/jetbrains/intellij-plugin-service")
-
     }
     dependencies {
         classpath("org.jetbrains.intellij.plugins:gradle-intellij-plugin:0.5.0-SNAPSHOT")
@@ -24,11 +23,13 @@ version = "1.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
+    maven("https://dl.bintray.com/kittinunf/maven")
 }
 
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.1")
+    implementation("com.github.kittinunf.fuel", "fuel", "2.2.0")
 }
 
 sourceSets {
@@ -43,9 +44,11 @@ intellij {
     version = "2019.2.2"
 }
 tasks.getByName<org.jetbrains.intellij.tasks.PatchPluginXmlTask>("patchPluginXml") {
-    changeNotes("""
+    changeNotes(
+        """
       Add change notes here.<br>
-      <em>most HTML tags may be used</em>""")
+      <em>most HTML tags may be used</em>"""
+    )
 }
 
 configure<org.jetbrains.intellij.IntelliJPluginExtension> {

@@ -12,6 +12,7 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <toolWindow id="Windchill" anchor="right" factoryClass="pl.dominikw.ui.MainSubWindowFactory"/>
+        <applicationService serviceInterface="pl.dominikw.service.HttpService" serviceImplementation="pl.dominikw.service.impl.HttpServiceImpl"/>
     </extensions>
 
     <actions>
