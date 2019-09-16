@@ -11,5 +11,5 @@ interface HttpService {
         }
     }
 
-    abstract fun getStatus(targetUrl: String): ServerStatus
+    abstract fun getStatus(targetUrl: String, login: String, password: String): ServerStatus
 }
