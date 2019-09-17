@@ -9,12 +9,12 @@ import com.intellij.ui.content.ContentFactory
 class MainSubWindowFactory() : ToolWindowFactory, DumbAware {
 
     override fun createToolWindowContent(project: Project, toolWindow: ToolWindow) {
-        val toolWindowBuilder = WindchillWindowPanel()
+        val toolWindowBuilder = WindchillWindowPanel(project)
         val contentFactory = ContentFactory.SERVICE.getInstance()
         val toolWindowContent = toolWindowBuilder.content
         val content = contentFactory.createContent(toolWindowContent, "", false)
         content.preferredFocusableComponent = toolWindowContent
-        content.setDisposer(toolWindowBuilder)
+        content.disposer = toolWindowBuilder
         toolWindow.contentManager.addContent(content)
     }
 }

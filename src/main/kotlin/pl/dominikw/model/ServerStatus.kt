@@ -10,6 +10,7 @@ enum class ServerStatus(
 
     RUNNING(PluginIcons.OK, "Running"),
     DOWN(PluginIcons.KO, "Turned Off"),
-    STARTING(PluginIcons.LOAD, "Starting");
+    STARTING(PluginIcons.LOAD, "Starting"),
+    NOT_SCANNING(PluginIcons.KO, "Scanning Stopped");
 
 }

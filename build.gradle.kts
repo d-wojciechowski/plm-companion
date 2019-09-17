@@ -19,7 +19,7 @@ plugins {
 apply(plugin = "org.jetbrains.intellij")
 
 group = "pl.dominikw"
-version = "1.0-SNAPSHOT"
+version = "0.1"
 
 repositories {
     mavenCentral()
@@ -41,7 +41,7 @@ sourceSets {
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
-    version = "2019.2.2"
+    version = "2019.2"
 }
 tasks.getByName<org.jetbrains.intellij.tasks.PatchPluginXmlTask>("patchPluginXml") {
     changeNotes(
@@ -52,7 +52,7 @@ tasks.getByName<org.jetbrains.intellij.tasks.PatchPluginXmlTask>("patchPluginXml
 }
 
 configure<org.jetbrains.intellij.IntelliJPluginExtension> {
-    version = "LATEST-EAP-SNAPSHOT"
+    version = "2019.2"
     updateSinceUntilBuild = true
     pluginName = "Windchill-Plugin"
 }
