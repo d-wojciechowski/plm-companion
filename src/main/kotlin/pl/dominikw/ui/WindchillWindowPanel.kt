@@ -1,9 +1,9 @@
 package pl.dominikw.ui
 
-import com.intellij.credentialStore.RememberCheckBoxState.isSelected
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.wm.StatusBarWidgetProvider
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -12,7 +12,7 @@ import pl.dominikw.model.ServerStatus
 import pl.dominikw.service.HttpService
 import javax.swing.*
 
-internal class WindchillWindowPanel(project: Project) : Disposable {
+internal class WindchillWindowPanel(private val project: Project) : Disposable {
 
     private val config: PluginConfiguration = ServiceManager.getService(project, PluginConfiguration::class.java)
 
@@ -56,7 +56,9 @@ internal class WindchillWindowPanel(project: Project) : Disposable {
         val password = String(passwordField.password)
         val status = HttpService.getInstance().getStatus(url, login, password)
         if (status != previousStatus && status == ServerStatus.RUNNING) {
-            WindchillNotification.serverOK();
+            WindchillNotification.serverOK(project)
+        } else if (status != previousStatus && status != ServerStatus.RUNNING){
+            WindchillNotification.serverKO(project)
         }
         previousStatus = status
         windchillStatusLabel.set(status)

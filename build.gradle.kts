@@ -19,7 +19,7 @@ plugins {
 apply(plugin = "org.jetbrains.intellij")
 
 group = "pl.dominikw"
-version = "0.1"
+version = "0.1.1"
 
 repositories {
     mavenCentral()
