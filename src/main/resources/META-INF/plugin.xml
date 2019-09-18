@@ -14,6 +14,8 @@
         <toolWindow id="Windchill" anchor="right" factoryClass="pl.dominikw.ui.MainSubWindowFactory"/>
         <projectService serviceImplementation="pl.dominikw.configuration.PluginConfiguration"/>
         <applicationService serviceInterface="pl.dominikw.service.HttpService" serviceImplementation="pl.dominikw.service.impl.HttpServiceImpl"/>
+        <projectService serviceInterface="pl.dominikw.service.WncConnectorService"
+                        serviceImplementation="pl.dominikw.service.impl.WncConnectorServiceImpl"/>
     </extensions>
 
     <actions>

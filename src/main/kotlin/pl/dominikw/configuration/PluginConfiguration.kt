@@ -12,11 +12,13 @@ class PluginConfiguration() : PersistentStateComponent<PluginConfiguration> {
 
     var login: String = ""
     var password: String = ""
-    var url: String = ""
+    var hostname: String = ""
+    var protocol: String = ""
 
     var preserveConfig: Boolean = false
     var scanWindchill: Boolean = false
 
+    var port: Int = 80
     var refreshRate: Int = 1000
 
     override fun getState() = this

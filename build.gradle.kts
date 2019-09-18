@@ -1,4 +1,10 @@
+import com.google.protobuf.gradle.*
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
+group = "pl.dominikw"
+version = "0.1.2"
+val protobufVersion = "3.9.1"
+val grpcVersion = "1.23.0"
 
 buildscript {
     repositories {
@@ -13,13 +19,13 @@ buildscript {
 
 plugins {
     id("org.jetbrains.intellij") version "0.4.10"
+    id("com.google.protobuf") version "0.8.10"
     kotlin("jvm") version "1.3.50"
+    java
+    idea
 }
 
 apply(plugin = "org.jetbrains.intellij")
-
-group = "pl.dominikw"
-version = "0.1.1"
 
 repositories {
     mavenCentral()
@@ -30,12 +36,21 @@ dependencies {
     implementation(kotlin("stdlib-jdk8"))
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.1")
     implementation("com.github.kittinunf.fuel", "fuel", "2.2.0")
+
+    compile("com.google.protobuf:protobuf-java:$protobufVersion")
+    compile("io.grpc:grpc-stub:$grpcVersion")
+    compile("io.grpc:grpc-protobuf:$grpcVersion")
+    runtime("io.grpc:grpc-netty:$grpcVersion")
+    if (JavaVersion.current().isJava9Compatible) {
+        compile("javax.annotation:javax.annotation-api:1.3.2")
+    }
 }
 
 sourceSets {
     main {
         java.srcDir("src/main/kotlin")
         resources.srcDir("src/main/resources")
+        proto.srcDir("src/main/proto")
     }
 }
 
@@ -58,4 +73,23 @@ configure<org.jetbrains.intellij.IntelliJPluginExtension> {
 }
 tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "1.8"
+}
+
+protobuf {
+    protoc {
+        generatedFilesBaseDir = "$projectDir/src"
+        artifact = "com.google.protobuf:protoc:$protobufVersion"
+    }
+    plugins {
+        id("grpc") {
+            artifact = "io.grpc:protoc-gen-grpc-java:1.15.1"
+        }
+    }
+    generateProtoTasks {
+        ofSourceSet("main").forEach {
+            it.plugins {
+                id("grpc")
+            }
+        }
+    }
 }
