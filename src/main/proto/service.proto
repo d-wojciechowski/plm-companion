@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package proto;
+
+message Command {
+    string command = 1;
+    string args = 2;
+}
+
+message Response {
+    int32 status = 1;
+    string message = 2;
+}
+
+service CommandService {
+    rpc execute(Command) returns (Response);
+}
