@@ -1,4 +1,4 @@
-package pl.dominikw.service
+package pl.dwojciechowski.service
 
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project

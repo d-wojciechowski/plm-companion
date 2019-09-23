@@ -1,9 +1,8 @@
 import com.google.protobuf.gradle.*
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import org.jetbrains.kotlin.js.translate.utils.generateDelegateCall
 
-group = "pl.dominikw"
-version = "0.1.2"
+group = "pl.dwojciechowski"
+version = "0.1.3"
 val protobufVersion = "3.9.1"
 val grpcVersion = "1.23.0"
 
@@ -57,21 +56,10 @@ sourceSets {
 
 intellij {
     version = "2019.2"
-}
-
-//tasks.getByName<org.jetbrains.intellij.tasks.PatchPluginXmlTask>("patchPluginXml") {
-//    changeNotes(
-//        """
-//      Add change notes here.<br>
-//      <em>most HTML tags may be used</em>"""
-//    )
-//}
-
-configure<org.jetbrains.intellij.IntelliJPluginExtension> {
-    version = "2019.2"
     updateSinceUntilBuild = true
     pluginName = "Windchill-Plugin"
 }
+
 tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "1.8"
 }
@@ -91,5 +79,25 @@ protobuf {
                 id("grpc")
             }
         }
+    }
+}
+
+/**
+ * KeyPromoterX function, visit its github: https://github.com/halirutan/IntelliJ-Key-Promoter-X
+ */
+fun htmlFixer(filename: String): String {
+    if (!File(filename).exists()) {
+        logger.error("File $filename not found.")
+    } else {
+        return File(filename).readText().replace("<html>", "").replace("</html>", "")
+    }
+    return ""
+}
+
+tasks {
+    named<org.jetbrains.intellij.tasks.PatchPluginXmlTask>("patchPluginXml") {
+        changeNotes(htmlFixer("src/main/resources/META-INF/change-notes.html"))
+        pluginDescription(htmlFixer("src/main/resources/META-INF/description.html"))
+        sinceBuild("191")
     }
 }

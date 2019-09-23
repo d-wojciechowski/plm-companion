@@ -1,15 +1,19 @@
-package pl.dominikw.ui
+package pl.dwojciechowski.ui.panel
 
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.ui.Messages
+import io.grpc.StatusRuntimeException
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import pl.dominikw.configuration.PluginConfiguration
-import pl.dominikw.model.ServerStatus
-import pl.dominikw.service.HttpService
-import pl.dominikw.service.WncConnectorService
+import pl.dwojciechowski.ui.WindchillNotification
+import pl.dwojciechowski.configuration.PluginConfiguration
+import pl.dwojciechowski.model.ServerStatus
+import pl.dwojciechowski.service.HttpService
+import pl.dwojciechowski.service.WncConnectorService
+import java.awt.event.ActionListener
 import javax.swing.*
 
 internal class WindchillWindowPanel(private val project: Project) : Disposable {
@@ -46,9 +50,9 @@ internal class WindchillWindowPanel(private val project: Project) : Disposable {
 
         initFromProperties()
 
-        restartWindchillButton.addActionListener { windchillService.restartWnc(hostnameField.text) }
-        stopWindchillButton.addActionListener { windchillService.stopWnc(hostnameField.text) }
-        startWindchillButton.addActionListener { windchillService.startWnc(hostnameField.text) }
+        restartWindchillButton.addActionListener(wrapWithErrorDialog { windchillService.restartWnc(hostnameField.text) })
+        stopWindchillButton.addActionListener(wrapWithErrorDialog { windchillService.stopWnc(hostnameField.text) })
+        startWindchillButton.addActionListener(wrapWithErrorDialog { windchillService.startWnc(hostnameField.text) })
         saveSettingsButton.addActionListener { saveConfig() }
         lockSettings.addActionListener { setSelectableConfig() }
 
@@ -59,6 +63,22 @@ internal class WindchillWindowPanel(private val project: Project) : Disposable {
             }
         }
     }
+
+    private fun wrapWithErrorDialog(action: () -> Unit): ActionListener? {
+        return ActionListener {
+            try {
+                action.invoke()
+            } catch (e: StatusRuntimeException) {
+                Messages.showMessageDialog(
+                    "Could not connect to windchill addon, at specified host: ${hostnameField.text}",
+                    "Connection error", Messages.getErrorIcon()
+                )
+            } catch (e: Exception) {
+                Messages.showMessageDialog(e.message, "Connection Error", Messages.getErrorIcon())
+            }
+        }
+    }
+
 
     private fun scanServer() {
         val url = "${protocolCB.selectedItem as String}://${hostnameField.text}:${portSpinner.value}/Windchill/app"
@@ -82,7 +102,6 @@ internal class WindchillWindowPanel(private val project: Project) : Disposable {
         loginField.isEnabled = isSelected
         passwordField.isEnabled = isSelected
         refreshRateSpinner.isEnabled = isSelected
-//        saveSettingsButton.isEnabled = isSelected
     }
 
     private fun saveConfig() {

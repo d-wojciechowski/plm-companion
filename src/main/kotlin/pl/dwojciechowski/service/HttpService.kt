@@ -1,7 +1,7 @@
-package pl.dominikw.service
+package pl.dwojciechowski.service
 
 import com.intellij.openapi.components.ServiceManager
-import pl.dominikw.model.ServerStatus
+import pl.dwojciechowski.model.ServerStatus
 
 interface HttpService {
 

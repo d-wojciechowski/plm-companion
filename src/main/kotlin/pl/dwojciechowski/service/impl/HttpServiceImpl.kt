@@ -1,9 +1,9 @@
-package pl.dominikw.service.impl
+package pl.dwojciechowski.service.impl
 
 import com.github.kittinunf.fuel.core.extensions.authentication
 import com.github.kittinunf.fuel.httpGet
-import pl.dominikw.model.ServerStatus
-import pl.dominikw.service.HttpService
+import pl.dwojciechowski.model.ServerStatus
+import pl.dwojciechowski.service.HttpService
 
 class HttpServiceImpl : HttpService {
 
@@ -14,7 +14,7 @@ class HttpServiceImpl : HttpService {
                 .authentication()
                 .basic(login, password)
                 .response().second
-             when (response.statusCode) {
+            when (response.statusCode) {
                 200 -> ServerStatus.RUNNING
                 else -> ServerStatus.DOWN
             }

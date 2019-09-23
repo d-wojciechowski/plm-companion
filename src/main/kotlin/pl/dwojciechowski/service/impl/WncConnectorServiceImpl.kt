@@ -1,9 +1,11 @@
-package pl.dominikw.service.impl
+package pl.dwojciechowski.service.impl
 
+import io.grpc.Deadline
 import io.grpc.ManagedChannelBuilder
-import pl.dominikw.proto.CommandServiceGrpc
-import pl.dominikw.proto.Service
-import pl.dominikw.service.WncConnectorService
+import pl.dwojciechowski.proto.CommandServiceGrpc
+import pl.dwojciechowski.proto.Service
+import pl.dwojciechowski.service.WncConnectorService
+import java.util.concurrent.TimeUnit
 
 class WncConnectorServiceImpl() : WncConnectorService {
 
@@ -13,7 +15,8 @@ class WncConnectorServiceImpl() : WncConnectorService {
     }
 
     override fun stopWnc(hostname: String) {
-        execCommand( hostname,
+        execCommand(
+            hostname,
             Service.Command.newBuilder()
                 .setCommand("windchill")
                 .setArgs("stop")
@@ -22,7 +25,8 @@ class WncConnectorServiceImpl() : WncConnectorService {
     }
 
     override fun startWnc(hostname: String) {
-        execCommand(hostname,
+        execCommand(
+            hostname,
             Service.Command.newBuilder()
                 .setCommand("windchill")
                 .setArgs("start")
@@ -35,7 +39,7 @@ class WncConnectorServiceImpl() : WncConnectorService {
             .usePlaintext()
             .build()
 
-        val stub = CommandServiceGrpc.newBlockingStub(channel)
+        val stub = CommandServiceGrpc.newBlockingStub(channel).withDeadline(Deadline.after(3, TimeUnit.SECONDS))
         val response = stub.execute(command)
         channel.shutdown()
         return response

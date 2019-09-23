@@ -1,4 +1,4 @@
-package pl.dominikw.configuration
+package pl.dwojciechowski.configuration
 
 import com.intellij.openapi.components.PersistentStateComponent
 import com.intellij.openapi.components.State
