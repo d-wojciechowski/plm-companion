@@ -1,5 +1,6 @@
 import com.google.protobuf.gradle.*
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.js.translate.utils.generateDelegateCall
 
 group = "pl.dominikw"
 version = "0.1.2"
@@ -54,17 +55,17 @@ sourceSets {
     }
 }
 
-// See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
     version = "2019.2"
 }
-tasks.getByName<org.jetbrains.intellij.tasks.PatchPluginXmlTask>("patchPluginXml") {
-    changeNotes(
-        """
-      Add change notes here.<br>
-      <em>most HTML tags may be used</em>"""
-    )
-}
+
+//tasks.getByName<org.jetbrains.intellij.tasks.PatchPluginXmlTask>("patchPluginXml") {
+//    changeNotes(
+//        """
+//      Add change notes here.<br>
+//      <em>most HTML tags may be used</em>"""
+//    )
+//}
 
 configure<org.jetbrains.intellij.IntelliJPluginExtension> {
     version = "2019.2"
@@ -77,7 +78,6 @@ tasks.withType<KotlinCompile> {
 
 protobuf {
     protoc {
-        generatedFilesBaseDir = "$projectDir/src"
         artifact = "com.google.protobuf:protoc:$protobufVersion"
     }
     plugins {

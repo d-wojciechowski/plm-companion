@@ -4,6 +4,33 @@
     <vendor email="doominikwoojciechowski@gmail.com">Dominik Wojciechowski</vendor>
     <idea-version since-build="191"/>
 
+    <description><![CDATA[
+        <html>
+            <p>
+                Windchill Plugin is an IDE extension that helps you write Windchill customizations.
+                It comes with windchill side plugin to controll it (ADVANCED)
+            </p>
+            <p>
+                Features:
+                <ul>
+                    <li> Windchill status </li>
+                    <li> Windchill stop (ADVANCED)</li>
+                    <li> Windchill start (ADVANCED)</li>
+                    <li> Windchill restart (ADVANCED)</li>
+                </ul>
+            </p>
+        </html>
+      ]]></description>
+
+    <change-notes><![CDATA[
+      <ul>
+        <li>0.1.2 - Refactor error handling</li>
+        <li>0.1.2 - Windchill basic control (stop/start/restart) with server add-on</li>
+        <li>0.1.1 - Windchill status scanner</li>
+      </ul>
+      ]]>
+    </change-notes>
+
     <application-components>
         <component>
             <implementation-class>pl.dominikw.Windchill</implementation-class>
@@ -13,12 +40,14 @@
     <extensions defaultExtensionNs="com.intellij">
         <toolWindow id="Windchill" anchor="right" factoryClass="pl.dominikw.ui.MainSubWindowFactory"/>
         <projectService serviceImplementation="pl.dominikw.configuration.PluginConfiguration"/>
-        <applicationService serviceInterface="pl.dominikw.service.HttpService" serviceImplementation="pl.dominikw.service.impl.HttpServiceImpl"/>
         <projectService serviceInterface="pl.dominikw.service.WncConnectorService"
                         serviceImplementation="pl.dominikw.service.impl.WncConnectorServiceImpl"/>
+        <applicationService serviceInterface="pl.dominikw.service.HttpService"
+                            serviceImplementation="pl.dominikw.service.impl.HttpServiceImpl"/>
     </extensions>
 
     <actions>
         <!-- Add your actions here -->
     </actions>
+
 </idea-plugin>

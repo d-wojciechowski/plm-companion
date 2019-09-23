@@ -5,7 +5,6 @@ import pl.dominikw.proto.CommandServiceGrpc
 import pl.dominikw.proto.Service
 import pl.dominikw.service.WncConnectorService
 
-
 class WncConnectorServiceImpl() : WncConnectorService {
 
     override fun restartWnc(hostname: String) {
