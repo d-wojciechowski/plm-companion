@@ -13,6 +13,7 @@ class PluginConfiguration() : PersistentStateComponent<PluginConfiguration> {
     var login: String = ""
     var password: String = ""
     var hostname: String = ""
+    var relativePath : String = ""
     var protocol: String = ""
 
     var preserveConfig: Boolean = false

@@ -9,14 +9,13 @@ import io.grpc.StatusRuntimeException
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import pl.dwojciechowski.ui.WindchillNotification
 import pl.dwojciechowski.configuration.PluginConfiguration
 import pl.dwojciechowski.model.ServerStatus
 import pl.dwojciechowski.service.HttpService
 import pl.dwojciechowski.service.WncConnectorService
+import pl.dwojciechowski.ui.WindchillNotification
 import java.awt.Dimension
 import java.awt.event.ActionListener
-import java.util.*
 import javax.swing.*
 
 internal class WindchillWindowPanel(private val project: Project) : Disposable {
@@ -34,6 +33,7 @@ internal class WindchillWindowPanel(private val project: Project) : Disposable {
     //CONFIG SECTION
     private lateinit var protocolCB: JComboBox<String>
     private lateinit var hostnameField: JTextField
+    private lateinit var windchillRelativeTextField: JTextField
     private lateinit var portSpinner: JSpinner
     private lateinit var lockSettings: JCheckBox
     private lateinit var shouldScanCheckbox: JCheckBox
@@ -44,21 +44,21 @@ internal class WindchillWindowPanel(private val project: Project) : Disposable {
 
     private var previousStatus = ServerStatus.DOWN
 
-    private fun createUIComponents(){
-        protocolCB = ComboBox(arrayOf("http","https"))
-        protocolCB.preferredSize = Dimension(63,5)
-        protocolCB.maximumSize = Dimension(63,5)
-        protocolCB.size = Dimension(63,5)
+    private fun createUIComponents() {
+        protocolCB = ComboBox(arrayOf("http", "https"))
+        protocolCB.preferredSize = Dimension(63, 5)
+        protocolCB.maximumSize = Dimension(63, 5)
+        protocolCB.size = Dimension(63, 5)
 
         portSpinner = JSpinner(SpinnerNumberModel(8080, 1, 9999, 1))
         portSpinner.editor = JSpinner.NumberEditor(portSpinner, ":#")
-        portSpinner.preferredSize = Dimension(70,5)
-        portSpinner.maximumSize = Dimension(70,5)
-        portSpinner.size = Dimension(70,5)
+        portSpinner.preferredSize = Dimension(70, 5)
+        portSpinner.maximumSize = Dimension(70, 5)
+        portSpinner.size = Dimension(70, 5)
     }
 
     init {
-        portSpinner.size = Dimension(20,20)
+        portSpinner.size = Dimension(20, 20)
 
         refreshRateSpinner.model = SpinnerNumberModel(1000, 500, 60_000, 100)
         refreshRateSpinner.editor = JSpinner.NumberEditor(refreshRateSpinner, "# ms")
@@ -96,7 +96,8 @@ internal class WindchillWindowPanel(private val project: Project) : Disposable {
 
 
     private fun scanServer() {
-        val url = "${protocolCB.selectedItem as String}://${hostnameField.text}:${portSpinner.value}/Windchill/app"
+        val url =
+            "${protocolCB.selectedItem as String}://${hostnameField.text}:${portSpinner.value}${windchillRelativeTextField.text}"
         val login = loginField.text
         val password = String(passwordField.password)
         val status = HttpService.getInstance().getStatus(url, login, password)
@@ -117,11 +118,13 @@ internal class WindchillWindowPanel(private val project: Project) : Disposable {
         loginField.isEnabled = isSelected
         passwordField.isEnabled = isSelected
         refreshRateSpinner.isEnabled = isSelected
+        windchillRelativeTextField.isEnabled = isSelected
     }
 
     private fun saveConfig() {
         config.protocol = protocolCB.selectedItem as String
         config.hostname = hostnameField.text
+        config.relativePath = windchillRelativeTextField.text
         config.port = portSpinner.value as Int
 
         config.login = loginField.text
@@ -135,6 +138,7 @@ internal class WindchillWindowPanel(private val project: Project) : Disposable {
 
     private fun initFromProperties() {
         hostnameField.text = config.hostname
+        windchillRelativeTextField.text = config.relativePath
         protocolCB.selectedItem = config.protocol
         portSpinner.value = config.port
         loginField.text = config.login
