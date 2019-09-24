@@ -1,10 +1,11 @@
-package pl.dominikw.ui
+package pl.dwojciechowski.ui
 
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.wm.ToolWindow
 import com.intellij.openapi.wm.ToolWindowFactory
 import com.intellij.ui.content.ContentFactory
+import pl.dwojciechowski.ui.panel.WindchillWindowPanel
 
 class MainSubWindowFactory() : ToolWindowFactory, DumbAware {
 

@@ -6,17 +6,17 @@
 
     <application-components>
         <component>
-            <implementation-class>pl.dominikw.Windchill</implementation-class>
+            <implementation-class>pl.dwojciechowski.Windchill</implementation-class>
         </component>
     </application-components>
 
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow id="Windchill" anchor="right" factoryClass="pl.dominikw.ui.MainSubWindowFactory"/>
-        <projectService serviceImplementation="pl.dominikw.configuration.PluginConfiguration"/>
-        <applicationService serviceInterface="pl.dominikw.service.HttpService" serviceImplementation="pl.dominikw.service.impl.HttpServiceImpl"/>
+        <toolWindow id="Windchill" anchor="right" factoryClass="pl.dwojciechowski.ui.MainSubWindowFactory" icon="/META-INF/pluginIcon.svg"/>
+        <projectService serviceImplementation="pl.dwojciechowski.configuration.PluginConfiguration"/>
+        <projectService serviceInterface="pl.dwojciechowski.service.WncConnectorService"
+                        serviceImplementation="pl.dwojciechowski.service.impl.WncConnectorServiceImpl"/>
+        <applicationService serviceInterface="pl.dwojciechowski.service.HttpService"
+                            serviceImplementation="pl.dwojciechowski.service.impl.HttpServiceImpl"/>
     </extensions>
 
-    <actions>
-        <!-- Add your actions here -->
-    </actions>
 </idea-plugin>

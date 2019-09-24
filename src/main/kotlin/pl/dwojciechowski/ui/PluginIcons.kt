@@ -1,4 +1,4 @@
-package pl.dominikw.ui
+package pl.dwojciechowski.ui
 
 import com.intellij.openapi.util.IconLoader
 

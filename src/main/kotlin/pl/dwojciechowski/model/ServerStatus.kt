@@ -1,6 +1,6 @@
-package pl.dominikw.model
+package pl.dwojciechowski.model
 
-import pl.dominikw.ui.PluginIcons
+import pl.dwojciechowski.ui.PluginIcons
 import javax.swing.Icon
 
 enum class ServerStatus(

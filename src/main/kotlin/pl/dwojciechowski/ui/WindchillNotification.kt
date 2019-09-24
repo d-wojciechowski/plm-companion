@@ -1,9 +1,10 @@
-package pl.dominikw.ui
+package pl.dwojciechowski.ui
 
 import com.intellij.notification.NotificationDisplayType
 import com.intellij.notification.NotificationGroup
 import com.intellij.notification.NotificationType
 import com.intellij.openapi.project.Project
+import javax.swing.Icon
 
 internal object WindchillNotification {
 
@@ -12,17 +13,21 @@ internal object WindchillNotification {
     )
 
     fun serverOK(project: Project) {
-        GROUP.createNotification("Windchill is UP!", NotificationType.INFORMATION)
-            .setImportant(true)
-            .setIcon(PluginIcons.OK)
-            .notify(project)
+        createNotification(project,"Windchill is OK!", PluginIcons.OK)
     }
 
     fun serverKO(project: Project) {
-        GROUP.createNotification("Windchill is DOWN!", NotificationType.INFORMATION)
-            .setImportant(true)
-            .setIcon(PluginIcons.KO)
-            .notify(project)
+        createNotification(project,"Windchill is DOWN!", PluginIcons.KO)
     }
 
+    fun settingsSaved(project: Project) {
+        createNotification(project,"Settings Saved", PluginIcons.OK)
+    }
+
+    private fun createNotification(project: Project, text: String, icon: Icon) {
+        GROUP.createNotification(text, NotificationType.INFORMATION)
+            .setImportant(true)
+            .setIcon(icon)
+            .notify(project)
+    }
 }
