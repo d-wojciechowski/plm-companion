@@ -46,15 +46,15 @@ internal class WindchillWindowPanel(private val project: Project) : Disposable {
 
     private fun createUIComponents(){
         protocolCB = ComboBox(arrayOf("http","https"))
-        protocolCB.preferredSize = Dimension(55,5)
-        protocolCB.maximumSize = Dimension(55,5)
-        protocolCB.size = Dimension(55,5)
+        protocolCB.preferredSize = Dimension(63,5)
+        protocolCB.maximumSize = Dimension(63,5)
+        protocolCB.size = Dimension(63,5)
 
         portSpinner = JSpinner(SpinnerNumberModel(8080, 1, 9999, 1))
         portSpinner.editor = JSpinner.NumberEditor(portSpinner, ":#")
-        portSpinner.preferredSize = Dimension(65,5)
-        portSpinner.maximumSize = Dimension(65,5)
-        portSpinner.size = Dimension(65,5)
+        portSpinner.preferredSize = Dimension(70,5)
+        portSpinner.maximumSize = Dimension(70,5)
+        portSpinner.size = Dimension(70,5)
     }
 
     init {
