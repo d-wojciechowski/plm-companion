@@ -3,6 +3,7 @@ package pl.dwojciechowski.ui.panel
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
+import com.intellij.openapi.ui.ComboBox
 import com.intellij.openapi.ui.Messages
 import io.grpc.StatusRuntimeException
 import kotlinx.coroutines.GlobalScope
@@ -13,7 +14,9 @@ import pl.dwojciechowski.configuration.PluginConfiguration
 import pl.dwojciechowski.model.ServerStatus
 import pl.dwojciechowski.service.HttpService
 import pl.dwojciechowski.service.WncConnectorService
+import java.awt.Dimension
 import java.awt.event.ActionListener
+import java.util.*
 import javax.swing.*
 
 internal class WindchillWindowPanel(private val project: Project) : Disposable {
@@ -41,12 +44,24 @@ internal class WindchillWindowPanel(private val project: Project) : Disposable {
 
     private var previousStatus = ServerStatus.DOWN
 
+    private fun createUIComponents(){
+        protocolCB = ComboBox(arrayOf("http","https"))
+        protocolCB.preferredSize = Dimension(55,5)
+        protocolCB.maximumSize = Dimension(55,5)
+        protocolCB.size = Dimension(55,5)
+
+        portSpinner = JSpinner(SpinnerNumberModel(8080, 1, 9999, 1))
+        portSpinner.editor = JSpinner.NumberEditor(portSpinner, ":#")
+        portSpinner.preferredSize = Dimension(65,5)
+        portSpinner.maximumSize = Dimension(65,5)
+        portSpinner.size = Dimension(65,5)
+    }
+
     init {
+        portSpinner.size = Dimension(20,20)
+
         refreshRateSpinner.model = SpinnerNumberModel(1000, 500, 60_000, 100)
         refreshRateSpinner.editor = JSpinner.NumberEditor(refreshRateSpinner, "# ms")
-
-        portSpinner.model = SpinnerNumberModel(8080, 1, 9999, 1)
-        portSpinner.editor = JSpinner.NumberEditor(portSpinner, ":#")
 
         initFromProperties()
 
