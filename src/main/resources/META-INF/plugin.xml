@@ -11,7 +11,7 @@
     </application-components>
 
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow id="Windchill" anchor="right" factoryClass="pl.dwojciechowski.ui.MainSubWindowFactory"/>
+        <toolWindow id="Windchill" anchor="right" factoryClass="pl.dwojciechowski.ui.MainSubWindowFactory" icon="/META-INF/pluginIcon.svg"/>
         <projectService serviceImplementation="pl.dwojciechowski.configuration.PluginConfiguration"/>
         <projectService serviceInterface="pl.dwojciechowski.service.WncConnectorService"
                         serviceImplementation="pl.dwojciechowski.service.impl.WncConnectorServiceImpl"/>
