@@ -14,10 +14,9 @@ import pl.dwojciechowski.service.WncConnectorService
 import pl.dwojciechowski.ui.WindchillNotification
 import java.awt.event.ActionListener
 import javax.swing.JButton
-import javax.swing.JLabel
 import javax.swing.JPanel
 
-internal class WindchillWindowPanel(private val project: Project){
+internal class WindchillWindowPanel(private val project: Project) {
 
     private val config = ServiceManager.getService(project, PluginConfiguration::class.java)
     private val windchillService = ServiceManager.getService(project, WncConnectorService::class.java)
@@ -27,19 +26,28 @@ internal class WindchillWindowPanel(private val project: Project){
     private lateinit var stopWindchillButton: JButton
     private lateinit var startWindchillButton: JButton
     private lateinit var configurationButton: JButton
-    private lateinit var windchillStatusLabel: JLabel
+    private lateinit var wncStatusButton: JButton
 
     private var previousStatus = ServerStatus.DOWN
 
     init {
+        wncStatusButton.isContentAreaFilled = false
+        wncStatusButton.isBorderPainted = false
+        wncStatusButton.background = null
+        wncStatusButton.isOpaque = false
+
         restartWindchillButton.addActionListener(wrapWithErrorDialog { windchillService.restartWnc(config.hostname) })
         stopWindchillButton.addActionListener(wrapWithErrorDialog { windchillService.stopWnc(config.hostname) })
         startWindchillButton.addActionListener(wrapWithErrorDialog { windchillService.startWnc(config.hostname) })
         configurationButton.addActionListener { PluginSettingsPanel(project).show() }
+        wncStatusButton.addActionListener {
+            config.scanWindchill = !config.scanWindchill
+            if (config.scanWindchill) scanServer() else wncStatusButton.set(ServerStatus.NOT_SCANNING)
+        }
 
         GlobalScope.launch {
             while (true) {
-                if (config.scanWindchill) scanServer() else windchillStatusLabel.set(ServerStatus.NOT_SCANNING)
+                if (config.scanWindchill) scanServer() else wncStatusButton.set(ServerStatus.NOT_SCANNING)
                 delay(config.refreshRate.toLong())
             }
         }
@@ -69,10 +77,10 @@ internal class WindchillWindowPanel(private val project: Project){
             WindchillNotification.serverKO(project)
         }
         previousStatus = status
-        windchillStatusLabel.set(status)
+        wncStatusButton.set(status)
     }
 
-    private fun JLabel.set(status: ServerStatus) {
+    private fun JButton.set(status: ServerStatus) {
         this.icon = status.icon
         this.text = status.label
     }
