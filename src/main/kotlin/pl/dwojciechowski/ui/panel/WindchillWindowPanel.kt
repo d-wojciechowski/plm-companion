@@ -1,9 +1,7 @@
 package pl.dwojciechowski.ui.panel
 
-import com.intellij.openapi.Disposable
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.ui.ComboBox
 import com.intellij.openapi.ui.Messages
 import io.grpc.StatusRuntimeException
 import kotlinx.coroutines.GlobalScope
@@ -14,67 +12,43 @@ import pl.dwojciechowski.model.ServerStatus
 import pl.dwojciechowski.service.HttpService
 import pl.dwojciechowski.service.WncConnectorService
 import pl.dwojciechowski.ui.WindchillNotification
-import java.awt.Dimension
 import java.awt.event.ActionListener
-import javax.swing.*
+import javax.swing.JButton
+import javax.swing.JPanel
 
-internal class WindchillWindowPanel(private val project: Project) : Disposable {
+internal class WindchillWindowPanel(private val project: Project) {
 
-    private val config: PluginConfiguration = ServiceManager.getService(project, PluginConfiguration::class.java)
-    private val windchillService: WncConnectorService =
-        ServiceManager.getService(project, WncConnectorService::class.java)
+    private val config = ServiceManager.getService(project, PluginConfiguration::class.java)
+    private val windchillService = ServiceManager.getService(project, WncConnectorService::class.java)
 
     lateinit var content: JPanel
     private lateinit var restartWindchillButton: JButton
     private lateinit var stopWindchillButton: JButton
     private lateinit var startWindchillButton: JButton
-    private lateinit var windchillStatusLabel: JLabel
-
-    //CONFIG SECTION
-    private lateinit var protocolCB: JComboBox<String>
-    private lateinit var hostnameField: JTextField
-    private lateinit var windchillRelativeTextField: JTextField
-    private lateinit var portSpinner: JSpinner
-    private lateinit var lockSettings: JCheckBox
-    private lateinit var shouldScanCheckbox: JCheckBox
-    private lateinit var loginField: JTextField
-    private lateinit var passwordField: JPasswordField
-    private lateinit var refreshRateSpinner: JSpinner
-    private lateinit var saveSettingsButton: JButton
+    private lateinit var configurationButton: JButton
+    private lateinit var wncStatusButton: JButton
 
     private var previousStatus = ServerStatus.DOWN
 
-    private fun createUIComponents() {
-        protocolCB = ComboBox(arrayOf("http", "https"))
-        protocolCB.preferredSize = Dimension(63, 5)
-        protocolCB.maximumSize = Dimension(63, 5)
-        protocolCB.size = Dimension(63, 5)
-
-        portSpinner = JSpinner(SpinnerNumberModel(8080, 1, 9999, 1))
-        portSpinner.editor = JSpinner.NumberEditor(portSpinner, ":#")
-        portSpinner.preferredSize = Dimension(70, 5)
-        portSpinner.maximumSize = Dimension(70, 5)
-        portSpinner.size = Dimension(70, 5)
-    }
-
     init {
-        portSpinner.size = Dimension(20, 20)
+        wncStatusButton.isContentAreaFilled = false
+        wncStatusButton.isBorderPainted = false
+        wncStatusButton.background = null
+        wncStatusButton.isOpaque = false
 
-        refreshRateSpinner.model = SpinnerNumberModel(1000, 500, 60_000, 100)
-        refreshRateSpinner.editor = JSpinner.NumberEditor(refreshRateSpinner, "# ms")
-
-        initFromProperties()
-
-        restartWindchillButton.addActionListener(wrapWithErrorDialog { windchillService.restartWnc(hostnameField.text) })
-        stopWindchillButton.addActionListener(wrapWithErrorDialog { windchillService.stopWnc(hostnameField.text) })
-        startWindchillButton.addActionListener(wrapWithErrorDialog { windchillService.startWnc(hostnameField.text) })
-        saveSettingsButton.addActionListener { saveConfig() }
-        lockSettings.addActionListener { setSelectableConfig() }
+        restartWindchillButton.addActionListener(wrapWithErrorDialog { windchillService.restartWnc(config.hostname) })
+        stopWindchillButton.addActionListener(wrapWithErrorDialog { windchillService.stopWnc(config.hostname) })
+        startWindchillButton.addActionListener(wrapWithErrorDialog { windchillService.startWnc(config.hostname) })
+        configurationButton.addActionListener { PluginSettingsPanel(project).show() }
+        wncStatusButton.addActionListener {
+            config.scanWindchill = !config.scanWindchill
+            if (config.scanWindchill) scanServer() else wncStatusButton.set(ServerStatus.NOT_SCANNING)
+        }
 
         GlobalScope.launch {
             while (true) {
-                if (shouldScanCheckbox.isSelected) scanServer() else windchillStatusLabel.set(ServerStatus.NOT_SCANNING)
-                delay((refreshRateSpinner.value as Int).toLong())
+                if (config.scanWindchill) scanServer() else wncStatusButton.set(ServerStatus.NOT_SCANNING)
+                delay(config.refreshRate.toLong())
             }
         }
     }
@@ -85,7 +59,7 @@ internal class WindchillWindowPanel(private val project: Project) : Disposable {
                 action.invoke()
             } catch (e: StatusRuntimeException) {
                 Messages.showMessageDialog(
-                    "Could not connect to windchill addon, at specified host: ${hostnameField.text}",
+                    "Could not connect to windchill addon, at specified host: ${config.hostname}",
                     "Connection error", Messages.getErrorIcon()
                 )
             } catch (e: Exception) {
@@ -94,64 +68,19 @@ internal class WindchillWindowPanel(private val project: Project) : Disposable {
         }
     }
 
-
     private fun scanServer() {
-        val url =
-            "${protocolCB.selectedItem as String}://${hostnameField.text}:${portSpinner.value}${windchillRelativeTextField.text}"
-        val login = loginField.text
-        val password = String(passwordField.password)
-        val status = HttpService.getInstance().getStatus(url, login, password)
+        val url = "${config.protocol}://${config.hostname}:${config.port}${config.relativePath}"
+        val status = HttpService.getInstance().getStatus(url, config.login, config.password)
         if (status != previousStatus && status == ServerStatus.RUNNING) {
             WindchillNotification.serverOK(project)
         } else if (status != previousStatus && status != ServerStatus.RUNNING) {
             WindchillNotification.serverKO(project)
         }
         previousStatus = status
-        windchillStatusLabel.set(status)
+        wncStatusButton.set(status)
     }
 
-    private fun setSelectableConfig() {
-        val isSelected = !lockSettings.isSelected
-        protocolCB.isEnabled = isSelected
-        portSpinner.isEnabled = isSelected
-        hostnameField.isEnabled = isSelected
-        loginField.isEnabled = isSelected
-        passwordField.isEnabled = isSelected
-        refreshRateSpinner.isEnabled = isSelected
-        windchillRelativeTextField.isEnabled = isSelected
-    }
-
-    private fun saveConfig() {
-        config.protocol = protocolCB.selectedItem as String
-        config.hostname = hostnameField.text
-        config.relativePath = windchillRelativeTextField.text
-        config.port = portSpinner.value as Int
-
-        config.login = loginField.text
-        config.password = String(passwordField.password)
-        config.preserveConfig = lockSettings.isSelected
-        config.scanWindchill = shouldScanCheckbox.isSelected
-        config.refreshRate = refreshRateSpinner.value as Int
-
-        WindchillNotification.settingsSaved(project)
-    }
-
-    private fun initFromProperties() {
-        hostnameField.text = config.hostname
-        windchillRelativeTextField.text = config.relativePath
-        protocolCB.selectedItem = config.protocol
-        portSpinner.value = config.port
-        loginField.text = config.login
-        passwordField.text = config.password
-        lockSettings.isSelected = config.preserveConfig
-        shouldScanCheckbox.isSelected = config.scanWindchill
-        refreshRateSpinner.value = config.refreshRate
-        setSelectableConfig()
-    }
-
-    override fun dispose() = saveConfig()
-
-    private fun JLabel.set(status: ServerStatus) {
+    private fun JButton.set(status: ServerStatus) {
         this.icon = status.icon
         this.text = status.label
     }

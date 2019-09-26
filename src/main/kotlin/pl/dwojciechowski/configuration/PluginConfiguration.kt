@@ -16,11 +16,11 @@ class PluginConfiguration() : PersistentStateComponent<PluginConfiguration> {
     var relativePath : String = ""
     var protocol: String = ""
 
-    var preserveConfig: Boolean = false
     var scanWindchill: Boolean = false
 
     var port: Int = 80
     var refreshRate: Int = 1000
+    var timeout: Int = 5000
 
     override fun getState() = this
 
