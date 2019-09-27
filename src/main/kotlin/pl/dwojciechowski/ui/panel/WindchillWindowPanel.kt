@@ -71,20 +71,13 @@ internal class WindchillWindowPanel(private val project: Project) {
     }
 
     private fun scanServer() {
-        var status = HttpService.getInstance().getStatus(HttpStatusConfig(config))
-        if (status == ServerStatus.DOWN
-            && HttpService.getInstance().getStatus(HttpStatusConfig(config, true)) == ServerStatus.RUNNING
-        ) {
-            status = ServerStatus.STARTING
-        }
-
+        val status = HttpService.getInstance().getStatus(HttpStatusConfig(config))
         when (status) {
             previousStatus -> Unit
             ServerStatus.STARTING -> WindchillNotification.apacheOK(project)
             ServerStatus.RUNNING -> WindchillNotification.serverOK(project)
             else -> WindchillNotification.serverKO(project)
         }
-
         previousStatus = status
         wncStatusButton.set(status)
     }

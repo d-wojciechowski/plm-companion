@@ -17,6 +17,7 @@ class HttpServiceImpl : HttpService {
                 .response().second
             when (response.statusCode) {
                 200 -> ServerStatus.RUNNING
+                503 -> ServerStatus.STARTING
                 else -> ServerStatus.DOWN
             }
         } catch (e: Exception) {
