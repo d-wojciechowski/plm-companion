@@ -8,6 +8,8 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import pl.dwojciechowski.configuration.PluginConfiguration
+import pl.dwojciechowski.model.CommandConfig
+import pl.dwojciechowski.model.HttpStatusConfig
 import pl.dwojciechowski.model.ServerStatus
 import pl.dwojciechowski.service.HttpService
 import pl.dwojciechowski.service.WncConnectorService
@@ -36,9 +38,9 @@ internal class WindchillWindowPanel(private val project: Project) {
         wncStatusButton.background = null
         wncStatusButton.isOpaque = false
 
-        restartWindchillButton.addActionListener(wrapWithErrorDialog { windchillService.restartWnc(config.hostname) })
-        stopWindchillButton.addActionListener(wrapWithErrorDialog { windchillService.stopWnc(config.hostname) })
-        startWindchillButton.addActionListener(wrapWithErrorDialog { windchillService.startWnc(config.hostname) })
+        restartWindchillButton.addActionListener(wrapWithErrorDialog { windchillService.restartWnc(CommandConfig(config)) })
+        stopWindchillButton.addActionListener(wrapWithErrorDialog { windchillService.stopWnc(CommandConfig(config)) })
+        startWindchillButton.addActionListener(wrapWithErrorDialog { windchillService.startWnc(CommandConfig(config)) })
         configurationButton.addActionListener { PluginSettingsPanel(project).show() }
         wncStatusButton.addActionListener {
             config.scanWindchill = !config.scanWindchill
@@ -59,7 +61,7 @@ internal class WindchillWindowPanel(private val project: Project) {
                 action.invoke()
             } catch (e: StatusRuntimeException) {
                 Messages.showMessageDialog(
-                    "Could not connect to windchill addon, at specified host: ${config.hostname}",
+                    "Could not connect to windchill add-on, at specified host: ${config.hostname}",
                     "Connection error", Messages.getErrorIcon()
                 )
             } catch (e: Exception) {
@@ -69,8 +71,7 @@ internal class WindchillWindowPanel(private val project: Project) {
     }
 
     private fun scanServer() {
-        val url = "${config.protocol}://${config.hostname}:${config.port}${config.relativePath}"
-        val status = HttpService.getInstance().getStatus(url, config.login, config.password)
+        val status = HttpService.getInstance().getStatus(HttpStatusConfig(config))
         if (status != previousStatus && status == ServerStatus.RUNNING) {
             WindchillNotification.serverOK(project)
         } else if (status != previousStatus && status != ServerStatus.RUNNING) {
