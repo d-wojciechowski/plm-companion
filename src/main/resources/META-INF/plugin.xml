@@ -15,6 +15,7 @@
         <projectService serviceImplementation="pl.dwojciechowski.configuration.PluginConfiguration"/>
         <projectService serviceInterface="pl.dwojciechowski.service.WncConnectorService"
                         serviceImplementation="pl.dwojciechowski.service.impl.WncConnectorServiceImpl"/>
+        <projectService serviceImplementation="pl.dwojciechowski.service.impl.LogViewerServiceImpl"/>
         <applicationService serviceInterface="pl.dwojciechowski.service.HttpService"
                             serviceImplementation="pl.dwojciechowski.service.impl.HttpServiceImpl"/>
     </extensions>
