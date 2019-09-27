@@ -2,17 +2,18 @@ package pl.dwojciechowski.service.impl
 
 import com.github.kittinunf.fuel.core.extensions.authentication
 import com.github.kittinunf.fuel.httpGet
+import pl.dwojciechowski.model.HttpStatusConfig
 import pl.dwojciechowski.model.ServerStatus
 import pl.dwojciechowski.service.HttpService
 
 class HttpServiceImpl : HttpService {
 
-    override fun getStatus(targetUrl: String, login: String, password: String): ServerStatus {
-        return try {
-            val response = targetUrl.httpGet()
-                .timeout(2000)
+    override fun getStatus(config: HttpStatusConfig): ServerStatus =
+        try {
+            val response = config.url.httpGet()
+                .timeout(config.timeout)
                 .authentication()
-                .basic(login, password)
+                .basic(config.login, config.password)
                 .response().second
             when (response.statusCode) {
                 200 -> ServerStatus.RUNNING
@@ -21,6 +22,5 @@ class HttpServiceImpl : HttpService {
         } catch (e: Exception) {
             ServerStatus.DOWN
         }
-    }
 
 }

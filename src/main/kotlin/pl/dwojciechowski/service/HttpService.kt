@@ -1,6 +1,7 @@
 package pl.dwojciechowski.service
 
 import com.intellij.openapi.components.ServiceManager
+import pl.dwojciechowski.model.HttpStatusConfig
 import pl.dwojciechowski.model.ServerStatus
 
 interface HttpService {
@@ -11,5 +12,6 @@ interface HttpService {
         }
     }
 
-    abstract fun getStatus(targetUrl: String, login: String, password: String): ServerStatus
+    fun getStatus(config: HttpStatusConfig): ServerStatus
+
 }
