@@ -6,11 +6,12 @@ import com.intellij.openapi.ui.ComboBox
 import com.intellij.openapi.ui.DialogWrapper
 import org.picocontainer.Disposable
 import pl.dwojciechowski.configuration.PluginConfiguration
+import pl.dwojciechowski.ui.WindchillNotification
 import java.awt.Dimension
 import java.awt.event.ActionEvent
 import javax.swing.*
 
-class PluginSettingsPanel(project: Project) : DialogWrapper(project), Disposable {
+class PluginSettingsPanel(private val project: Project) : DialogWrapper(project), Disposable {
 
     private val config: PluginConfiguration = ServiceManager.getService(project, PluginConfiguration::class.java)
 
@@ -76,6 +77,7 @@ class PluginSettingsPanel(project: Project) : DialogWrapper(project), Disposable
         object : AbstractAction("OK") {
             override fun actionPerformed(e: ActionEvent?) {
                 saveConfig()
+                WindchillNotification.settingsSaved(project)
                 dispose()
             }
         }

@@ -20,6 +20,10 @@ internal object WindchillNotification {
         createNotification(project,"Windchill is DOWN!", PluginIcons.KO)
     }
 
+    fun apacheOK(project: Project) {
+        createNotification(project,"Apache is OK, Windchill is DOWN!", PluginIcons.LOAD)
+    }
+
     fun settingsSaved(project: Project) {
         createNotification(project,"Settings Saved", PluginIcons.OK)
     }
