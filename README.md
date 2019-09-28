@@ -1,3 +1,4 @@
+[![pipeline status](https://gitlab.com/wojciechowskid/wncplugin/badges/master/pipeline.svg)](https://gitlab.com/wojciechowskid/wncplugin/commits/master)
 # Windchill Intellij Plugin
 
 Plugin for Intellij Idea to interact with Windchill.
@@ -40,3 +41,4 @@ Go to plugin section in Intellij Idea and install it from disk (poit to artifact
 ## License
 
 This project is licensed under the GNU GENERAL PUBLIC LICENSE Version 3 - see the [LICENSE](LICENSE) file for details
+
