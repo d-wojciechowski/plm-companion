@@ -35,6 +35,16 @@ class WncConnectorServiceImpl : WncConnectorService {
         )
     }
 
+    override fun xconf(cfg: CommandConfig) {
+        execCommand(
+            cfg,
+            Service.Command.newBuilder()
+                .setCommand("xconfmanager")
+                .setArgs("-p")
+                .build()
+        )
+    }
+
     private fun execCommand(cfg: CommandConfig, command: Service.Command): Service.Response? {
         val channel = ManagedChannelBuilder.forAddress(cfg.hostname, 4040)
             .usePlaintext()

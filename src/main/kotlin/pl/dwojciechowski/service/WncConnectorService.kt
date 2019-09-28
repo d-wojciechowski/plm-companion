@@ -15,5 +15,6 @@ interface WncConnectorService {
     fun stopWnc(cfg: CommandConfig)
     fun startWnc(cfg: CommandConfig)
     fun restartWnc(cfg: CommandConfig)
+    fun xconf(cfg: CommandConfig)
 
 }
