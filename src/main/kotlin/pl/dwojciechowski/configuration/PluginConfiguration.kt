@@ -15,6 +15,7 @@ class PluginConfiguration() : PersistentStateComponent<PluginConfiguration> {
     var hostname: String = ""
     var relativePath : String = ""
     var protocol: String = ""
+    var logFileLocation: String = ""
 
     var scanWindchill: Boolean = false
 

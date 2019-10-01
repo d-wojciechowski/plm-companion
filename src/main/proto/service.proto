@@ -17,3 +17,15 @@ message Response {
 service CommandService {
     rpc execute (Command) returns (Response);
 }
+
+message LogLine {
+    string message = 1;
+}
+
+message LogFileLocation{
+    string fileLocation = 1;
+}
+
+service LogViewerService{
+    rpc getLogs(LogFileLocation) returns (stream LogLine);
+}
