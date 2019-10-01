@@ -97,16 +97,7 @@
           <verticalScrollBarPolicy value="22"/>
         </properties>
         <border type="none"/>
-        <children>
-          <component id="b653a" class="javax.swing.JTextArea" binding="logViewerTA">
-            <constraints/>
-            <properties>
-              <editable value="false"/>
-              <enabled value="false"/>
-              <visible value="false"/>
-            </properties>
-          </component>
-        </children>
+        <children/>
       </scrollpane>
     </children>
   </grid>

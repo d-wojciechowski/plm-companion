@@ -4,7 +4,6 @@ import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.Messages
 import io.grpc.StatusRuntimeException
-import io.grpc.stub.StreamObserver
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -12,19 +11,19 @@ import pl.dwojciechowski.configuration.PluginConfiguration
 import pl.dwojciechowski.model.CommandConfig
 import pl.dwojciechowski.model.HttpStatusConfig
 import pl.dwojciechowski.model.ServerStatus
-import pl.dwojciechowski.proto.Service
 import pl.dwojciechowski.service.HttpService
 import pl.dwojciechowski.service.WncConnectorService
-import pl.dwojciechowski.service.impl.LogViewerServiceImpl
 import pl.dwojciechowski.ui.WindchillNotification
 import java.awt.event.ActionListener
-import javax.swing.*
+import javax.swing.JButton
+import javax.swing.JCheckBox
+import javax.swing.JPanel
+import javax.swing.JScrollPane
 
 internal class WindchillWindowPanel(private val project: Project) {
 
     private val config = ServiceManager.getService(project, PluginConfiguration::class.java)
     private val windchillService = ServiceManager.getService(project, WncConnectorService::class.java)
-    private val logService: LogViewerServiceImpl = ServiceManager.getService(project, LogViewerServiceImpl::class.java)
 
     lateinit var content: JPanel
     private lateinit var restartWindchillButton: JButton
@@ -35,7 +34,6 @@ internal class WindchillWindowPanel(private val project: Project) {
 
     //Log Section
     private lateinit var logsSP: JScrollPane
-    private lateinit var logViewerTA: JTextArea
     private lateinit var showLogsCB: JCheckBox
 
     private var previousStatus = ServerStatus.DOWN
@@ -65,28 +63,7 @@ internal class WindchillWindowPanel(private val project: Project) {
     }
 
     private fun toggleLogViewer() {
-        logViewerTA.isEnabled = logViewerTA.isEnabled.not()
-        logViewerTA.isVisible = logViewerTA.isVisible.not()
-        if (logViewerTA.isVisible) {
-            val logsObserver = object : StreamObserver<Service.LogLine> {
-                override fun onNext(value: Service.LogLine?) {
-                    logViewerTA.append(value?.message)
-                    logViewerTA.append("\r\n")
-                    logViewerTA.caretPosition = logViewerTA.document.length
-                }
-
-                override fun onError(t: Throwable?) {
-                    Messages.showErrorDialog(project, t?.toString(), "${t?.message}")
-                }
-
-                override fun onCompleted() {
-                    logViewerTA.append("\r\r")
-                    logViewerTA.append("DISCONNECTED!")
-                    logViewerTA.append("\r\n")
-                }
-            }
-            logService.getLogFile(config, logsObserver)
-        }
+        config.subjectLog.onNext(showLogsCB.isSelected)
     }
 
     private fun wrapWithErrorDialog(action: () -> Unit): ActionListener? {
