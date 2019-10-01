@@ -77,7 +77,6 @@ internal class WindchillWindowPanel(private val project: Project) {
 
                 override fun onError(t: Throwable?) {
                     Messages.showErrorDialog(project, t?.toString(), "${t?.message}")
-                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                 }
 
                 override fun onCompleted() {
@@ -86,7 +85,7 @@ internal class WindchillWindowPanel(private val project: Project) {
                     logViewerTA.append("\r\n")
                 }
             }
-            logService.getLogFile(CommandConfig(config).hostname, "asd", logsObserver)
+            logService.getLogFile(config, logsObserver)
         }
     }
 

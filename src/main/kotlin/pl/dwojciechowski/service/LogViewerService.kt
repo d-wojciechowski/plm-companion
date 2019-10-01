@@ -3,6 +3,7 @@ package pl.dwojciechowski.service
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
 import io.grpc.stub.StreamObserver
+import pl.dwojciechowski.configuration.PluginConfiguration
 import pl.dwojciechowski.proto.Service
 
 interface LogViewerService {
@@ -12,5 +13,5 @@ interface LogViewerService {
         }
     }
 
-    fun getLogFile(hostname: String, logFilePath: String, logsObserver: StreamObserver<Service.LogLine>)
+    fun getLogFile(config: PluginConfiguration, logsObserver: StreamObserver<Service.LogLine>)
 }
