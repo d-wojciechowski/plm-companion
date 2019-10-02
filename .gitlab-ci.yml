@@ -4,6 +4,7 @@ stages:
   - build
 
 before_script:
+  - git submodule update --init --recursive
   - echo `pwd`
   - export GRADLE_USER_HOME=`pwd`/.gradle
 
