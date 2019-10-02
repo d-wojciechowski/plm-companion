@@ -25,6 +25,7 @@ class PluginSettingsPanel(private val project: Project) : DialogWrapper(project)
     private lateinit var passwordField: JPasswordField
     private lateinit var refreshRateSpinner: JSpinner
     private lateinit var timeoutSpinner: JSpinner
+    private lateinit var logFileLocation: JTextField
 
     fun createUIComponents() {
         hostnameField = JTextField("enter domain like \" google.com \"", 35)
@@ -58,6 +59,7 @@ class PluginSettingsPanel(private val project: Project) : DialogWrapper(project)
         passwordField.text = config.password
         refreshRateSpinner.value = config.refreshRate
         timeoutSpinner.value = config.timeout
+        logFileLocation.text = config.logFileLocation
     }
 
     private fun saveConfig() {
@@ -70,6 +72,7 @@ class PluginSettingsPanel(private val project: Project) : DialogWrapper(project)
         config.password = String(passwordField.password)
         config.refreshRate = refreshRateSpinner.value as Int
         config.timeout = timeoutSpinner.value as Int
+        config.logFileLocation = logFileLocation.text
     }
 
 

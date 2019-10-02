@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="pl.dwojciechowski.ui.panel.LogViewerPanel">
+  <grid id="27dc6" binding="content" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+    <margin top="0" left="0" bottom="0" right="0"/>
+    <constraints>
+      <xy x="20" y="20" width="500" height="400"/>
+    </constraints>
+    <properties/>
+    <border type="none"/>
+    <children>
+      <tabbedpane id="90995" binding="tabPane">
+        <constraints>
+          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
+            <preferred-size width="200" height="200"/>
+          </grid>
+        </constraints>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <scrollpane id="7a223">
+            <constraints>
+              <tabbedpane title="Method Server"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="4fa99" class="javax.swing.JTextArea" binding="ms">
+                <constraints/>
+                <properties>
+                  <editable value="false"/>
+                  <lineWrap value="true"/>
+                  <text value=""/>
+                  <wrapStyleWord value="false"/>
+                </properties>
+              </component>
+            </children>
+          </scrollpane>
+          <scrollpane id="47802">
+            <constraints>
+              <tabbedpane title="Background Method Server"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="d9801" class="javax.swing.JTextArea" binding="bms">
+                <constraints/>
+                <properties>
+                  <editable value="false"/>
+                  <lineWrap value="true"/>
+                  <text value=""/>
+                  <wrapStyleWord value="true"/>
+                </properties>
+              </component>
+            </children>
+          </scrollpane>
+        </children>
+      </tabbedpane>
+    </children>
+  </grid>
+</form>
