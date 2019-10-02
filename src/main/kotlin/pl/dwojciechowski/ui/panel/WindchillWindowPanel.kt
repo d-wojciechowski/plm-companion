@@ -16,7 +16,9 @@ import pl.dwojciechowski.service.WncConnectorService
 import pl.dwojciechowski.ui.WindchillNotification
 import java.awt.event.ActionListener
 import javax.swing.JButton
+import javax.swing.JCheckBox
 import javax.swing.JPanel
+import javax.swing.JScrollPane
 
 internal class WindchillWindowPanel(private val project: Project) {
 
@@ -30,6 +32,10 @@ internal class WindchillWindowPanel(private val project: Project) {
     private lateinit var configurationButton: JButton
     private lateinit var wncStatusButton: JButton
     private lateinit var xconfManagerButton: JButton
+
+    //Log Section
+    private lateinit var logsSP: JScrollPane
+    private lateinit var showLogsCB: JCheckBox
 
     private var previousStatus = ServerStatus.DOWN
 
@@ -48,6 +54,7 @@ internal class WindchillWindowPanel(private val project: Project) {
             config.scanWindchill = !config.scanWindchill
             if (config.scanWindchill) scanServer() else wncStatusButton.set(ServerStatus.NOT_SCANNING)
         }
+        showLogsCB.addActionListener { toggleLogViewer() }
 
         GlobalScope.launch {
             while (true) {
@@ -55,6 +62,10 @@ internal class WindchillWindowPanel(private val project: Project) {
                 delay(config.refreshRate.toLong())
             }
         }
+    }
+
+    private fun toggleLogViewer() {
+        config.subjectLog.onNext(showLogsCB.isSelected)
     }
 
     private fun wrapWithErrorDialog(action: () -> Unit): ActionListener? {

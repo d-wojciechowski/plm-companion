@@ -1,0 +1,3 @@
+[submodule "src/main/proto"]
+	path = src/main/proto
+	url = https://gitlab.com/wojciechowskid/wncplugin-protobuf.git

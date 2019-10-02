@@ -12,9 +12,11 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <toolWindow id="Windchill" anchor="right" factoryClass="pl.dwojciechowski.ui.MainSubWindowFactory" icon="/META-INF/pluginIcon.svg"/>
+        <toolWindow id="WindchillLog" anchor="bottom" factoryClass="pl.dwojciechowski.ui.LogViewerPanelFactory" icon="/META-INF/pluginIcon.svg"/>
         <projectService serviceImplementation="pl.dwojciechowski.configuration.PluginConfiguration"/>
         <projectService serviceInterface="pl.dwojciechowski.service.WncConnectorService"
                         serviceImplementation="pl.dwojciechowski.service.impl.WncConnectorServiceImpl"/>
+        <projectService serviceImplementation="pl.dwojciechowski.service.impl.LogViewerServiceImpl"/>
         <applicationService serviceInterface="pl.dwojciechowski.service.HttpService"
                             serviceImplementation="pl.dwojciechowski.service.impl.HttpServiceImpl"/>
     </extensions>
