@@ -31,6 +31,7 @@ internal class WindchillWindowPanel(private val project: Project) {
     private lateinit var startWindchillButton: JButton
     private lateinit var configurationButton: JButton
     private lateinit var wncStatusButton: JButton
+    private lateinit var xconfManagerButton: JButton
 
     //Log Section
     private lateinit var logsSP: JScrollPane
@@ -47,6 +48,7 @@ internal class WindchillWindowPanel(private val project: Project) {
         restartWindchillButton.addActionListener(wrapWithErrorDialog { windchillService.restartWnc(CommandConfig(config)) })
         stopWindchillButton.addActionListener(wrapWithErrorDialog { windchillService.stopWnc(CommandConfig(config)) })
         startWindchillButton.addActionListener(wrapWithErrorDialog { windchillService.startWnc(CommandConfig(config)) })
+        xconfManagerButton.addActionListener(wrapWithErrorDialog { windchillService.xconf(CommandConfig(config)) })
         configurationButton.addActionListener { PluginSettingsPanel(project).show() }
         wncStatusButton.addActionListener {
             config.scanWindchill = !config.scanWindchill
