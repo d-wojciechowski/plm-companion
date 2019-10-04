@@ -11,14 +11,15 @@ import pl.dwojciechowski.configuration.PluginConfiguration
 import pl.dwojciechowski.model.CommandConfig
 import pl.dwojciechowski.model.HttpStatusConfig
 import pl.dwojciechowski.model.ServerStatus
+import pl.dwojciechowski.proto.Service
 import pl.dwojciechowski.service.HttpService
 import pl.dwojciechowski.service.WncConnectorService
+import pl.dwojciechowski.ui.PluginIcons
 import pl.dwojciechowski.ui.WindchillNotification
 import java.awt.event.ActionListener
 import javax.swing.JButton
 import javax.swing.JCheckBox
 import javax.swing.JPanel
-import javax.swing.JScrollPane
 
 internal class WindchillWindowPanel(private val project: Project) {
 
@@ -34,7 +35,6 @@ internal class WindchillWindowPanel(private val project: Project) {
     private lateinit var xconfManagerButton: JButton
 
     //Log Section
-    private lateinit var logsSP: JScrollPane
     private lateinit var showLogsCB: JCheckBox
 
     private var previousStatus = ServerStatus.DOWN
@@ -49,7 +49,7 @@ internal class WindchillWindowPanel(private val project: Project) {
         stopWindchillButton.addActionListener(wrapWithErrorDialog { windchillService.stopWnc(CommandConfig(config)) })
         startWindchillButton.addActionListener(wrapWithErrorDialog { windchillService.startWnc(CommandConfig(config)) })
         xconfManagerButton.addActionListener(wrapWithErrorDialog { windchillService.xconf(CommandConfig(config)) })
-        configurationButton.addActionListener { PluginSettingsPanel(project).show() }
+        configurationButton.addActionListener { PluginSettingsDialog(project).show() }
         wncStatusButton.addActionListener {
             config.scanWindchill = !config.scanWindchill
             if (config.scanWindchill) scanServer() else wncStatusButton.set(ServerStatus.NOT_SCANNING)
@@ -68,13 +68,19 @@ internal class WindchillWindowPanel(private val project: Project) {
         config.subjectLog.onNext(showLogsCB.isSelected)
     }
 
-    private fun wrapWithErrorDialog(action: () -> Unit): ActionListener? {
+    private fun wrapWithErrorDialog(action: () -> Service.Response): ActionListener? {
         return ActionListener {
             try {
-                action.invoke()
+                WindchillNotification.createNotification(project,"Started execution of action", PluginIcons.OK)
+                val response = action.invoke()
+                if(response.status == 200) {
+                    WindchillNotification.createNotification(project, "Action executed successfully", PluginIcons.OK)
+                } else {
+                    WindchillNotification.createNotification(project, "Action FAILED", PluginIcons.KO)
+                }
             } catch (e: StatusRuntimeException) {
                 Messages.showMessageDialog(
-                    "Could not connect to windchill add-on, at specified host: ${config.hostname}",
+                    "Could not connect to windchill add-on, at specified host: ${config.hostname}\n${e.message}",
                     "Connection error", Messages.getErrorIcon()
                 )
             } catch (e: Exception) {

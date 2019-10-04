@@ -10,13 +10,13 @@ import java.util.concurrent.TimeUnit
 
 class WncConnectorServiceImpl : WncConnectorService {
 
-    override fun restartWnc(cfg: CommandConfig) {
-        stopWnc(cfg)
-        startWnc(cfg)
+    override fun restartWnc(cfg: CommandConfig): Service.Response {
+        val response = stopWnc(cfg)
+        return if(response.status == 200) startWnc(cfg) else response
     }
 
-    override fun stopWnc(cfg: CommandConfig) {
-        execCommand(
+    override fun stopWnc(cfg: CommandConfig): Service.Response {
+        return execCommand(
             cfg,
             Service.Command.newBuilder()
                 .setCommand("windchill")
@@ -25,8 +25,8 @@ class WncConnectorServiceImpl : WncConnectorService {
         )
     }
 
-    override fun startWnc(cfg: CommandConfig) {
-        execCommand(
+    override fun startWnc(cfg: CommandConfig): Service.Response {
+        return execCommand(
             cfg,
             Service.Command.newBuilder()
                 .setCommand("windchill")
@@ -35,8 +35,8 @@ class WncConnectorServiceImpl : WncConnectorService {
         )
     }
 
-    override fun xconf(cfg: CommandConfig) {
-        execCommand(
+    override fun xconf(cfg: CommandConfig): Service.Response {
+        return execCommand(
             cfg,
             Service.Command.newBuilder()
                 .setCommand("xconfmanager")
@@ -45,7 +45,7 @@ class WncConnectorServiceImpl : WncConnectorService {
         )
     }
 
-    private fun execCommand(cfg: CommandConfig, command: Service.Command): Service.Response? {
+    private fun execCommand(cfg: CommandConfig, command: Service.Command): Service.Response {
         val channel = ManagedChannelBuilder.forAddress(cfg.hostname, 4040)
             .usePlaintext()
             .build()

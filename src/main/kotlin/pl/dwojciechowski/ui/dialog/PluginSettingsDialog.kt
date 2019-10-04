@@ -11,7 +11,7 @@ import java.awt.Dimension
 import java.awt.event.ActionEvent
 import javax.swing.*
 
-class PluginSettingsPanel(private val project: Project) : DialogWrapper(project), Disposable {
+class PluginSettingsDialog(private val project: Project) : DialogWrapper(project), Disposable {
 
     private val config: PluginConfiguration = ServiceManager.getService(project, PluginConfiguration::class.java)
 

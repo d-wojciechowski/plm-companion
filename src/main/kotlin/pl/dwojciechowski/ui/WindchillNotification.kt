@@ -28,7 +28,7 @@ internal object WindchillNotification {
         createNotification(project,"Settings Saved", PluginIcons.OK)
     }
 
-    private fun createNotification(project: Project, text: String, icon: Icon) {
+    fun createNotification(project: Project, text: String, icon: Icon) {
         GROUP.createNotification(text, NotificationType.INFORMATION)
             .setImportant(true)
             .setIcon(icon)

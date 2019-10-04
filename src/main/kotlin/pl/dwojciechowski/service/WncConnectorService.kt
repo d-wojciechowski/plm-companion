@@ -3,6 +3,7 @@ package pl.dwojciechowski.service
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
 import pl.dwojciechowski.model.CommandConfig
+import pl.dwojciechowski.proto.Service
 
 interface WncConnectorService {
 
@@ -12,9 +13,9 @@ interface WncConnectorService {
         }
     }
 
-    fun stopWnc(cfg: CommandConfig)
-    fun startWnc(cfg: CommandConfig)
-    fun restartWnc(cfg: CommandConfig)
-    fun xconf(cfg: CommandConfig)
+    fun stopWnc(cfg: CommandConfig): Service.Response
+    fun startWnc(cfg: CommandConfig): Service.Response
+    fun restartWnc(cfg: CommandConfig) : Service.Response
+    fun xconf(cfg: CommandConfig): Service.Response
 
 }
