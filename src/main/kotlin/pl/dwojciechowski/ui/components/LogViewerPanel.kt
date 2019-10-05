@@ -5,26 +5,28 @@ import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.ui.SimpleToolWindowPanel
-import com.intellij.ui.components.JBScrollPane
 import io.grpc.ManagedChannel
 import io.grpc.stub.StreamObserver
 import pl.dwojciechowski.configuration.PluginConfiguration
 import pl.dwojciechowski.proto.Service
 import pl.dwojciechowski.service.impl.LogViewerServiceImpl
+import javax.swing.JScrollPane
 import javax.swing.JTextArea
 
-class LogViewerPanel(private val project: Project) : SimpleToolWindowPanel(false,true) {
+class LogViewerPanel(private val project: Project) : SimpleToolWindowPanel(false, true) {
 
     private val logService: LogViewerServiceImpl = ServiceManager.getService(project, LogViewerServiceImpl::class.java)
     private val config = ServiceManager.getService(project, PluginConfiguration::class.java)
 
-    private lateinit var textArea : JTextArea
-    private lateinit var channel : ManagedChannel
+    private var textArea: JTextArea
+    private lateinit var channel: ManagedChannel
 
     init {
         autoscrolls = true
-        textArea = JTextArea("Sssssssssssssssssssssssssssssssssssss")
-        this.add(JBScrollPane(textArea))
+        textArea = JTextArea()
+        textArea.isEditable = false
+
+        this.add(JScrollPane(textArea))
 
         config.subjectLog
             .doOnNext { b -> toggleLogViewer(b) }
@@ -42,7 +44,7 @@ class LogViewerPanel(private val project: Project) : SimpleToolWindowPanel(false
                 }
 
                 override fun onError(t: Throwable?) {
-                    ApplicationManager.getApplication().invokeLater{
+                    ApplicationManager.getApplication().invokeLater {
                         Messages.showErrorDialog(project, t?.toString(), "${t?.message}")
                     }
                 }
