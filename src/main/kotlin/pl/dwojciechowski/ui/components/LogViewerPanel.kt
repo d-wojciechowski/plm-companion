@@ -9,13 +9,13 @@ import io.grpc.ManagedChannel
 import io.grpc.stub.StreamObserver
 import pl.dwojciechowski.configuration.PluginConfiguration
 import pl.dwojciechowski.proto.Service
-import pl.dwojciechowski.service.impl.LogViewerServiceImpl
+import pl.dwojciechowski.service.LogViewerService
 import javax.swing.JScrollPane
 import javax.swing.JTextArea
 
 class LogViewerPanel(private val project: Project) : SimpleToolWindowPanel(false, true) {
 
-    private val logService: LogViewerServiceImpl = ServiceManager.getService(project, LogViewerServiceImpl::class.java)
+    private val logService: LogViewerService = ServiceManager.getService(project, LogViewerService::class.java)
     private val config = ServiceManager.getService(project, PluginConfiguration::class.java)
 
     private var textArea: JTextArea
