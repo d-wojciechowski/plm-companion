@@ -15,7 +15,6 @@ class MainSubWindowFactory() : ToolWindowFactory, DumbAware {
         val toolWindowContent = toolWindowBuilder.content
         val content = contentFactory.createContent(toolWindowContent, "", false)
         content.preferredFocusableComponent = toolWindowContent
-//        content.disposer = toolWindowBuilkder
         toolWindow.contentManager.addContent(content)
     }
 }

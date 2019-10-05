@@ -14,5 +14,5 @@ interface LogViewerService {
         }
     }
 
-    fun getLogFile(config: PluginConfiguration, logsObserver: StreamObserver<Service.LogLine>): ManagedChannel?
+    fun getLogFile(config: PluginConfiguration, logsObserver: StreamObserver<Service.LogLine>): ManagedChannel
 }
