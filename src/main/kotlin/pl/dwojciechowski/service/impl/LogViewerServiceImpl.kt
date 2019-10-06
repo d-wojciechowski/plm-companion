@@ -9,13 +9,18 @@ import pl.dwojciechowski.proto.Service
 import pl.dwojciechowski.service.LogViewerService
 
 class LogViewerServiceImpl : LogViewerService {
-    override fun getLogFile(config: PluginConfiguration, logsObserver: StreamObserver<Service.LogLine>): ManagedChannel {
+    override fun getLogFile(
+        config: PluginConfiguration,
+        source: Service.LogFileLocation.Source,
+        logsObserver: StreamObserver<Service.LogLine>
+    ): ManagedChannel {
         val channel = ManagedChannelBuilder.forAddress(config.hostname, 4040)
             .usePlaintext()
             .build()
 
         val fileLocation = Service.LogFileLocation.newBuilder()
             .setFileLocation(config.logFileLocation)
+            .setLogType(source)
             .build()
 
         LogViewerServiceGrpc.newStub(channel)

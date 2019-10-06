@@ -13,7 +13,8 @@ import pl.dwojciechowski.service.LogViewerService
 import javax.swing.JScrollPane
 import javax.swing.JTextArea
 
-class LogViewerPanel(private val project: Project) : SimpleToolWindowPanel(false, true) {
+class LogViewerPanel(private val project: Project, private val type: Service.LogFileLocation.Source) :
+    SimpleToolWindowPanel(false, true) {
 
     private val logService: LogViewerService = ServiceManager.getService(project, LogViewerService::class.java)
     private val config = ServiceManager.getService(project, PluginConfiguration::class.java)
@@ -55,9 +56,10 @@ class LogViewerPanel(private val project: Project) : SimpleToolWindowPanel(false
                     textArea.append("\r\n")
                 }
             }
-            channel = logService.getLogFile(config, logsObserver)
+            channel = logService.getLogFile(config, type, logsObserver)
         } else {
             channel.shutdown()
+            textArea.text = ""
         }
     }
 }

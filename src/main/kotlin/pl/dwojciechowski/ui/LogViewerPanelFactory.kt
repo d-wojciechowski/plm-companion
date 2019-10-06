@@ -8,6 +8,7 @@ import com.intellij.openapi.wm.ToolWindowFactory
 import com.intellij.openapi.wm.impl.ToolWindowImpl
 import com.intellij.ui.content.ContentFactory
 import pl.dwojciechowski.configuration.PluginConfiguration
+import pl.dwojciechowski.proto.Service
 import pl.dwojciechowski.service.LogViewerService
 import pl.dwojciechowski.ui.actions.ToggleLoggingAction
 import pl.dwojciechowski.ui.components.LogViewerPanel
@@ -22,8 +23,8 @@ class LogViewerPanelFactory : ToolWindowFactory, DumbAware {
         logService = ServiceManager.getService(project, LogViewerService::class.java)
 
         val contentFactory = ContentFactory.SERVICE.getInstance()
-        val logPane1 = LogViewerPanel(project)
-        val logPane2 = LogViewerPanel(project)
+        val logPane1 = LogViewerPanel(project, Service.LogFileLocation.Source.METHOD_SERVER)
+        val logPane2 = LogViewerPanel(project, Service.LogFileLocation.Source.BACKGROUND_METHOD_SERVER)
 
         val content = contentFactory.createContent(logPane1, "Method Server", false)
         content.preferredFocusableComponent = logPane1
