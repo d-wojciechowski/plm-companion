@@ -1,23 +1,26 @@
 package pl.dwojciechowski.service.impl
 
+import com.intellij.openapi.components.ServiceManager
+import com.intellij.openapi.project.Project
 import io.grpc.Deadline
 import io.grpc.ManagedChannelBuilder
-import pl.dwojciechowski.model.CommandConfig
+import pl.dwojciechowski.configuration.PluginConfiguration
 import pl.dwojciechowski.proto.CommandServiceGrpc
 import pl.dwojciechowski.proto.Service
 import pl.dwojciechowski.service.WncConnectorService
 import java.util.concurrent.TimeUnit
 
-class WncConnectorServiceImpl : WncConnectorService {
+class WncConnectorServiceImpl(private val project: Project) : WncConnectorService {
 
-    override fun restartWnc(cfg: CommandConfig): Service.Response {
-        val response = stopWnc(cfg)
-        return if(response.status == 200) startWnc(cfg) else response
+    private val config = ServiceManager.getService(project, PluginConfiguration::class.java)
+
+    override fun restartWnc(): Service.Response {
+        val response = stopWnc()
+        return if (response.status == 200) startWnc() else response
     }
 
-    override fun stopWnc(cfg: CommandConfig): Service.Response {
+    override fun stopWnc(): Service.Response {
         return execCommand(
-            cfg,
             Service.Command.newBuilder()
                 .setCommand("windchill")
                 .setArgs("stop")
@@ -25,9 +28,8 @@ class WncConnectorServiceImpl : WncConnectorService {
         )
     }
 
-    override fun startWnc(cfg: CommandConfig): Service.Response {
+    override fun startWnc(): Service.Response {
         return execCommand(
-            cfg,
             Service.Command.newBuilder()
                 .setCommand("windchill")
                 .setArgs("start")
@@ -35,9 +37,8 @@ class WncConnectorServiceImpl : WncConnectorService {
         )
     }
 
-    override fun xconf(cfg: CommandConfig): Service.Response {
+    override fun xconf(): Service.Response {
         return execCommand(
-            cfg,
             Service.Command.newBuilder()
                 .setCommand("xconfmanager")
                 .setArgs("-p")
@@ -45,13 +46,13 @@ class WncConnectorServiceImpl : WncConnectorService {
         )
     }
 
-    private fun execCommand(cfg: CommandConfig, command: Service.Command): Service.Response {
-        val channel = ManagedChannelBuilder.forAddress(cfg.hostname, 4040)
+    private fun execCommand(command: Service.Command): Service.Response {
+        val channel = ManagedChannelBuilder.forAddress(config.hostname, 4040)
             .usePlaintext()
             .build()
 
         val stub = CommandServiceGrpc.newBlockingStub(channel)
-            .withDeadline(Deadline.after(cfg.timeout.toLong(), TimeUnit.SECONDS))
+            .withDeadline(Deadline.after(config.timeout.toLong(), TimeUnit.SECONDS))
         val response = stub.execute(command)
         channel.shutdown()
         return response
