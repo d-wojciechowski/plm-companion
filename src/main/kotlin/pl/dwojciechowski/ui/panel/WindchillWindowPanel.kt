@@ -1,9 +1,12 @@
 package pl.dwojciechowski.ui.panel
 
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.Messages
 import io.grpc.StatusRuntimeException
+import io.reactivex.Flowable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -15,7 +18,6 @@ import pl.dwojciechowski.service.HttpService
 import pl.dwojciechowski.service.WncConnectorService
 import pl.dwojciechowski.ui.PluginIcons
 import pl.dwojciechowski.ui.WindchillNotification
-import java.awt.event.ActionListener
 import javax.swing.JButton
 import javax.swing.JPanel
 
@@ -39,11 +41,10 @@ internal class WindchillWindowPanel(private val project: Project) {
         wncStatusButton.isBorderPainted = false
         wncStatusButton.background = null
         wncStatusButton.isOpaque = false
-
-        restartWindchillButton.addActionListener(wrapWithErrorDialog { windchillService.restartWnc() })
-        stopWindchillButton.addActionListener(wrapWithErrorDialog { windchillService.stopWnc() })
-        startWindchillButton.addActionListener(wrapWithErrorDialog { windchillService.startWnc() })
-        xconfManagerButton.addActionListener(wrapWithErrorDialog { windchillService.xconf() })
+        restartWindchillButton.addListener { windchillService.restartWnc() }
+        stopWindchillButton.addListener { windchillService.stopWnc() }
+        startWindchillButton.addListener { windchillService.startWnc() }
+        xconfManagerButton.addListener { windchillService.xconf() }
         configurationButton.addActionListener { PluginSettingsDialog(project).show() }
         wncStatusButton.addActionListener {
             config.scanWindchill = !config.scanWindchill
@@ -58,25 +59,52 @@ internal class WindchillWindowPanel(private val project: Project) {
         }
     }
 
-    private fun wrapWithErrorDialog(action: () -> Service.Response): ActionListener? {
-        return ActionListener {
-            try {
-                WindchillNotification.createNotification(project, "Started execution of action", PluginIcons.OK)
-                val response = action.invoke()
-                if (response.status == 200) {
-                    WindchillNotification.createNotification(project, "Action executed successfully", PluginIcons.OK)
-                } else {
-                    WindchillNotification.createNotification(project, "Action FAILED", PluginIcons.KO)
-                }
-            } catch (e: StatusRuntimeException) {
+    private fun JButton.addListener(function: () -> Service.Response) {
+        this.addActionListener { executeAction(function, this) }
+    }
+
+    private fun executeAction(action: () -> Service.Response, button: JButton) {
+        WindchillNotification.createNotification(project, "Started execution of ${button.name}", PluginIcons.OK)
+        button.isEnabled = false
+        Flowable.fromCallable(action)
+            .subscribeOn(Schedulers.newThread())
+            .subscribe(
+                { handle(it) },
+                { showMessageOnUIThread(it, button) },
+                { button.isEnabled = true }
+            )
+    }
+
+    private fun handle(response: Service.Response) {
+        if (response.status == 200) {
+            WindchillNotification.createNotification(
+                project,
+                "Action executed successfully",
+                PluginIcons.OK
+            )
+        } else {
+            WindchillNotification.createNotification(project, "Action FAILED", PluginIcons.KO)
+        }
+    }
+
+    private fun showMessageOnUIThread(error: Throwable, button: JButton) {
+        ApplicationManager.getApplication().invokeLater {
+            if (error is StatusRuntimeException) {
                 Messages.showMessageDialog(
-                    "Could not connect to windchill add-on, at specified host: ${config.hostname}\n${e.message}",
+                    project,
+                    "Could not connect to windchill add-on, at specified host: ${config.hostname}\n${error.message}",
                     "Connection error", Messages.getErrorIcon()
                 )
-            } catch (e: Exception) {
-                Messages.showMessageDialog(e.message, "Connection Error", Messages.getErrorIcon())
+            } else {
+                Messages.showMessageDialog(
+                    project,
+                    error.message,
+                    "Connection error",
+                    Messages.getErrorIcon()
+                )
             }
         }
+        button.isEnabled = true
     }
 
     private fun scanServer() {
