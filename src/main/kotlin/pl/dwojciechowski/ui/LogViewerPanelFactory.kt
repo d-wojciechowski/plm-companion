@@ -11,7 +11,7 @@ import pl.dwojciechowski.configuration.PluginConfiguration
 import pl.dwojciechowski.proto.Service
 import pl.dwojciechowski.service.LogViewerService
 import pl.dwojciechowski.ui.actions.ToggleLoggingAction
-import pl.dwojciechowski.ui.components.LogViewerPanel
+import pl.dwojciechowski.ui.panel.LogViewerPanel
 
 class LogViewerPanelFactory : ToolWindowFactory, DumbAware {
 

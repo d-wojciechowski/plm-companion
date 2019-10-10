@@ -2,7 +2,7 @@ import com.google.protobuf.gradle.*
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 group = "pl.dwojciechowski"
-version = "0.2.1"
+version = "0.3.0"
 val protobufVersion = "3.9.1"
 val grpcVersion = "1.23.0"
 

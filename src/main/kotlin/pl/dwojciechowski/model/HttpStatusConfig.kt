@@ -16,5 +16,4 @@ data class HttpStatusConfig(
         timeout = config.timeout
     )
 
-
 }

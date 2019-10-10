@@ -1,5 +1,7 @@
 package pl.dwojciechowski.service.impl
 
+import com.intellij.openapi.components.ServiceManager
+import com.intellij.openapi.project.Project
 import io.grpc.ManagedChannel
 import io.grpc.ManagedChannelBuilder
 import io.grpc.stub.StreamObserver
@@ -8,9 +10,11 @@ import pl.dwojciechowski.proto.LogViewerServiceGrpc
 import pl.dwojciechowski.proto.Service
 import pl.dwojciechowski.service.LogViewerService
 
-class LogViewerServiceImpl : LogViewerService {
+class LogViewerServiceImpl(private val project: Project) : LogViewerService {
+
+    private val config = ServiceManager.getService(project, PluginConfiguration::class.java)
+
     override fun getLogFile(
-        config: PluginConfiguration,
         source: Service.LogFileLocation.Source,
         logsObserver: StreamObserver<Service.LogLine>
     ): ManagedChannel {

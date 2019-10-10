@@ -1,4 +1,4 @@
-package pl.dwojciechowski.ui.components
+package pl.dwojciechowski.ui.panel
 
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.ServiceManager
@@ -56,7 +56,7 @@ class LogViewerPanel(private val project: Project, private val type: Service.Log
                     textArea.append("\r\n")
                 }
             }
-            channel = logService.getLogFile(config, type, logsObserver)
+            channel = logService.getLogFile(type, logsObserver)
         } else {
             channel.shutdown()
             textArea.text = ""

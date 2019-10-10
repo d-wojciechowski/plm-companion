@@ -8,7 +8,6 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import pl.dwojciechowski.configuration.PluginConfiguration
-import pl.dwojciechowski.model.CommandConfig
 import pl.dwojciechowski.model.HttpStatusConfig
 import pl.dwojciechowski.model.ServerStatus
 import pl.dwojciechowski.proto.Service
@@ -41,10 +40,10 @@ internal class WindchillWindowPanel(private val project: Project) {
         wncStatusButton.background = null
         wncStatusButton.isOpaque = false
 
-        restartWindchillButton.addActionListener(wrapWithErrorDialog { windchillService.restartWnc(CommandConfig(config)) })
-        stopWindchillButton.addActionListener(wrapWithErrorDialog { windchillService.stopWnc(CommandConfig(config)) })
-        startWindchillButton.addActionListener(wrapWithErrorDialog { windchillService.startWnc(CommandConfig(config)) })
-        xconfManagerButton.addActionListener(wrapWithErrorDialog { windchillService.xconf(CommandConfig(config)) })
+        restartWindchillButton.addActionListener(wrapWithErrorDialog { windchillService.restartWnc() })
+        stopWindchillButton.addActionListener(wrapWithErrorDialog { windchillService.stopWnc() })
+        startWindchillButton.addActionListener(wrapWithErrorDialog { windchillService.startWnc() })
+        xconfManagerButton.addActionListener(wrapWithErrorDialog { windchillService.xconf() })
         configurationButton.addActionListener { PluginSettingsDialog(project).show() }
         wncStatusButton.addActionListener {
             config.scanWindchill = !config.scanWindchill
@@ -62,9 +61,9 @@ internal class WindchillWindowPanel(private val project: Project) {
     private fun wrapWithErrorDialog(action: () -> Service.Response): ActionListener? {
         return ActionListener {
             try {
-                WindchillNotification.createNotification(project,"Started execution of action", PluginIcons.OK)
+                WindchillNotification.createNotification(project, "Started execution of action", PluginIcons.OK)
                 val response = action.invoke()
-                if(response.status == 200) {
+                if (response.status == 200) {
                     WindchillNotification.createNotification(project, "Action executed successfully", PluginIcons.OK)
                 } else {
                     WindchillNotification.createNotification(project, "Action FAILED", PluginIcons.KO)
