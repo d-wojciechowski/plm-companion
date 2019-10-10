@@ -36,7 +36,7 @@ class LogViewerPanel(private val project: Project, private val type: Service.Log
 
     private fun toggleLogViewer(enable: Boolean) {
         if (enable) {
-
+            textArea.text = ""
             val logsObserver = object : StreamObserver<Service.LogLine> {
                 override fun onNext(value: Service.LogLine?) {
                     textArea.append(value?.message)
@@ -62,4 +62,5 @@ class LogViewerPanel(private val project: Project, private val type: Service.Log
             textArea.text = ""
         }
     }
+
 }
