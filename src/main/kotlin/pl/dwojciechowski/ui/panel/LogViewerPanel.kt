@@ -1,5 +1,6 @@
 package pl.dwojciechowski.ui.panel
 
+import com.intellij.icons.AllIcons
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
@@ -7,35 +8,38 @@ import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.ui.SimpleToolWindowPanel
 import io.grpc.ManagedChannel
 import io.grpc.stub.StreamObserver
-import pl.dwojciechowski.configuration.PluginConfiguration
 import pl.dwojciechowski.proto.Service
 import pl.dwojciechowski.service.LogViewerService
-import javax.swing.JScrollPane
+import javax.swing.JButton
+import javax.swing.JPanel
 import javax.swing.JTextArea
+import pl.dwojciechowski.proto.Service.LogFileLocation.Source as SourceEnum
 
-class LogViewerPanel(private val project: Project, private val type: Service.LogFileLocation.Source) :
-    SimpleToolWindowPanel(false, true) {
+class LogViewerPanel(
+    private val project: Project,
+    private val type: SourceEnum
+) : SimpleToolWindowPanel(false, true) {
 
     private val logService: LogViewerService = ServiceManager.getService(project, LogViewerService::class.java)
-    private val config = ServiceManager.getService(project, PluginConfiguration::class.java)
 
-    private var textArea: JTextArea
+    lateinit var panel: JPanel
+
+    private lateinit var textArea: JTextArea
     private lateinit var channel: ManagedChannel
+    private lateinit var button: JButton
+
+    private var status = false
 
     init {
-        autoscrolls = true
-        textArea = JTextArea()
-        textArea.isEditable = false
-
-        this.add(JScrollPane(textArea))
-
-        config.subjectLog
-            .doOnNext { b -> toggleLogViewer(b) }
-            .subscribe()
+        this.add(panel)
+        button.icon = AllIcons.RunConfigurations.TestState.Run
+        button.addActionListener { toggleLogViewer() }
     }
 
-    private fun toggleLogViewer(enable: Boolean) {
-        if (enable) {
+    private fun toggleLogViewer() {
+        status = !status
+        if (status) {
+            button.icon = AllIcons.Actions.Suspend
             textArea.text = ""
             val logsObserver = object : StreamObserver<Service.LogLine> {
                 override fun onNext(value: Service.LogLine?) {
@@ -45,6 +49,8 @@ class LogViewerPanel(private val project: Project, private val type: Service.Log
                 }
 
                 override fun onError(t: Throwable?) {
+                    status = !status
+                    button.icon = AllIcons.RunConfigurations.TestState.Run
                     ApplicationManager.getApplication().invokeLater {
                         Messages.showErrorDialog(project, t?.toString(), "${t?.message}")
                     }
@@ -58,6 +64,7 @@ class LogViewerPanel(private val project: Project, private val type: Service.Log
             }
             channel = logService.getLogFile(type, logsObserver)
         } else {
+            button.icon = AllIcons.RunConfigurations.TestState.Run
             channel.shutdown()
             textArea.text = ""
         }
