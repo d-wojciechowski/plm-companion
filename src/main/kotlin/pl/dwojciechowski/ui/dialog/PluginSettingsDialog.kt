@@ -1,5 +1,9 @@
 package pl.dwojciechowski.ui.panel
 
+import com.intellij.credentialStore.CredentialAttributes
+import com.intellij.credentialStore.Credentials
+import com.intellij.credentialStore.generateServiceName
+import com.intellij.ide.passwordSafe.PasswordSafe
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.ComboBox
@@ -73,6 +77,15 @@ class PluginSettingsDialog(private val project: Project) : DialogWrapper(project
         config.refreshRate = refreshRateSpinner.value as Int
         config.timeout = timeoutSpinner.value as Int
         config.logFileLocation = logFileLocation.text
+
+        val attributes = CredentialAttributes(
+            generateServiceName(
+                "WindchillPluginConfiguration",
+                config.hostname + config.relativePath
+            )
+        )
+        val saveCredentials = Credentials(loginField.text, String(passwordField.password))
+        PasswordSafe.instance[attributes, saveCredentials] = false
     }
 
 
