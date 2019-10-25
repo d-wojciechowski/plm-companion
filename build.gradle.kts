@@ -2,7 +2,7 @@ import com.google.protobuf.gradle.*
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 group = "pl.dwojciechowski"
-version = "0.3.0"
+version = "0.3.2"
 val protobufVersion = "3.9.1"
 val grpcVersion = "1.23.0"
 
@@ -98,6 +98,6 @@ tasks {
     named<org.jetbrains.intellij.tasks.PatchPluginXmlTask>("patchPluginXml") {
         changeNotes(htmlFixer("src/main/resources/META-INF/change-notes.html"))
         pluginDescription(htmlFixer("src/main/resources/META-INF/description.html"))
-        sinceBuild("191")
+        sinceBuild("192")
     }
 }

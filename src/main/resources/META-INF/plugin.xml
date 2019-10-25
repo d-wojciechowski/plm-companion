@@ -1,14 +1,16 @@
 <idea-plugin>
     <id>pl.dominikw.Windchill-Intellij-Plugin</id>
-    <name>Windchill Plugin</name>
+    <name>PLM Companion</name>
     <vendor email="doominikwoojciechowski@gmail.com">Dominik Wojciechowski</vendor>
-    <idea-version since-build="191"/>
+    <idea-version since-build="192"/>
 
     <application-components>
         <component>
             <implementation-class>pl.dwojciechowski.Windchill</implementation-class>
         </component>
     </application-components>
+
+    <depends>com.intellij.modules.platform</depends>
 
     <extensions defaultExtensionNs="com.intellij">
         <toolWindow id="Windchill" anchor="right" factoryClass="pl.dwojciechowski.ui.MainSubWindowFactory" icon="/META-INF/pluginIcon.svg"/>
