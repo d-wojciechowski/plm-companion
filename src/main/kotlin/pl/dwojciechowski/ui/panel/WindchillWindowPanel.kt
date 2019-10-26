@@ -18,7 +18,6 @@ import pl.dwojciechowski.service.HttpService
 import pl.dwojciechowski.service.WncConnectorService
 import pl.dwojciechowski.ui.PluginIcons
 import pl.dwojciechowski.ui.WindchillNotification
-import pl.dwojciechowski.ui.dialog.LoadFromFileDialog
 import javax.swing.JButton
 import javax.swing.JPanel
 
@@ -34,7 +33,6 @@ internal class WindchillWindowPanel(private val project: Project) {
     private lateinit var configurationButton: JButton
     private lateinit var wncStatusButton: JButton
     private lateinit var xconfManagerButton: JButton
-    private lateinit var fileExplorerButton: JButton
 
     private var previousStatus = ServerStatus.DOWN
 
@@ -52,8 +50,6 @@ internal class WindchillWindowPanel(private val project: Project) {
             config.scanWindchill = !config.scanWindchill
             if (config.scanWindchill) scanServer() else wncStatusButton.set(ServerStatus.NOT_SCANNING)
         }
-
-        fileExplorerButton.addActionListener { LoadFromFileDialog(project).show() }
 
         GlobalScope.launch {
             while (true) {

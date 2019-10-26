@@ -3,6 +3,7 @@ package pl.dwojciechowski.ui.panel
 import com.intellij.credentialStore.CredentialAttributes
 import com.intellij.credentialStore.Credentials
 import com.intellij.credentialStore.generateServiceName
+import com.intellij.icons.AllIcons
 import com.intellij.ide.passwordSafe.PasswordSafe
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
@@ -11,6 +12,7 @@ import com.intellij.openapi.ui.DialogWrapper
 import org.picocontainer.Disposable
 import pl.dwojciechowski.configuration.PluginConfiguration
 import pl.dwojciechowski.ui.WindchillNotification
+import pl.dwojciechowski.ui.dialog.RemoteFilePickerDialog
 import java.awt.Dimension
 import java.awt.event.ActionEvent
 import javax.swing.*
@@ -30,6 +32,7 @@ class PluginSettingsDialog(private val project: Project) : DialogWrapper(project
     private lateinit var refreshRateSpinner: JSpinner
     private lateinit var timeoutSpinner: JSpinner
     private lateinit var logFileLocation: JTextField
+    private lateinit var remotePickerButton: JButton
 
     fun createUIComponents() {
         hostnameField = JTextField("enter domain like \" google.com \"", 35)
@@ -45,6 +48,14 @@ class PluginSettingsDialog(private val project: Project) : DialogWrapper(project
         refreshRateSpinner.editor = JSpinner.NumberEditor(refreshRateSpinner, "# ms")
         timeoutSpinner.model = SpinnerNumberModel(5000, 500, Int.MAX_VALUE, 100)
         timeoutSpinner.editor = JSpinner.NumberEditor(timeoutSpinner, "# ms")
+
+        remotePickerButton.icon = AllIcons.General.OpenDisk
+        remotePickerButton.addActionListener {
+            val remoteFilePickerDialog = RemoteFilePickerDialog(project)
+            if(remoteFilePickerDialog.showAndGet()) {
+                logFileLocation.text = remoteFilePickerDialog.chosenItems.first()
+            }
+        }
 
         initFromConfig()
         init()
