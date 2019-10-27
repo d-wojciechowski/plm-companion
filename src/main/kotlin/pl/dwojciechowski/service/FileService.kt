@@ -12,6 +12,6 @@ interface FileService {
         }
     }
 
-    fun getDirContent(path : String): Service.FileResponse
+    fun getDirContent(path: String, fullExpand: Boolean = true): Service.FileResponse
 
 }

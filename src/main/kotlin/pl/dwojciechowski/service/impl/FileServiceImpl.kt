@@ -14,13 +14,14 @@ class FileServiceImpl(project: Project) : FileService {
 
     private val config = ServiceManager.getService(project, PluginConfiguration::class.java)
 
-    override fun getDirContent(path: String): Service.FileResponse {
+    override fun getDirContent(path: String, fullExpand: Boolean): Service.FileResponse {
         val channel = ManagedChannelBuilder.forAddress(config.hostname, 4040)
             .usePlaintext()
             .build()
 
         val pathObj = Service.Path.newBuilder()
             .setName(path)
+            .setFullExpand(fullExpand)
             .build()
 
         return FileServiceGrpc.newBlockingStub(channel)

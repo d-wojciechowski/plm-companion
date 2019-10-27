@@ -9,20 +9,25 @@ import pl.dwojciechowski.service.FileService
 import pl.dwojciechowski.ui.component.FileExplorerCellTreeRenderer
 import pl.dwojciechowski.ui.component.RemoteFileRepresentaton
 import java.awt.event.ActionEvent
+import java.awt.event.MouseAdapter
+import java.awt.event.MouseEvent
 import javax.swing.AbstractAction
 import javax.swing.Action
 import javax.swing.JPanel
 import javax.swing.tree.DefaultMutableTreeNode
 import javax.swing.tree.DefaultTreeModel
+import javax.swing.tree.TreePath
 import javax.swing.tree.TreeSelectionModel
 
 class RemoteFilePickerDialog(
     project: Project,
+    private val startPath: String,
     singleSelect: Boolean = true,
     private val onlyFoldersVisible: Boolean = true
 ) : DialogWrapper(project) {
 
     private val fileService: FileService = ServiceManager.getService(project, FileService::class.java)
+    private val separator: String
 
     private lateinit var rootPane: JPanel
     private lateinit var selectionTree: Tree
@@ -31,16 +36,48 @@ class RemoteFilePickerDialog(
 
     init {
         init()
+        setSelectionModel(singleSelect)
 
-        val dirContent = fileService.getDirContent("")
+        selectionTree.cellRenderer = FileExplorerCellTreeRenderer()
+
+        val dirContent = fileService.getDirContent(startPath, true)
+        separator = dirContent.separator
         val first = dirContent.fileTreeList.first()
         val top = DefaultMutableTreeNode(RemoteFileRepresentaton(first.name, first.isDirectory))
         createNodes(top, first.childFilesList)
         selectionTree.model = DefaultTreeModel(top, false)
-        selectionTree.cellRenderer = FileExplorerCellTreeRenderer()
-        if (singleSelect) {
-            selectionTree.selectionModel.selectionMode = TreeSelectionModel.SINGLE_TREE_SELECTION
+        selectionTree.addMouseListener(expandRemoteFolderListener())
+        selectFromInput()
+    }
+
+    private fun setSelectionModel(singleSelect: Boolean) {
+        selectionTree.selectionModel.selectionMode = if (singleSelect) {
+            TreeSelectionModel.SINGLE_TREE_SELECTION
+        } else {
+            TreeSelectionModel.CONTIGUOUS_TREE_SELECTION
         }
+    }
+
+    private fun selectFromInput() {
+        val nodePath = startPath.split(separator)
+        var contextItem = selectionTree.model.root as DefaultMutableTreeNode
+        for (i in 1 until nodePath.size) {
+            contextItem = contextItem.children().toList()
+                .map { it as DefaultMutableTreeNode }
+                .find {
+                    (it.userObject as RemoteFileRepresentaton).name == nodePath[i]
+                } ?: break
+            selectionTree.expandPath(TreePath(contextItem.path))
+            selectionTree.selectionPath = TreePath(contextItem.path)
+            scrollToSelectedItem(contextItem)
+        }
+    }
+
+    private fun scrollToSelectedItem(node: DefaultMutableTreeNode) {
+        val path = TreePath(node.path)
+        val bounds = selectionTree.getPathBounds(path)
+        bounds?.height = selectionTree.visibleRect.height
+        selectionTree.scrollRectToVisible(bounds)
     }
 
     private fun createNodes(
@@ -68,11 +105,28 @@ class RemoteFilePickerDialog(
             override fun actionPerformed(e: ActionEvent?) {
                 chosenItems.clear()
                 selectionTree.selectionPaths?.forEach {
-                    chosenItems.add(it.path.joinToString("/"))
+                    chosenItems.add(it.path.joinToString(separator))
                 }
-                close(0,true)
+                close(0, true)
             }
         }
+
+    private fun expandRemoteFolderListener() = object : MouseAdapter() {
+        override fun mouseClicked(e: MouseEvent?) {
+            if (e?.clickCount == 2) {
+                val node = selectionTree.lastSelectedPathComponent as DefaultMutableTreeNode
+                val userObject = node.userObject as RemoteFileRepresentaton
+                if (userObject.isDirectory) {
+                    val currentContent = fileService.getDirContent(node.path.joinToString(separator), false)
+                    createNodes(node, currentContent.fileTreeList.first().childFilesList)
+                }
+
+                (selectionTree.model as DefaultTreeModel).reload(node)
+                selectionTree.expandPath(TreePath(node.path))
+            }
+            super.mouseClicked(e)
+        }
+    }
 
     override fun createCenterPanel() = rootPane
 

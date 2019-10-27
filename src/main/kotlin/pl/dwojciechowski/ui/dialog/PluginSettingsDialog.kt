@@ -51,8 +51,8 @@ class PluginSettingsDialog(private val project: Project) : DialogWrapper(project
 
         remotePickerButton.icon = AllIcons.General.OpenDisk
         remotePickerButton.addActionListener {
-            val remoteFilePickerDialog = RemoteFilePickerDialog(project)
-            if(remoteFilePickerDialog.showAndGet()) {
+            val remoteFilePickerDialog = RemoteFilePickerDialog(project, logFileLocation.text)
+            if (remoteFilePickerDialog.showAndGet()) {
                 logFileLocation.text = remoteFilePickerDialog.chosenItems.first()
             }
         }
