@@ -38,14 +38,14 @@ class RemoteFilePickerDialog(
         init()
         setSelectionModel(singleSelect)
 
-        selectionTree.cellRenderer = FileExplorerCellTreeRenderer()
 
         val dirContent = fileService.getDirContent(startPath, true)
         separator = dirContent.separator
-        val first = dirContent.fileTreeList.first()
-        val top = DefaultMutableTreeNode(RemoteFileRepresentaton(first.name, first.isDirectory))
-        createNodes(top, first.childFilesList)
-        selectionTree.model = DefaultTreeModel(top, false)
+        val root = DefaultMutableTreeNode(RemoteFileRepresentaton("root", true))
+        selectionTree.isRootVisible = false
+        createNodes(root, dirContent.fileTreeList)
+        selectionTree.model = DefaultTreeModel(root, false)
+        selectionTree.cellRenderer = FileExplorerCellTreeRenderer()
         selectionTree.addMouseListener(expandRemoteFolderListener())
         selectFromInput()
     }
@@ -117,10 +117,10 @@ class RemoteFilePickerDialog(
                 val node = selectionTree.lastSelectedPathComponent as DefaultMutableTreeNode
                 val userObject = node.userObject as RemoteFileRepresentaton
                 if (userObject.isDirectory) {
-                    val currentContent = fileService.getDirContent(node.path.joinToString(separator), false)
+                    val nodePath = node.path.asList().subList(1,node.path.size)
+                    val currentContent = fileService.getDirContent(nodePath.joinToString(separator), false)
                     createNodes(node, currentContent.fileTreeList.first().childFilesList)
                 }
-
                 (selectionTree.model as DefaultTreeModel).reload(node)
                 selectionTree.expandPath(TreePath(node.path))
             }

@@ -15,7 +15,7 @@ class FileExplorerCellTreeRenderer : DefaultTreeCellRenderer() {
         super.getTreeCellRendererComponent(tree, value, sel, exp, leaf, row, hasFocus)
 
         val node = value as DefaultMutableTreeNode
-        val nodeVal = node.userObject as RemoteFileRepresentaton
+        val nodeVal = node?.userObject as RemoteFileRepresentaton
 
         if (nodeVal.isDirectory) {
             this.leafIcon = AllIcons.Nodes.Package
