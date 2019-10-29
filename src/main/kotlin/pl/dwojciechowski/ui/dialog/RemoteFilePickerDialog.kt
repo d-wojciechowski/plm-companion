@@ -116,7 +116,7 @@ class RemoteFilePickerDialog(
             if (e?.clickCount == 2) {
                 val node = selectionTree.lastSelectedPathComponent as DefaultMutableTreeNode
                 val userObject = node.userObject as RemoteFileRepresentaton
-                if (userObject.isDirectory) {
+                if (userObject.isDirectory && node.childCount == 0) {
                     val nodePath = node.path.asList().subList(1,node.path.size)
                     val currentContent = fileService.getDirContent(nodePath.joinToString(separator), false)
                     createNodes(node, currentContent.fileTreeList.first().childFilesList)
