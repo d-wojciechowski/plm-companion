@@ -38,7 +38,6 @@ class RemoteFilePickerDialog(
         init()
         setSelectionModel(singleSelect)
 
-
         val dirContent = fileService.getDirContent(startPath, true)
         separator = dirContent.separator
         val root = DefaultMutableTreeNode(RemoteFileRepresentation("root", true))
@@ -59,8 +58,8 @@ class RemoteFilePickerDialog(
     }
 
     private fun selectFromInput() {
-        val nodePath = startPath.split(separator)
         var contextItem = selectionTree.model.root as DefaultMutableTreeNode
+        val nodePath = listOf(contextItem.path.first().toString()) + startPath.split(separator)
         for (i in 1 until nodePath.size) {
             contextItem = contextItem.children().toList()
                 .map { it as DefaultMutableTreeNode }
@@ -105,7 +104,7 @@ class RemoteFilePickerDialog(
             override fun actionPerformed(e: ActionEvent?) {
                 chosenItems.clear()
                 selectionTree.selectionPaths?.forEach {
-                    chosenItems.add(it.path.joinToString(separator))
+                    chosenItems.add(it.path.asList().subList(1, it.path.size).joinToString(separator))
                 }
                 close(0, true)
             }
