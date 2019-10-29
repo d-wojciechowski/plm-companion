@@ -15,15 +15,16 @@ class FileExplorerCellTreeRenderer : DefaultTreeCellRenderer() {
         super.getTreeCellRendererComponent(tree, value, sel, exp, leaf, row, hasFocus)
 
         val node = value as DefaultMutableTreeNode
-        val nodeVal = node?.userObject as RemoteFileRepresentaton
+        val nodeVal = node.userObject as RemoteFileRepresentation
 
         if (nodeVal.isDirectory) {
-            this.leafIcon = AllIcons.Nodes.Package
-            this.openIcon = AllIcons.Nodes.Package
-            this.closedIcon = AllIcons.Nodes.Package
+            this.leafIcon = AllIcons.Nodes.UnknownJdk
+            this.openIcon = AllIcons.Actions.Menu_open
+            this.closedIcon = AllIcons.Nodes.Folder
         } else {
             this.leafIcon = AllIcons.FileTypes.Any_type
         }
+        if (nodeVal.empty) icon = AllIcons.Actions.GroupByPackage
 
         return this
     }
