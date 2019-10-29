@@ -120,7 +120,7 @@ class RemoteFilePickerDialog(
                     val nodePath = node.path.asList().subList(1, node.path.size)
                     val currentContent = fileService.getDirContent(nodePath.joinToString(separator), false)
                     createNodes(node, currentContent.fileTreeList.first().childFilesList)
-                    if (currentContent.fileTreeList.first().childFilesList.count { it.isDirectory } == 0) {
+                    if (currentContent.isEmpty()) {
                         userObject.empty = true
                     }
                 }
@@ -128,6 +128,13 @@ class RemoteFilePickerDialog(
                 selectionTree.expandPath(TreePath(node.path))
             }
             super.mouseClicked(e)
+        }
+    }
+
+    private fun Service.FileResponse.isEmpty() : Boolean{
+        return when(onlyFoldersVisible){
+            true -> this.fileTreeList.first().childFilesList.count { it.isDirectory } == 0
+            else -> this.fileTreeList.first().childFilesList.count() == 0
         }
     }
 
