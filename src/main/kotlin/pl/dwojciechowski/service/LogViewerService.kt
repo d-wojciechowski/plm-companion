@@ -19,4 +19,9 @@ interface LogViewerService {
         logsObserver: StreamObserver<Service.LogLine>
     ): ManagedChannel
 
+    fun getCustomLogFile(
+        logFileLocation: String,
+        logsObserver: StreamObserver<Service.LogLine>
+    ): ManagedChannel
+
 }

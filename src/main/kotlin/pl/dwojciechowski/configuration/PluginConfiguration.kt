@@ -1,8 +1,5 @@
 package pl.dwojciechowski.configuration
 
-import com.intellij.credentialStore.CredentialAttributes
-import com.intellij.credentialStore.generateServiceName
-import com.intellij.ide.passwordSafe.PasswordSafe
 import com.intellij.openapi.components.PersistentStateComponent
 import com.intellij.openapi.components.State
 import com.intellij.openapi.components.Storage
@@ -26,22 +23,21 @@ class PluginConfiguration : PersistentStateComponent<PluginConfiguration> {
     var refreshRate: Int = 1000
     var timeout: Int = 5000
 
-    override fun getState(): PluginConfiguration {
-        login = ""
-        password = ""
-
-        return this
-    }
+    override fun getState() = this
 
     override fun loadState(config: PluginConfiguration) {
         XmlSerializerUtil.copyBean(config, this)
 
+        // Disabled due to compatibility issues
+        // TODO test with IJ version newer than 2019.2
+        /*
         val attributes =
             CredentialAttributes(generateServiceName("WindchillPluginConfiguration", hostname + relativePath))
 
         val credentials = PasswordSafe.instance.get(attributes)
         login = credentials?.userName ?: ""
         password = credentials?.password.toString()
+         */
     }
 
 }
