@@ -20,6 +20,8 @@
                         serviceImplementation="pl.dwojciechowski.service.impl.WncConnectorServiceImpl"/>
         <projectService serviceInterface="pl.dwojciechowski.service.LogViewerService"
                         serviceImplementation="pl.dwojciechowski.service.impl.LogViewerServiceImpl"/>
+        <projectService serviceInterface="pl.dwojciechowski.service.FileService"
+                        serviceImplementation="pl.dwojciechowski.service.impl.FileServiceImpl"/>
         <applicationService serviceInterface="pl.dwojciechowski.service.HttpService"
                             serviceImplementation="pl.dwojciechowski.service.impl.HttpServiceImpl"/>
     </extensions>
