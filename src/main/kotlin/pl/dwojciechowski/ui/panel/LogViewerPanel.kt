@@ -50,10 +50,9 @@ class LogViewerPanel(
 
         clearButton.addActionListener { textArea.text = "" }
         clearButton.icon = AllIcons.Actions.GC
+
         if (SourceEnum.CUSTOM == type) {
             settingsJB.icon = AllIcons.General.Settings
-            settingsJB.isEnabled = true
-            settingsJB.isVisible = true
             startRestartButton.isEnabled = false
             settingsJB.addActionListener { LogFileLocationDialog(project, logLocation).show() }
             logLocation.subscribe {
@@ -61,6 +60,8 @@ class LogViewerPanel(
                 customLogFileLocation = it
                 startRestartButton.isEnabled = true
             }
+        } else {
+            settingsJB.isVisible = false
         }
     }
 
