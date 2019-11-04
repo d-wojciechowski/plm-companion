@@ -24,6 +24,8 @@
                         serviceImplementation="pl.dwojciechowski.service.impl.FileServiceImpl"/>
         <applicationService serviceInterface="pl.dwojciechowski.service.HttpService"
                             serviceImplementation="pl.dwojciechowski.service.impl.HttpServiceImpl"/>
+        <projectService serviceInterface="pl.dwojciechowski.service.ActionExecutor"
+                        serviceImplementation="pl.dwojciechowski.service.impl.ActionExecutorImpl"/>
     </extensions>
 
 </idea-plugin>
