@@ -12,7 +12,6 @@ import pl.dwojciechowski.configuration.PluginConfiguration
 import pl.dwojciechowski.proto.Service
 import pl.dwojciechowski.service.ActionExecutor
 import pl.dwojciechowski.service.WncConnectorService
-import java.awt.event.ActionEvent
 import java.util.*
 import javax.swing.*
 import javax.swing.table.DefaultTableModel
@@ -70,16 +69,6 @@ class CustomCommandDialog(
         }
     }
 
-    override fun getOKAction(): Action =
-        object : AbstractAction("OK") {
-            override fun actionPerformed(e: ActionEvent?) {
-                if (executeSelectedCommand()) {
-                    dispose()
-                    close(OK_EXIT_CODE)
-                }
-            }
-        }
-
     private fun executeFromInput(): Boolean {
         return if (commandField.text.isEmpty()) {
             Messages.showMessageDialog(
@@ -115,14 +104,6 @@ class CustomCommandDialog(
         }
     }
 
-    override fun getCancelAction(): Action =
-        object : AbstractAction("Cancel") {
-            override fun actionPerformed(e: ActionEvent?) {
-                dispose()
-                close(CANCEL_EXIT_CODE)
-            }
-        }
-
     override fun dispose() {
         config.commandsHistory = tableModel.dataVector
             .reversed()
@@ -130,8 +111,6 @@ class CustomCommandDialog(
             .toMutableList()
         super.dispose()
     }
-
-    override fun createCenterPanel() = content
 
     private fun buildCommand(command: String, args: String) =
         Service.Command.newBuilder()
@@ -141,5 +120,8 @@ class CustomCommandDialog(
 
 
     private fun String.toRow(): Array<Any>? = split(splitPattern).toArray(arrayOf())
+
+    override fun createCenterPanel() = content
+    override fun createActions(): Array<Action> = arrayOf()
 
 }
