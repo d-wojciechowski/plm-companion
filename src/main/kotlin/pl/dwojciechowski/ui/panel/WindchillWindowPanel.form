@@ -69,7 +69,7 @@
               </grid>
             </constraints>
             <properties>
-              <text value="Custom Action"/>
+              <text value="Custom Command"/>
             </properties>
           </component>
         </children>
