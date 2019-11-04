@@ -33,6 +33,7 @@ class CustomCommandDialog(
     private lateinit var argsField: JTextField
     private lateinit var addButton: JButton
     private lateinit var executeSelectedAction: JButton
+    private lateinit var executeCommandFromInputButton: JButton
     private lateinit var removeSelectionButton: JButton
 
     private lateinit var commandHistory: JBTable
@@ -53,6 +54,9 @@ class CustomCommandDialog(
         init()
         commandHistory.selectionModel.selectionMode = ListSelectionModel.SINGLE_SELECTION
         config.commandsHistory.forEach { tableModel.addRow(it.toRow()) }
+
+        executeCommandFromInputButton.icon = AllIcons.RunConfigurations.TestState.Run
+        executeCommandFromInputButton.addActionListener { executeFromInput() }
 
         executeSelectedAction.icon = AllIcons.RunConfigurations.TestState.Run
         executeSelectedAction.addActionListener { executeSelectedCommand() }
@@ -75,6 +79,22 @@ class CustomCommandDialog(
                 }
             }
         }
+
+    private fun executeFromInput(): Boolean {
+        return if (commandField.text.isEmpty()) {
+            Messages.showMessageDialog(
+                project, "Command field is empty", "No command provided", Messages.getErrorIcon()
+            )
+            false
+        } else {
+            val command = buildCommand(commandField.text, argsField.text)
+            val actionName = "${command.command} ${command.args}"
+            actionExecutor.executeAction(actionName) {
+                windchillService.execCommand(command)
+            }
+            true
+        }
+    }
 
     private fun executeSelectedCommand(): Boolean {
         return if (commandHistory.selectedRow == -1) {
