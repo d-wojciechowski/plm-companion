@@ -69,16 +69,7 @@ class CustomCommandDialog(
     override fun getOKAction(): Action =
         object : AbstractAction("OK") {
             override fun actionPerformed(e: ActionEvent?) {
-                if (commandField.text.isEmpty()) {
-                    if (executeSelectedCommand()) {
-                        dispose()
-                        close(OK_EXIT_CODE)
-                    }
-                } else {
-                    val actionName = "${commandField.text} ${argsField.text}"
-                    actionExecutor.executeAction(actionName) {
-                        windchillService.execCommand(buildCommand())
-                    }
+                if (executeSelectedCommand()) {
                     dispose()
                     close(OK_EXIT_CODE)
                 }
@@ -121,12 +112,6 @@ class CustomCommandDialog(
     }
 
     override fun createCenterPanel() = content
-
-    private fun buildCommand() =
-        Service.Command.newBuilder()
-            .setCommand(commandField.text)
-            .setArgs(argsField.text)
-            .build()
 
     private fun buildCommand(command: String, args: String) =
         Service.Command.newBuilder()
