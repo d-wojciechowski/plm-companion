@@ -1,12 +1,7 @@
 package pl.dwojciechowski.ui.panel
 
-import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.ui.Messages
-import io.grpc.StatusRuntimeException
-import io.reactivex.Flowable
-import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -14,10 +9,11 @@ import pl.dwojciechowski.configuration.PluginConfiguration
 import pl.dwojciechowski.model.HttpStatusConfig
 import pl.dwojciechowski.model.ServerStatus
 import pl.dwojciechowski.proto.Service
+import pl.dwojciechowski.service.ActionExecutor
 import pl.dwojciechowski.service.HttpService
 import pl.dwojciechowski.service.WncConnectorService
-import pl.dwojciechowski.ui.PluginIcons
 import pl.dwojciechowski.ui.WindchillNotification
+import pl.dwojciechowski.ui.dialog.CustomCommandDialog
 import javax.swing.JButton
 import javax.swing.JPanel
 
@@ -25,6 +21,7 @@ internal class WindchillWindowPanel(private val project: Project) {
 
     private val config = ServiceManager.getService(project, PluginConfiguration::class.java)
     private val windchillService = ServiceManager.getService(project, WncConnectorService::class.java)
+    private val actionExecutor = ServiceManager.getService(project, ActionExecutor::class.java)
 
     lateinit var content: JPanel
     private lateinit var restartWindchillButton: JButton
@@ -33,6 +30,7 @@ internal class WindchillWindowPanel(private val project: Project) {
     private lateinit var configurationButton: JButton
     private lateinit var wncStatusButton: JButton
     private lateinit var xconfManagerButton: JButton
+    private lateinit var customActionButton: JButton
 
     private var previousStatus = ServerStatus.DOWN
 
@@ -51,6 +49,8 @@ internal class WindchillWindowPanel(private val project: Project) {
             if (config.scanWindchill) scanServer() else wncStatusButton.set(ServerStatus.NOT_SCANNING)
         }
 
+        customActionButton.addActionListener { CustomCommandDialog(project).show() }
+
         GlobalScope.launch {
             while (true) {
                 if (config.scanWindchill) scanServer() else wncStatusButton.set(ServerStatus.NOT_SCANNING)
@@ -60,51 +60,7 @@ internal class WindchillWindowPanel(private val project: Project) {
     }
 
     private fun JButton.addListener(function: () -> Service.Response) {
-        this.addActionListener { executeAction(function, this) }
-    }
-
-    private fun executeAction(action: () -> Service.Response, button: JButton) {
-        WindchillNotification.createNotification(project, "Started execution of ${button.name}", PluginIcons.OK)
-        button.isEnabled = false
-        Flowable.fromCallable(action)
-            .subscribeOn(Schedulers.newThread())
-            .subscribe(
-                { handle(it) },
-                { showMessageOnUIThread(it, button) },
-                { button.isEnabled = true }
-            )
-    }
-
-    private fun handle(response: Service.Response) {
-        if (response.status == 200) {
-            WindchillNotification.createNotification(
-                project,
-                "Action executed successfully",
-                PluginIcons.OK
-            )
-        } else {
-            WindchillNotification.createNotification(project, "Action FAILED", PluginIcons.KO)
-        }
-    }
-
-    private fun showMessageOnUIThread(error: Throwable, button: JButton) {
-        ApplicationManager.getApplication().invokeLater {
-            if (error is StatusRuntimeException) {
-                Messages.showMessageDialog(
-                    project,
-                    "Could not connect to windchill add-on, at specified host: ${config.hostname}\n${error.message}",
-                    "Connection error", Messages.getErrorIcon()
-                )
-            } else {
-                Messages.showMessageDialog(
-                    project,
-                    error.message,
-                    "Connection error",
-                    Messages.getErrorIcon()
-                )
-            }
-        }
-        button.isEnabled = true
+        this.addActionListener { actionExecutor.executeAction(this, function) }
     }
 
     private fun scanServer() {

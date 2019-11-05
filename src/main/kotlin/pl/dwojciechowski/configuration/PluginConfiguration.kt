@@ -23,6 +23,8 @@ class PluginConfiguration : PersistentStateComponent<PluginConfiguration> {
     var refreshRate: Int = 1000
     var timeout: Int = 5000
 
+    var commandsHistory = mutableListOf<String>()
+
     override fun getState() = this
 
     override fun loadState(config: PluginConfiguration) {
