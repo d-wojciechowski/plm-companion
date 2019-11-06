@@ -17,8 +17,9 @@ import javax.swing.*
 import javax.swing.table.DefaultTableModel
 
 class CustomCommandDialog(
-    private val project: Project
-) : DialogWrapper(project), Disposable {
+    private val project: Project,
+    private val customActionButton: JButton
+) : DialogWrapper(project, false, IdeModalityType.MODELESS), Disposable {
 
     private val config: PluginConfiguration = ServiceManager.getService(project, PluginConfiguration::class.java)
     private val actionExecutor = ServiceManager.getService(project, ActionExecutor::class.java)
@@ -51,6 +52,7 @@ class CustomCommandDialog(
 
     init {
         init()
+        customActionButton.isEnabled = false
         commandHistory.selectionModel.selectionMode = ListSelectionModel.SINGLE_SELECTION
         config.commandsHistory.forEach { tableModel.addRow(it.toRow()) }
 
@@ -109,6 +111,7 @@ class CustomCommandDialog(
             .reversed()
             .map { (it as Vector<*>).joinToString(splitPattern) }
             .toMutableList()
+        customActionButton.isEnabled = true
         super.dispose()
     }
 
