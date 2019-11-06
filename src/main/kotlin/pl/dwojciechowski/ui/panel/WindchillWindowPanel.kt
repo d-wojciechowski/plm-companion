@@ -49,7 +49,11 @@ internal class WindchillWindowPanel(private val project: Project) {
             if (config.scanWindchill) scanServer() else wncStatusButton.set(ServerStatus.NOT_SCANNING)
         }
 
-        customActionButton.addActionListener { CustomCommandDialog(project).show() }
+        customActionButton.addActionListener {
+            customActionButton.isEnabled = false
+            CustomCommandDialog(project).show()
+            customActionButton.isEnabled = true
+        }
 
         GlobalScope.launch {
             while (true) {
