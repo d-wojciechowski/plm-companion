@@ -9,7 +9,6 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.wm.ToolWindow
 import com.intellij.openapi.wm.ToolWindowFactory
 import com.intellij.openapi.wm.impl.ToolWindowImpl
-import com.intellij.openapi.wm.impl.content.BaseLabel
 import com.intellij.ui.content.ContentFactory
 import pl.dwojciechowski.configuration.PluginConfiguration
 import pl.dwojciechowski.service.LogViewerService
@@ -32,32 +31,15 @@ class LogViewerPanelFactory : ToolWindowFactory, DumbAware {
 
         val content = contentFactory.createContent(logPane1, "Method Server", false)
         content.preferredFocusableComponent = logPane1
+        content.isCloseable = false
 
         val content2 = contentFactory.createContent(logPane2, "Background Method Server", false)
-        content.preferredFocusableComponent = logPane2
+        content2.preferredFocusableComponent = logPane2
+        content2.isCloseable = false
 
         toolWindow.contentManager.addContent(content)
         toolWindow.contentManager.addContent(content2)
-        setActionsForLogsWindow(toolWindow, project, contentFactory)
-    }
-
-    private fun setActionsForLogsWindow(
-        toolWindow: ToolWindow,
-        project: Project,
-        contentFactory: ContentFactory
-    ) {
         (toolWindow as ToolWindowImpl).setTabActions(createNewTabAction(project, contentFactory, toolWindow))
-        toolWindow.setTabDoubleClickActions(object : DumbAwareAction("", "", AllIcons.General.Add) {
-            override fun actionPerformed(e: AnActionEvent) {
-                val baseLabel = e.inputEvent.source as BaseLabel
-                if (baseLabel.text.equals("Method Server", true) ||
-                    baseLabel.text.equals("Background Method Server", true)
-                ) {
-                    return
-                }
-                toolWindow.contentManager.removeContent(baseLabel.content, true)
-            }
-        })
     }
 
     private fun createNewTabAction(
@@ -74,10 +56,8 @@ class LogViewerPanelFactory : ToolWindowFactory, DumbAware {
                 }
                 val newContent = contentFactory.createContent(newPanel, newPanel.customLogFileLocation, false)
                 newPanel.parentContent = newContent
-                newContent.isCloseable = true
                 newContent.preferredFocusableComponent = newPanel
                 toolWindow.contentManager.addContent(newContent)
-                toolWindow.contentManager.canCloseContents()
                 toolWindow.contentManager.setSelectedContent(newContent)
             }
         }
