@@ -28,6 +28,7 @@ class RemoteFilePickerDialog(
 
     private val fileService: FileService = ServiceManager.getService(project, FileService::class.java)
     private val separator: String
+    private val os: String
 
     private lateinit var rootPane: JPanel
     private lateinit var selectionTree: Tree
@@ -40,6 +41,7 @@ class RemoteFilePickerDialog(
 
         val dirContent = fileService.getDirContent(startPath, true)
         separator = dirContent.separator
+        os = dirContent.os
         val root = DefaultMutableTreeNode(RemoteFileRepresentation("root", true))
         selectionTree.isRootVisible = false
         createNodes(root, dirContent.fileTreeList)
@@ -59,7 +61,10 @@ class RemoteFilePickerDialog(
 
     private fun selectFromInput() {
         var contextItem = selectionTree.model.root as DefaultMutableTreeNode
-        val nodePath = listOf(contextItem.path.first().toString()) + startPath.split(separator)
+        val nodePath = (listOf(contextItem.path.first().toString()) + startPath.split(separator)).toMutableList()
+        if (os != "windows" && nodePath.size >= 2) {
+            nodePath[1] = "/"
+        }
         for (i in 1 until nodePath.size) {
             contextItem = contextItem.children().toList()
                 .map { it as DefaultMutableTreeNode }
@@ -104,7 +109,12 @@ class RemoteFilePickerDialog(
             override fun actionPerformed(e: ActionEvent?) {
                 chosenItems.clear()
                 selectionTree.selectionPaths?.forEach {
-                    chosenItems.add(it.path.asList().subList(1, it.path.size).joinToString(separator))
+                    val subList = it.path.asList().subList(1, it.path.size)
+                    if (this@RemoteFilePickerDialog.os != "windows") {
+                        chosenItems.add("/" + subList.subList(1, subList.size).joinToString(separator))
+                    } else {
+                        chosenItems.add(subList.joinToString(separator))
+                    }
                 }
                 close(0, true)
             }

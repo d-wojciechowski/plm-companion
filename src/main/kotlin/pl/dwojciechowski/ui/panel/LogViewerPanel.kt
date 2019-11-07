@@ -54,7 +54,7 @@ class LogViewerPanel(
         if (SourceEnum.CUSTOM == type) {
             settingsJB.icon = AllIcons.General.Settings
             startRestartButton.isEnabled = false
-            settingsJB.addActionListener { LogFileLocationDialog(project, logLocation).show() }
+            settingsJB.addActionListener { LogFileLocationDialog(project, logLocation, customLogFileLocation).show() }
             logLocation.subscribe {
                 parentContent?.displayName = it
                 customLogFileLocation = it

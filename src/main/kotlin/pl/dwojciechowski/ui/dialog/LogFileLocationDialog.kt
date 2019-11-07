@@ -10,7 +10,8 @@ import javax.swing.*
 
 class LogFileLocationDialog(
     private val project: Project,
-    private val logLocation: PublishSubject<String>
+    private val logLocation: PublishSubject<String>,
+    initTFValue: String = ""
 ) : DialogWrapper(project), org.picocontainer.Disposable {
 
     lateinit var content: JPanel
@@ -21,6 +22,7 @@ class LogFileLocationDialog(
     init {
         init()
         remotePickerButton.icon = AllIcons.General.OpenDisk
+        logFileLocationTF.text = initTFValue
         remotePickerButton.addActionListener {
             val remoteFilePickerDialog = RemoteFilePickerDialog(project, logFileLocationTF.text, true, false)
             if (remoteFilePickerDialog.showAndGet()) {
