@@ -15,7 +15,7 @@ import javax.swing.JButton
 class ActionExecutorImpl(private val project: Project) : ActionExecutor {
 
     override fun executeAction(actionName: String, action: () -> Service.Response) {
-        WindchillNotification.createNotification(project, "Started execution of $actionName", PluginIcons.OK)
+        WindchillNotification.notify(project, "Started execution of $actionName", PluginIcons.CONFIRMATION)
         Flowable.fromCallable(action)
             .subscribeOn(Schedulers.newThread())
             .subscribe(
@@ -25,7 +25,7 @@ class ActionExecutorImpl(private val project: Project) : ActionExecutor {
     }
 
     override fun executeAction(button: JButton, action: () -> Service.Response) {
-        WindchillNotification.createNotification(project, "Started execution of ${button.name}", PluginIcons.OK)
+        WindchillNotification.notify(project, "Started execution of ${button.name}", PluginIcons.CONFIRMATION)
         button.isEnabled = false
         Flowable.fromCallable(action)
             .subscribeOn(Schedulers.newThread())
@@ -38,13 +38,9 @@ class ActionExecutorImpl(private val project: Project) : ActionExecutor {
 
     private fun handle(response: Service.Response) {
         if (response.status == 200) {
-            WindchillNotification.createNotification(
-                project,
-                "Action executed successfully",
-                PluginIcons.OK
-            )
+            WindchillNotification.notify(project, "Action executed successfully", PluginIcons.CONFIRMATION)
         } else {
-            WindchillNotification.createNotification(project, "Action FAILED", PluginIcons.KO)
+            WindchillNotification.notify(project, "Action FAILED", PluginIcons.ERROR)
         }
     }
 
@@ -55,12 +51,7 @@ class ActionExecutorImpl(private val project: Project) : ActionExecutor {
                     project, error.status.description, "Action execution error", Messages.getErrorIcon()
                 )
             } else {
-                Messages.showMessageDialog(
-                    project,
-                    error.message,
-                    "Connection error",
-                    Messages.getErrorIcon()
-                )
+                Messages.showMessageDialog(project, error.message, "Connection error", Messages.getErrorIcon())
             }
         }
         button?.isEnabled = true
