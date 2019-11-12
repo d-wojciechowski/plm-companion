@@ -1,3 +1,3 @@
 package pl.dwojciechowski
 
-class Windchill()
+class Windchill

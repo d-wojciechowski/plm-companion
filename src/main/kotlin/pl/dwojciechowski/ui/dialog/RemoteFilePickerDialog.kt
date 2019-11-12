@@ -140,8 +140,8 @@ class RemoteFilePickerDialog(
         }
     }
 
-    private fun Service.FileResponse.isEmpty() : Boolean{
-        return when(onlyFoldersVisible){
+    private fun Service.FileResponse.isEmpty(): Boolean {
+        return when (onlyFoldersVisible) {
             true -> this.fileTreeList.first().childFilesList.count { it.isDirectory } == 0
             else -> this.fileTreeList.first().childFilesList.count() == 0
         }

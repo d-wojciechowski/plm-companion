@@ -7,7 +7,7 @@ import com.intellij.openapi.wm.ToolWindowFactory
 import com.intellij.ui.content.ContentFactory
 import pl.dwojciechowski.ui.panel.WindchillWindowPanel
 
-class MainSubWindowFactory() : ToolWindowFactory, DumbAware {
+class MainSubWindowFactory : ToolWindowFactory, DumbAware {
 
     override fun createToolWindowContent(project: Project, toolWindow: ToolWindow) {
         val toolWindowBuilder = WindchillWindowPanel(project)
@@ -17,4 +17,5 @@ class MainSubWindowFactory() : ToolWindowFactory, DumbAware {
         content.preferredFocusableComponent = toolWindowContent
         toolWindow.contentManager.addContent(content)
     }
+
 }

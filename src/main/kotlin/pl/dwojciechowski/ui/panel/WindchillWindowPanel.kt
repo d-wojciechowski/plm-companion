@@ -12,6 +12,7 @@ import pl.dwojciechowski.proto.Service
 import pl.dwojciechowski.service.ActionExecutor
 import pl.dwojciechowski.service.HttpService
 import pl.dwojciechowski.service.WncConnectorService
+import pl.dwojciechowski.ui.PluginIcons
 import pl.dwojciechowski.ui.WindchillNotification
 import pl.dwojciechowski.ui.dialog.CustomCommandDialog
 import javax.swing.JButton
@@ -39,6 +40,7 @@ internal class WindchillWindowPanel(private val project: Project) {
         wncStatusButton.isBorderPainted = false
         wncStatusButton.background = null
         wncStatusButton.isOpaque = false
+
         restartWindchillButton.addListener { windchillService.restartWnc() }
         stopWindchillButton.addListener { windchillService.stopWnc() }
         startWindchillButton.addListener { windchillService.startWnc() }
@@ -67,7 +69,7 @@ internal class WindchillWindowPanel(private val project: Project) {
         val status = HttpService.getInstance().getStatus(HttpStatusConfig(config))
         when (status) {
             previousStatus -> Unit
-            ServerStatus.STARTING -> WindchillNotification.apacheOK(project)
+            ServerStatus.REACHABLE -> WindchillNotification.apacheOK(project)
             ServerStatus.RUNNING -> WindchillNotification.serverOK(project)
             else -> WindchillNotification.serverKO(project)
         }
@@ -76,7 +78,7 @@ internal class WindchillWindowPanel(private val project: Project) {
     }
 
     private fun JButton.set(status: ServerStatus) {
-        this.icon = status.icon
+        this.icon = PluginIcons.scaleToSize(status.icon, 20)
         this.text = status.label
     }
 

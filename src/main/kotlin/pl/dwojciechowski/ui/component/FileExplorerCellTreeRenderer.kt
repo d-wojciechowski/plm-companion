@@ -20,7 +20,7 @@ class FileExplorerCellTreeRenderer : DefaultTreeCellRenderer() {
         this.closedIcon = AllIcons.Nodes.Folder
         this.leafIcon = AllIcons.Nodes.UnknownJdk
 
-        if(!nodeVal.isDirectory) icon = AllIcons.FileTypes.Any_type
+        if (!nodeVal.isDirectory) icon = AllIcons.FileTypes.Any_type
         if (nodeVal.empty) icon = AllIcons.Actions.GroupByPackage
 
         return this
