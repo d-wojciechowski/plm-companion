@@ -3,8 +3,8 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 group = "pl.dwojciechowski"
 version = "0.3.2"
-val protobufVersion = "3.9.1"
-val grpcVersion = "1.23.0"
+val protobufVersion = "3.10.0"
+val grpcVersion = "1.25.0"
 
 buildscript {
     repositories {
@@ -20,7 +20,7 @@ buildscript {
 plugins {
     id("org.jetbrains.intellij") version "0.4.10"
     id("com.google.protobuf") version "0.8.10"
-    kotlin("jvm") version "1.3.50"
+    kotlin("jvm") version "1.3.60"
     java
     idea
 }
@@ -34,8 +34,8 @@ repositories {
 
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.1")
-    implementation("com.github.kittinunf.fuel", "fuel", "2.2.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.2")
+    implementation("com.github.kittinunf.fuel", "fuel", "2.2.1")
 
     compile("com.google.protobuf:protobuf-java:$protobufVersion")
     compile("io.grpc:grpc-stub:$grpcVersion")
@@ -70,7 +70,7 @@ protobuf {
     }
     plugins {
         id("grpc") {
-            artifact = "io.grpc:protoc-gen-grpc-java:1.15.1"
+            artifact = "io.grpc:protoc-gen-grpc-java:1.25.0"
         }
     }
     generateProtoTasks {
