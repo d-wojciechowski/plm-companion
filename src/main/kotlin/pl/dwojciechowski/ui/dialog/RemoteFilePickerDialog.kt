@@ -38,6 +38,7 @@ class RemoteFilePickerDialog(
     init {
         init()
         setSelectionModel(singleSelect)
+        title = "Remote File Picker Dialog"
 
         val dirContent = fileService.getDirContent(startPath, true)
         separator = dirContent.separator
