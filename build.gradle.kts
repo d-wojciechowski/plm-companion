@@ -36,6 +36,7 @@ dependencies {
     implementation(kotlin("stdlib-jdk8"))
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.2")
     implementation("com.github.kittinunf.fuel", "fuel", "2.2.1")
+    implementation("io.reactivex.rxjava3:rxjava:3.0.0-RC5")
 
     compile("com.google.protobuf:protobuf-java:$protobufVersion")
     compile("io.grpc:grpc-stub:$grpcVersion")
@@ -55,7 +56,7 @@ sourceSets {
 }
 
 intellij {
-    version = "2019.2"
+    version = "2019.3"
     updateSinceUntilBuild = true
     pluginName = "Windchill-Plugin"
 }

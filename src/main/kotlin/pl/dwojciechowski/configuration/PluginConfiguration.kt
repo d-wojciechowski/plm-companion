@@ -29,17 +29,6 @@ class PluginConfiguration : PersistentStateComponent<PluginConfiguration> {
 
     override fun loadState(config: PluginConfiguration) {
         XmlSerializerUtil.copyBean(config, this)
-
-        // Disabled due to compatibility issues
-        // TODO test with IJ version newer than 2019.2
-        /*
-        val attributes =
-            CredentialAttributes(generateServiceName("WindchillPluginConfiguration", hostname + relativePath))
-
-        val credentials = PasswordSafe.instance.get(attributes)
-        login = credentials?.userName ?: ""
-        password = credentials?.password.toString()
-         */
     }
 
 }
