@@ -4,7 +4,7 @@ import com.intellij.icons.AllIcons
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.ui.Messages
-import io.reactivex.subjects.PublishSubject
+import io.reactivex.rxjava3.subjects.PublishSubject
 import java.awt.event.ActionEvent
 import javax.swing.*
 
@@ -21,6 +21,8 @@ class LogFileLocationDialog(
 
     init {
         init()
+        title = "Log File Location"
+
         remotePickerButton.icon = AllIcons.General.OpenDisk
         logFileLocationTF.text = initTFValue
         remotePickerButton.addActionListener {

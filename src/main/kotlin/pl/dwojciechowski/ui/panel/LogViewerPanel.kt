@@ -9,7 +9,7 @@ import com.intellij.openapi.ui.SimpleToolWindowPanel
 import com.intellij.ui.content.Content
 import io.grpc.ManagedChannel
 import io.grpc.stub.StreamObserver
-import io.reactivex.subjects.PublishSubject
+import io.reactivex.rxjava3.subjects.PublishSubject
 import pl.dwojciechowski.proto.Service
 import pl.dwojciechowski.service.LogViewerService
 import pl.dwojciechowski.ui.dialog.LogFileLocationDialog

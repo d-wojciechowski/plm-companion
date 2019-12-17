@@ -4,8 +4,8 @@ import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.Messages
 import io.grpc.StatusRuntimeException
-import io.reactivex.Flowable
-import io.reactivex.schedulers.Schedulers
+import io.reactivex.rxjava3.core.Flowable
+import io.reactivex.rxjava3.schedulers.Schedulers
 import pl.dwojciechowski.proto.Service
 import pl.dwojciechowski.service.ActionExecutor
 import pl.dwojciechowski.ui.PluginIcons
