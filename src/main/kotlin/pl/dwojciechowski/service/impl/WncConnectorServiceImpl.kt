@@ -10,7 +10,7 @@ import pl.dwojciechowski.proto.Service
 import pl.dwojciechowski.service.WncConnectorService
 import java.util.concurrent.TimeUnit
 
-class WncConnectorServiceImpl(private val project: Project) : WncConnectorService {
+class WncConnectorServiceImpl(project: Project) : WncConnectorService {
 
     private val config = ServiceManager.getService(project, PluginConfiguration::class.java)
 
@@ -46,7 +46,7 @@ class WncConnectorServiceImpl(private val project: Project) : WncConnectorServic
         )
     }
 
-    private fun execCommand(command: Service.Command): Service.Response {
+    override fun execCommand(command: Service.Command): Service.Response {
         val channel = ManagedChannelBuilder.forAddress(config.hostname, 4040)
             .usePlaintext()
             .build()

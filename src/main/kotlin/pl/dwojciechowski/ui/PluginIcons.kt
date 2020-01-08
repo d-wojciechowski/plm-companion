@@ -1,11 +1,19 @@
 package pl.dwojciechowski.ui
 
-import com.intellij.openapi.util.IconLoader
+import com.intellij.icons.AllIcons
+import com.intellij.util.IconUtil
+import javax.swing.Icon
 
 object PluginIcons {
 
-    val OK = IconLoader.getIcon("/icons/OK.svg")
-    val LOAD = IconLoader.getIcon("/icons/LOAD.svg")
-    val KO = IconLoader.getIcon("/icons/KO.svg")
+    val CONFIRMATION = AllIcons.Actions.Commit
+    val RUNNING = AllIcons.RunConfigurations.TestState.Run
+    val ERROR = AllIcons.General.BalloonError
+    val WARNING = AllIcons.General.BalloonWarning
+
+    fun scaleToSize(icon: Icon, targetSize: Int): Icon {
+        val iconHeight = icon.iconHeight
+        return IconUtil.toSize(IconUtil.scale(icon, (targetSize / iconHeight.toDouble())), targetSize, targetSize)
+    }
 
 }

@@ -2,25 +2,14 @@ import com.google.protobuf.gradle.*
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 group = "pl.dwojciechowski"
-version = "0.3.2.1"
-val protobufVersion = "3.9.1"
-val grpcVersion = "1.23.0"
-
-buildscript {
-    repositories {
-        mavenCentral()
-        maven("https://oss.sonatype.org/content/repositories/snapshots/")
-        maven("https://dl.bintray.com/jetbrains/intellij-plugin-service")
-    }
-    dependencies {
-        classpath("org.jetbrains.intellij.plugins:gradle-intellij-plugin:0.5.0-SNAPSHOT")
-    }
-}
+version = "0.4.0"
+val protobufVersion = "3.11.1"
+val grpcVersion = "1.26.0"
 
 plugins {
-    id("org.jetbrains.intellij") version "0.4.10"
-    id("com.google.protobuf") version "0.8.10"
-    kotlin("jvm") version "1.3.50"
+    id("org.jetbrains.intellij") version "0.4.15"
+    id("com.google.protobuf") version "0.8.11"
+    kotlin("jvm") version "1.3.61"
     java
     idea
 }
@@ -34,9 +23,9 @@ repositories {
 
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.1")
-    implementation("com.github.kittinunf.fuel", "fuel", "2.2.0")
-    implementation("io.reactivex.rxjava3:rxjava:3.0.0-RC5")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.3")
+    implementation("com.github.kittinunf.fuel", "fuel", "2.2.1")
+    implementation("io.reactivex.rxjava3:rxjava:3.0.0-RC7")
 
     compile("com.google.protobuf:protobuf-java:$protobufVersion")
     compile("io.grpc:grpc-stub:$grpcVersion")
@@ -58,7 +47,7 @@ sourceSets {
 intellij {
     version = "2019.3"
     updateSinceUntilBuild = true
-    pluginName = "Windchill-Plugin"
+    pluginName = "PLM Companion"
 }
 
 tasks.withType<KotlinCompile> {
@@ -71,7 +60,7 @@ protobuf {
     }
     plugins {
         id("grpc") {
-            artifact = "io.grpc:protoc-gen-grpc-java:1.15.1"
+            artifact = "io.grpc:protoc-gen-grpc-java:$grpcVersion"
         }
     }
     generateProtoTasks {

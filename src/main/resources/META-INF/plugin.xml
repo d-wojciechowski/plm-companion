@@ -7,14 +7,21 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <toolWindow id="Windchill" anchor="right" factoryClass="pl.dwojciechowski.ui.MainSubWindowFactory" icon="/META-INF/pluginIcon.svg"/>
-        <toolWindow id="Windchill Log Viewer" anchor="bottom" factoryClass="pl.dwojciechowski.ui.LogViewerPanelFactory" icon="/META-INF/pluginIcon.svg"/>
+        <toolWindow id="Windchill Log Viewer" anchor="bottom"
+                    factoryClass="pl.dwojciechowski.ui.LogViewerPanelFactory" icon="/META-INF/pluginIcon.svg"
+                    canCloseContents="true"
+        />
         <projectService serviceImplementation="pl.dwojciechowski.configuration.PluginConfiguration"/>
         <projectService serviceInterface="pl.dwojciechowski.service.WncConnectorService"
                         serviceImplementation="pl.dwojciechowski.service.impl.WncConnectorServiceImpl"/>
         <projectService serviceInterface="pl.dwojciechowski.service.LogViewerService"
                         serviceImplementation="pl.dwojciechowski.service.impl.LogViewerServiceImpl"/>
+        <projectService serviceInterface="pl.dwojciechowski.service.FileService"
+                        serviceImplementation="pl.dwojciechowski.service.impl.FileServiceImpl"/>
         <applicationService serviceInterface="pl.dwojciechowski.service.HttpService"
                             serviceImplementation="pl.dwojciechowski.service.impl.HttpServiceImpl"/>
+        <projectService serviceInterface="pl.dwojciechowski.service.ActionExecutor"
+                        serviceImplementation="pl.dwojciechowski.service.impl.ActionExecutorImpl"/>
     </extensions>
 
 </idea-plugin>

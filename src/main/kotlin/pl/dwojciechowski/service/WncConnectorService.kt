@@ -16,5 +16,6 @@ interface WncConnectorService {
     fun startWnc(): Service.Response
     fun restartWnc(): Service.Response
     fun xconf(): Service.Response
+    fun execCommand(command: Service.Command): Service.Response
 
 }

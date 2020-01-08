@@ -13,25 +13,26 @@ internal object WindchillNotification {
     )
 
     fun serverOK(project: Project) {
-        createNotification(project,"Windchill is OK!", PluginIcons.OK)
+        notify(project, "Windchill is OK!", PluginIcons.RUNNING)
     }
 
     fun serverKO(project: Project) {
-        createNotification(project,"Windchill is DOWN!", PluginIcons.KO)
+        notify(project, "Windchill is DOWN!", PluginIcons.ERROR)
     }
 
     fun apacheOK(project: Project) {
-        createNotification(project,"Apache is OK, Windchill is DOWN!", PluginIcons.LOAD)
+        notify(project, "Apache is OK, Windchill is DOWN!", PluginIcons.WARNING)
     }
 
     fun settingsSaved(project: Project) {
-        createNotification(project,"Settings Saved", PluginIcons.OK)
+        notify(project, "Settings Saved", PluginIcons.CONFIRMATION)
     }
 
-    fun createNotification(project: Project, text: String, icon: Icon) {
+    fun notify(project: Project, text: String, icon: Icon) {
         GROUP.createNotification(text, NotificationType.INFORMATION)
             .setImportant(true)
-            .setIcon(icon)
+            .setIcon(PluginIcons.scaleToSize(icon, 18))
             .notify(project)
     }
+
 }

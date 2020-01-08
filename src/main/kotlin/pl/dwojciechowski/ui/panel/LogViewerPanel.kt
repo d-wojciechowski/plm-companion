@@ -6,10 +6,13 @@ import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.ui.SimpleToolWindowPanel
+import com.intellij.ui.content.Content
 import io.grpc.ManagedChannel
 import io.grpc.stub.StreamObserver
+import io.reactivex.rxjava3.subjects.PublishSubject
 import pl.dwojciechowski.proto.Service
 import pl.dwojciechowski.service.LogViewerService
+import pl.dwojciechowski.ui.dialog.LogFileLocationDialog
 import javax.swing.JButton
 import javax.swing.JPanel
 import javax.swing.JTextArea
@@ -29,8 +32,12 @@ class LogViewerPanel(
     private lateinit var startRestartButton: JButton
     private lateinit var stopButton: JButton
     private lateinit var clearButton: JButton
+    private lateinit var settingsJB: JButton
+    var customLogFileLocation = ""
+    var parentContent: Content? = null
 
     private var status = false
+    var logLocation = PublishSubject.create<String>()
 
     init {
         this.add(panel)
@@ -43,6 +50,19 @@ class LogViewerPanel(
 
         clearButton.addActionListener { textArea.text = "" }
         clearButton.icon = AllIcons.Actions.GC
+
+        if (SourceEnum.CUSTOM == type) {
+            settingsJB.icon = AllIcons.General.Settings
+            startRestartButton.isEnabled = false
+            settingsJB.addActionListener { LogFileLocationDialog(project, logLocation, customLogFileLocation).show() }
+            logLocation.subscribe {
+                parentContent?.displayName = it
+                customLogFileLocation = it
+                startRestartButton.isEnabled = true
+            }
+        } else {
+            settingsJB.isVisible = false
+        }
     }
 
     private fun startRestart() {
@@ -52,7 +72,11 @@ class LogViewerPanel(
         stopButton.isEnabled = true
 
         textArea.text = ""
-        channel = logService.getLogFile(type, logsObserver)
+        channel = if (SourceEnum.CUSTOM == type) {
+            logService.getCustomLogFile(customLogFileLocation, logsObserver)
+        } else {
+            logService.getLogFile(type, logsObserver)
+        }
     }
 
     private fun stopLogViewer() {

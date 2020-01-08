@@ -1,13 +1,18 @@
 package pl.dwojciechowski.ui
 
+import com.intellij.icons.AllIcons
+import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.DumbAware
+import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.wm.ToolWindow
 import com.intellij.openapi.wm.ToolWindowFactory
+import com.intellij.openapi.wm.impl.ToolWindowImpl
 import com.intellij.ui.content.ContentFactory
 import pl.dwojciechowski.configuration.PluginConfiguration
 import pl.dwojciechowski.service.LogViewerService
+import pl.dwojciechowski.ui.dialog.LogFileLocationDialog
 import pl.dwojciechowski.ui.panel.LogViewerPanel
 import pl.dwojciechowski.proto.Service.LogFileLocation.Source as SourceEnum
 
@@ -26,12 +31,36 @@ class LogViewerPanelFactory : ToolWindowFactory, DumbAware {
 
         val content = contentFactory.createContent(logPane1, "Method Server", false)
         content.preferredFocusableComponent = logPane1
+        content.isCloseable = false
 
         val content2 = contentFactory.createContent(logPane2, "Background Method Server", false)
-        content.preferredFocusableComponent = logPane2
+        content2.preferredFocusableComponent = logPane2
+        content2.isCloseable = false
 
         toolWindow.contentManager.addContent(content)
         toolWindow.contentManager.addContent(content2)
+        (toolWindow as ToolWindowImpl).setTabActions(createNewTabAction(project, contentFactory, toolWindow))
+    }
+
+    private fun createNewTabAction(
+        project: Project,
+        contentFactory: ContentFactory,
+        toolWindow: ToolWindowImpl
+    ): DumbAwareAction {
+        return object :
+            DumbAwareAction("New Window", "Create new log window", AllIcons.General.Add) {
+            override fun actionPerformed(e: AnActionEvent) {
+                val newPanel = LogViewerPanel(project, SourceEnum.CUSTOM)
+                if (!LogFileLocationDialog(project, newPanel.logLocation).showAndGet()) {
+                    return
+                }
+                val newContent = contentFactory.createContent(newPanel, newPanel.customLogFileLocation, false)
+                newPanel.parentContent = newContent
+                newContent.preferredFocusableComponent = newPanel
+                toolWindow.contentManager.addContent(newContent)
+                toolWindow.contentManager.setSelectedContent(newContent)
+            }
+        }
     }
 
 }
