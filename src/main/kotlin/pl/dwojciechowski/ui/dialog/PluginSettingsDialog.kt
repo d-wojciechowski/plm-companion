@@ -40,6 +40,7 @@ class PluginSettingsDialog(private val project: Project) : DialogWrapper(project
     }
 
     init {
+        title = "PLM Companion Configuration"
         refreshRateSpinner.model = SpinnerNumberModel(1000, 500, Int.MAX_VALUE, 100)
         refreshRateSpinner.editor = JSpinner.NumberEditor(refreshRateSpinner, "# ms")
         timeoutSpinner.model = SpinnerNumberModel(5000, 500, Int.MAX_VALUE, 100)

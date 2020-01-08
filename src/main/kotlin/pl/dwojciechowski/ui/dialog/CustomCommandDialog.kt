@@ -52,6 +52,7 @@ class CustomCommandDialog(
 
     init {
         init()
+        title = "Custom Command Execution"
         customActionButton.isEnabled = false
         commandHistory.selectionModel.selectionMode = ListSelectionModel.SINGLE_SELECTION
         config.commandsHistory.forEach { tableModel.addRow(it.toRow()) }
