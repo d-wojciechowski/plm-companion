@@ -3,11 +3,12 @@ package pl.dwojciechowski.ui.component
 import pl.dwojciechowski.proto.commands.Command
 
 data class CommandRepresenation(
-    val name: String,
-    val command: String
+    var name: String,
+    var command: String
 ) {
     override fun toString(): String {
-        return if (name.isNotEmpty()) name else command
+//        return if (name.isNotEmpty()) name else command
+        return command
     }
 
     fun getCommand(): Command {
