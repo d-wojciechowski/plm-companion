@@ -2,9 +2,9 @@ package pl.dwojciechowski.service
 
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
-import io.grpc.ManagedChannel
-import io.grpc.stub.StreamObserver
-import pl.dwojciechowski.proto.Service
+import pl.dwojciechowski.proto.files.LogFileLocation
+import pl.dwojciechowski.proto.files.LogLine
+import reactor.core.Disposable
 
 interface LogViewerService {
 
@@ -15,13 +15,13 @@ interface LogViewerService {
     }
 
     fun getLogFile(
-        source: Service.LogFileLocation.Source,
-        logsObserver: StreamObserver<Service.LogLine>
-    ): ManagedChannel
+        source: LogFileLocation.Source,
+        logsObserver: (LogLine) -> Unit
+    ): Disposable
 
     fun getCustomLogFile(
         logFileLocation: String,
-        logsObserver: StreamObserver<Service.LogLine>
-    ): ManagedChannel
+        logsObserver: (LogLine) -> Unit
+    ): Disposable
 
 }

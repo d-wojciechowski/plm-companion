@@ -14,7 +14,7 @@ import pl.dwojciechowski.configuration.PluginConfiguration
 import pl.dwojciechowski.service.LogViewerService
 import pl.dwojciechowski.ui.dialog.LogFileLocationDialog
 import pl.dwojciechowski.ui.panel.LogViewerPanel
-import pl.dwojciechowski.proto.Service.LogFileLocation.Source as SourceEnum
+import pl.dwojciechowski.proto.files.LogFileLocation.Source as SourceEnum
 
 class LogViewerPanelFactory : ToolWindowFactory, DumbAware {
 

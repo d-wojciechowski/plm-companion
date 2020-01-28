@@ -6,11 +6,11 @@ import com.intellij.openapi.components.Storage
 import com.intellij.openapi.components.StoragePathMacros
 import com.intellij.util.xmlb.XmlSerializerUtil
 
-@State(name = "WindchillPluginConfiguration", storages = [Storage(value = StoragePathMacros.WORKSPACE_FILE)])
+@State(name = "PLMCompanionConfiguration", storages = [Storage(value = StoragePathMacros.WORKSPACE_FILE)])
 class PluginConfiguration : PersistentStateComponent<PluginConfiguration> {
 
     var login: String = ""
-    var password: String = ""
+    var passwd: String = ""
 
     var hostname: String = ""
     var relativePath: String = ""

@@ -1,61 +1,71 @@
 package pl.dwojciechowski.service.impl
 
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
-import io.grpc.Deadline
-import io.grpc.ManagedChannelBuilder
+import com.intellij.openapi.ui.Messages
+import io.rsocket.RSocketFactory
+import io.rsocket.transport.netty.client.TcpClientTransport
 import pl.dwojciechowski.configuration.PluginConfiguration
-import pl.dwojciechowski.proto.CommandServiceGrpc
-import pl.dwojciechowski.proto.Service
+import pl.dwojciechowski.proto.commands.Command
+import pl.dwojciechowski.proto.commands.CommandServiceClient
+import pl.dwojciechowski.proto.commands.Response
 import pl.dwojciechowski.service.WncConnectorService
-import java.util.concurrent.TimeUnit
 
-class WncConnectorServiceImpl(project: Project) : WncConnectorService {
+class WncConnectorServiceImpl(private val project: Project) : WncConnectorService {
 
     private val config = ServiceManager.getService(project, PluginConfiguration::class.java)
 
-    override fun restartWnc(): Service.Response {
+    override fun restartWnc(): Response {
         val response = stopWnc()
         return if (response.status == 200) startWnc() else response
     }
 
-    override fun stopWnc(): Service.Response {
+    override fun stopWnc(): Response {
         return execCommand(
-            Service.Command.newBuilder()
+            Command.newBuilder()
                 .setCommand("windchill")
                 .setArgs("stop")
                 .build()
         )
     }
 
-    override fun startWnc(): Service.Response {
+    override fun startWnc(): Response {
         return execCommand(
-            Service.Command.newBuilder()
+            Command.newBuilder()
                 .setCommand("windchill")
                 .setArgs("start")
                 .build()
         )
     }
 
-    override fun xconf(): Service.Response {
+    override fun xconf(): Response {
         return execCommand(
-            Service.Command.newBuilder()
+            Command.newBuilder()
                 .setCommand("xconfmanager")
                 .setArgs("-p")
                 .build()
         )
     }
 
-    override fun execCommand(command: Service.Command): Service.Response {
-        val channel = ManagedChannelBuilder.forAddress(config.hostname, 4040)
-            .usePlaintext()
-            .build()
-
-        val stub = CommandServiceGrpc.newBlockingStub(channel)
-            .withDeadline(Deadline.after(config.timeout.toLong(), TimeUnit.SECONDS))
-        val response = stub.execute(command)
-        channel.shutdown()
-        return response
+    override fun execCommand(command: Command): Response {
+        try {
+            val rSocket = RSocketFactory.connect()
+                .transport(TcpClientTransport.create(config.hostname, 4040))
+                .start()
+                .block()
+            val response = CommandServiceClient(rSocket)
+                .execute(command)
+                .block()
+            rSocket?.dispose()
+            return response ?: throw Exception("Could not get response with result of command")
+        } catch (e: Exception) {
+            ApplicationManager.getApplication().invokeLater {
+                Messages.showErrorDialog(project, e.toString(), e.message ?: "")
+            }
+        }
+        return Response.newBuilder().setStatus(500).build()
     }
+
 
 }
