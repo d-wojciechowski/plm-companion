@@ -7,16 +7,14 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.ui.SimpleToolWindowPanel
 import com.intellij.ui.content.Content
-import io.grpc.ManagedChannel
-import io.grpc.stub.StreamObserver
 import io.reactivex.rxjava3.subjects.PublishSubject
-import pl.dwojciechowski.proto.Service
 import pl.dwojciechowski.service.LogViewerService
 import pl.dwojciechowski.ui.dialog.LogFileLocationDialog
+import reactor.core.Disposable
 import javax.swing.JButton
 import javax.swing.JPanel
 import javax.swing.JTextArea
-import pl.dwojciechowski.proto.Service.LogFileLocation.Source as SourceEnum
+import pl.dwojciechowski.proto.files.LogFileLocation.Source as SourceEnum
 
 class LogViewerPanel(
     private val project: Project,
@@ -28,7 +26,7 @@ class LogViewerPanel(
     lateinit var panel: JPanel
 
     private lateinit var textArea: JTextArea
-    private lateinit var channel: ManagedChannel
+    private lateinit var channel: Disposable
     private lateinit var startRestartButton: JButton
     private lateinit var stopButton: JButton
     private lateinit var clearButton: JButton
@@ -72,40 +70,29 @@ class LogViewerPanel(
         stopButton.isEnabled = true
 
         textArea.text = ""
-        channel = if (SourceEnum.CUSTOM == type) {
-            logService.getCustomLogFile(customLogFileLocation, logsObserver)
+        if (SourceEnum.CUSTOM == type) {
+            channel = logService.getCustomLogFile(customLogFileLocation) {
+                textArea.append(it.message + "\n")
+                textArea.caretPosition = textArea.document.length
+            }
         } else {
-            logService.getLogFile(type, logsObserver)
+            channel = logService.getLogFile(type) {
+                textArea.append(it.message + "\n")
+                textArea.caretPosition = textArea.document.length
+            }
         }
     }
 
     private fun stopLogViewer() {
-        status = false
-        startRestartButton.icon = AllIcons.RunConfigurations.TestState.Run
-        stopButton.isEnabled = false
-        channel.shutdown()
-    }
-
-
-    private val logsObserver = object : StreamObserver<Service.LogLine> {
-        override fun onNext(value: Service.LogLine?) {
-            textArea.append(value?.message)
-            textArea.append("\r\n")
-            textArea.caretPosition = textArea.document.length
-        }
-
-        override fun onError(t: Throwable?) {
-            stopLogViewer()
+        try {
+            status = false
+            startRestartButton.icon = AllIcons.RunConfigurations.TestState.Run
+            stopButton.isEnabled = false
+            channel.dispose()
+        } catch (t: Throwable) {
             ApplicationManager.getApplication().invokeLater {
-                Messages.showErrorDialog(project, t?.toString(), "${t?.message}")
+                Messages.showErrorDialog(project, t.toString(), "${t.message}")
             }
         }
-
-        override fun onCompleted() {
-            textArea.append("\r\r")
-            textArea.append("DISCONNECTED!")
-            textArea.append("\r\n")
-        }
     }
-
 }

@@ -4,7 +4,8 @@ import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.ui.treeStructure.Tree
-import pl.dwojciechowski.proto.Service
+import pl.dwojciechowski.proto.files.FileMeta
+import pl.dwojciechowski.proto.files.FileResponse
 import pl.dwojciechowski.service.FileService
 import pl.dwojciechowski.ui.component.FileExplorerCellTreeRenderer
 import pl.dwojciechowski.ui.component.RemoteFileRepresentation
@@ -87,9 +88,9 @@ class RemoteFilePickerDialog(
 
     private fun createNodes(
         top: DefaultMutableTreeNode,
-        fileList: MutableList<Service.FileMeta>
+        fileList: MutableList<FileMeta>
     ) {
-        val comparator = compareByDescending<Service.FileMeta> { it.isDirectory }.thenBy { it.name }
+        val comparator = compareByDescending<FileMeta> { it.isDirectory }.thenBy { it.name }
 
         fileList.filter {
             !(onlyFoldersVisible && !it.isDirectory)
@@ -141,7 +142,7 @@ class RemoteFilePickerDialog(
         }
     }
 
-    private fun Service.FileResponse.isEmpty(): Boolean {
+    private fun FileResponse.isEmpty(): Boolean {
         return when (onlyFoldersVisible) {
             true -> this.fileTreeList.first().childFilesList.count { it.isDirectory } == 0
             else -> this.fileTreeList.first().childFilesList.count() == 0

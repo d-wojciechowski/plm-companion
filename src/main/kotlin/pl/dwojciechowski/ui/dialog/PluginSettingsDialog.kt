@@ -7,7 +7,7 @@ import com.intellij.openapi.ui.ComboBox
 import com.intellij.openapi.ui.DialogWrapper
 import org.picocontainer.Disposable
 import pl.dwojciechowski.configuration.PluginConfiguration
-import pl.dwojciechowski.ui.WindchillNotification
+import pl.dwojciechowski.ui.PLMPluginNotification
 import pl.dwojciechowski.ui.dialog.RemoteFilePickerDialog
 import java.awt.Dimension
 import java.awt.event.ActionEvent
@@ -68,7 +68,7 @@ class PluginSettingsDialog(private val project: Project) : DialogWrapper(project
         portSpinner.value = config.port
 
         loginField.text = config.login
-        passwordField.text = config.password
+        passwordField.text = config.passwd
         refreshRateSpinner.value = config.refreshRate
         timeoutSpinner.value = config.timeout
         logFileLocation.text = config.logFileLocation
@@ -81,23 +81,11 @@ class PluginSettingsDialog(private val project: Project) : DialogWrapper(project
         config.port = portSpinner.value as Int
 
         config.login = loginField.text
-        config.password = String(passwordField.password)
+        config.passwd = String(passwordField.password)
         config.refreshRate = refreshRateSpinner.value as Int
         config.timeout = timeoutSpinner.value as Int
         config.logFileLocation = logFileLocation.text
 
-        // Disabled due to compatibility issues
-        // TODO test with IJ version newer than 2019.2
-        /*
-        val attributes = CredentialAttributes(
-            generateServiceName(
-                "WindchillPluginConfiguration",
-                config.hostname + config.relativePath
-            )
-        )
-        val saveCredentials = Credentials(loginField.text, String(passwordField.password))
-        PasswordSafe.instance[attributes, saveCredentials] = false
-*/
     }
 
 
@@ -105,7 +93,7 @@ class PluginSettingsDialog(private val project: Project) : DialogWrapper(project
         object : AbstractAction("OK") {
             override fun actionPerformed(e: ActionEvent?) {
                 saveConfig()
-                WindchillNotification.settingsSaved(project)
+                PLMPluginNotification.settingsSaved(project)
                 dispose()
             }
         }

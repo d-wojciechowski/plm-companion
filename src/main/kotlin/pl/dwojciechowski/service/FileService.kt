@@ -2,7 +2,7 @@ package pl.dwojciechowski.service
 
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
-import pl.dwojciechowski.proto.Service
+import pl.dwojciechowski.proto.files.FileResponse
 
 interface FileService {
 
@@ -12,6 +12,6 @@ interface FileService {
         }
     }
 
-    fun getDirContent(path: String, fullExpand: Boolean = true): Service.FileResponse
+    fun getDirContent(path: String, fullExpand: Boolean = true): FileResponse
 
 }

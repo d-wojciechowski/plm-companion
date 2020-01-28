@@ -5,12 +5,12 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.wm.ToolWindow
 import com.intellij.openapi.wm.ToolWindowFactory
 import com.intellij.ui.content.ContentFactory
-import pl.dwojciechowski.ui.panel.WindchillWindowPanel
+import pl.dwojciechowski.ui.panel.PLMCompanionPanel
 
 class MainSubWindowFactory : ToolWindowFactory, DumbAware {
 
     override fun createToolWindowContent(project: Project, toolWindow: ToolWindow) {
-        val toolWindowBuilder = WindchillWindowPanel(project)
+        val toolWindowBuilder = PLMCompanionPanel(project)
         val contentFactory = ContentFactory.SERVICE.getInstance()
         val toolWindowContent = toolWindowBuilder.content
         val content = contentFactory.createContent(toolWindowContent, "", false)

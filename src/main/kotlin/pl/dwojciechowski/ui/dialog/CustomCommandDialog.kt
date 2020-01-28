@@ -9,7 +9,7 @@ import com.intellij.ui.table.JBTable
 import com.intellij.util.containers.toArray
 import org.picocontainer.Disposable
 import pl.dwojciechowski.configuration.PluginConfiguration
-import pl.dwojciechowski.proto.Service
+import pl.dwojciechowski.proto.commands.Command
 import pl.dwojciechowski.service.ActionExecutor
 import pl.dwojciechowski.service.WncConnectorService
 import java.util.*
@@ -29,8 +29,8 @@ class CustomCommandDialog(
 
     lateinit var content: JPanel
 
+    private lateinit var nameField: JTextField
     private lateinit var commandField: JTextField
-    private lateinit var argsField: JTextField
     private lateinit var addButton: JButton
     private lateinit var executeSelectedAction: JButton
     private lateinit var executeCommandFromInputButton: JButton
@@ -40,7 +40,7 @@ class CustomCommandDialog(
     private lateinit var tableModel: DefaultTableModel
 
     fun createUIComponents() {
-        tableModel = object : DefaultTableModel(arrayOf("Command", "Args"), 0) {
+        tableModel = object : DefaultTableModel(arrayOf("Name", "Command"), 0) {
             override fun addRow(rowData: Array<Any>) {
                 getDataVector().reverse()
                 super.addRow(rowData)
@@ -68,7 +68,7 @@ class CustomCommandDialog(
 
         addButton.icon = AllIcons.General.Add
         addButton.addActionListener {
-            tableModel.addRow(arrayOf(commandField.text, argsField.text))
+            tableModel.addRow(arrayOf(nameField.text, commandField.text))
         }
     }
 
@@ -79,10 +79,8 @@ class CustomCommandDialog(
             )
             false
         } else {
-            val command = buildCommand(commandField.text, argsField.text)
-            val actionName = "${command.command} ${command.args}"
-            actionExecutor.executeAction(actionName) {
-                windchillService.execCommand(command)
+            actionExecutor.executeAction(commandField.text) {
+                windchillService.execCommand(buildCommand(commandField.text))
             }
             true
         }
@@ -95,13 +93,10 @@ class CustomCommandDialog(
             )
             false
         } else {
-            val command = buildCommand(
-                tableModel.getValueAt(commandHistory.selectedRow, 0) as String,
-                tableModel.getValueAt(commandHistory.selectedRow, 1) as String
-            )
-            val actionName = "${command.command} ${command.args}"
-            actionExecutor.executeAction(actionName) {
-                windchillService.execCommand(command)
+            val command = tableModel.getSelectedCommand()
+            actionExecutor.executeAction(command.getActionName()) {
+                val execCommand = windchillService.execCommand(command)
+                execCommand
             }
             true
         }
@@ -116,16 +111,27 @@ class CustomCommandDialog(
         super.dispose()
     }
 
-    private fun buildCommand(command: String, args: String) =
-        Service.Command.newBuilder()
-            .setCommand(command)
-            .setArgs(args)
-            .build()
-
 
     private fun String.toRow(): Array<Any>? = split(splitPattern).toArray(arrayOf())
 
     override fun createCenterPanel() = content
     override fun createActions(): Array<Action> = arrayOf()
+
+    private fun DefaultTableModel.getSelectedCommand(): Command {
+        return buildCommand(this.getValueAt(commandHistory.selectedRow, 1) as String)
+    }
+
+    private fun Command.getActionName(): String {
+        val actionName = tableModel.getValueAt(commandHistory.selectedRow, 0) as String
+        return if (actionName.isNotEmpty()) command else "$command $args"
+    }
+
+    private fun buildCommand(command: String): Command {
+        val split = command.split(' ', limit = 1)
+        return Command.newBuilder()
+            .setCommand(split[0])
+            .setArgs(if (split.size > 1) split[1] else "")
+            .build()
+    }
 
 }

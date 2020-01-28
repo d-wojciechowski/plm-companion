@@ -2,7 +2,8 @@ package pl.dwojciechowski.service
 
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
-import pl.dwojciechowski.proto.Service
+import pl.dwojciechowski.proto.commands.Response
+
 import javax.swing.JButton
 
 interface ActionExecutor {
@@ -13,7 +14,7 @@ interface ActionExecutor {
         }
     }
 
-    fun executeAction(actionName: String, action: () -> Service.Response)
-    fun executeAction(button: JButton, action: () -> Service.Response)
+    fun executeAction(actionName: String, action: () -> Response)
+    fun executeAction(button: JButton, action: () -> Response)
 
 }
