@@ -25,15 +25,19 @@ internal class PLMCompanionPanel(private val project: Project) {
     private val actionExecutor = ServiceManager.getService(project, ActionExecutor::class.java)
 
     lateinit var content: JPanel
+    private lateinit var customCommandPanel: JPanel
     private lateinit var restartWindchillButton: JButton
     private lateinit var stopWindchillButton: JButton
     private lateinit var startWindchillButton: JButton
     private lateinit var configurationButton: JButton
     private lateinit var wncStatusButton: JButton
     private lateinit var xconfManagerButton: JButton
-    private lateinit var customActionButton: JButton
 
     private var previousStatus = ServerStatus.DOWN
+
+    fun createUIComponents() {
+        customCommandPanel = CustomCommandDialog(project).content
+    }
 
     init {
         wncStatusButton.isContentAreaFilled = false
@@ -50,8 +54,6 @@ internal class PLMCompanionPanel(private val project: Project) {
             config.scanWindchill = !config.scanWindchill
             if (config.scanWindchill) scanServer() else wncStatusButton.set(ServerStatus.NOT_SCANNING)
         }
-
-        customActionButton.addActionListener { CustomCommandDialog(project, customActionButton).show() }
 
         GlobalScope.launch {
             while (true) {

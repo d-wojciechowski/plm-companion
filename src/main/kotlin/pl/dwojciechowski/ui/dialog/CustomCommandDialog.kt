@@ -3,23 +3,17 @@ package pl.dwojciechowski.ui.dialog
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.ui.Messages
-import com.intellij.ui.table.JBTable
-import com.intellij.util.containers.toArray
-import org.picocontainer.Disposable
+import com.intellij.ui.components.JBList
 import pl.dwojciechowski.configuration.PluginConfiguration
-import pl.dwojciechowski.proto.commands.Command
 import pl.dwojciechowski.service.ActionExecutor
 import pl.dwojciechowski.service.WncConnectorService
-import java.util.*
+import pl.dwojciechowski.ui.component.CommandRepresenation
 import javax.swing.*
-import javax.swing.table.DefaultTableModel
 
 class CustomCommandDialog(
-    private val project: Project,
-    private val customActionButton: JButton
-) : DialogWrapper(project, false, IdeModalityType.MODELESS), Disposable {
+    private val project: Project
+) {
 
     private val config: PluginConfiguration = ServiceManager.getService(project, PluginConfiguration::class.java)
     private val actionExecutor = ServiceManager.getService(project, ActionExecutor::class.java)
@@ -29,33 +23,27 @@ class CustomCommandDialog(
 
     lateinit var content: JPanel
 
-    private lateinit var nameField: JTextField
     private lateinit var commandField: JTextField
     private lateinit var addButton: JButton
     private lateinit var executeSelectedAction: JButton
     private lateinit var executeCommandFromInputButton: JButton
     private lateinit var removeSelectionButton: JButton
 
-    private lateinit var commandHistory: JBTable
-    private lateinit var tableModel: DefaultTableModel
+    private lateinit var commandHistory: JBList<CommandRepresenation>
+    private lateinit var listModel: DefaultListModel<CommandRepresenation>
 
     fun createUIComponents() {
-        tableModel = object : DefaultTableModel(arrayOf("Name", "Command"), 0) {
-            override fun addRow(rowData: Array<Any>) {
-                getDataVector().reverse()
-                super.addRow(rowData)
-                getDataVector().reverse()
-            }
-        }
-        commandHistory = JBTable(tableModel)
+        listModel = DefaultListModel()
+        commandHistory = JBList<CommandRepresenation>(listModel)
     }
 
     init {
-        init()
-        title = "Custom Command Execution"
-        customActionButton.isEnabled = false
         commandHistory.selectionModel.selectionMode = ListSelectionModel.SINGLE_SELECTION
-        config.commandsHistory.forEach { tableModel.addRow(it.toRow()) }
+        config.commandsHistory.forEach {
+            val split = it.split(splitPattern)
+            listModel.add(0, CommandRepresenation(split[0], split[1]))
+            dispose()
+        }
 
         executeCommandFromInputButton.icon = AllIcons.RunConfigurations.TestState.Run
         executeCommandFromInputButton.addActionListener { executeFromInput() }
@@ -64,11 +52,11 @@ class CustomCommandDialog(
         executeSelectedAction.addActionListener { executeSelectedCommand() }
 
         removeSelectionButton.icon = AllIcons.General.Remove
-        removeSelectionButton.addActionListener { tableModel.removeRow(commandHistory.selectedRow) }
+        removeSelectionButton.addActionListener { listModel.remove(commandHistory.selectedIndex) }
 
         addButton.icon = AllIcons.General.Add
         addButton.addActionListener {
-            tableModel.addRow(arrayOf(nameField.text, commandField.text))
+            listModel.add(0, CommandRepresenation(commandField.text, commandField.text))
         }
     }
 
@@ -80,58 +68,44 @@ class CustomCommandDialog(
             false
         } else {
             actionExecutor.executeAction(commandField.text) {
-                windchillService.execCommand(buildCommand(commandField.text))
+                windchillService.execCommand(CommandRepresenation("", commandField.text).getCommand())
             }
             true
         }
     }
 
     private fun executeSelectedCommand(): Boolean {
-        return if (commandHistory.selectedRow == -1) {
+        return if (commandHistory.selectedIndex == -1) {
             Messages.showMessageDialog(
                 project, "No command selected", "Missing selection error", Messages.getErrorIcon()
             )
             false
         } else {
-            val command = tableModel.getSelectedCommand()
-            actionExecutor.executeAction(command.getActionName()) {
-                val execCommand = windchillService.execCommand(command)
+            val command = commandHistory.selectedValue
+            actionExecutor.executeAction(command.name) {
+                val execCommand = windchillService.execCommand(command.getCommand())
                 execCommand
             }
             true
         }
     }
 
-    override fun dispose() {
-        config.commandsHistory = tableModel.dataVector
+    fun dispose() {
+        config.commandsHistory = listModel.elements().toList()
             .reversed()
-            .map { (it as Vector<*>).joinToString(splitPattern) }
+            .map { "${it.name}$splitPattern${it.command}" }
             .toMutableList()
-        customActionButton.isEnabled = true
-        super.dispose()
     }
 
 
-    private fun String.toRow(): Array<Any>? = split(splitPattern).toArray(arrayOf())
-
-    override fun createCenterPanel() = content
-    override fun createActions(): Array<Action> = arrayOf()
-
-    private fun DefaultTableModel.getSelectedCommand(): Command {
-        return buildCommand(this.getValueAt(commandHistory.selectedRow, 1) as String)
-    }
-
-    private fun Command.getActionName(): String {
-        val actionName = tableModel.getValueAt(commandHistory.selectedRow, 0) as String
-        return if (actionName.isNotEmpty()) command else "$command $args"
-    }
-
-    private fun buildCommand(command: String): Command {
-        val split = command.split(' ', limit = 1)
-        return Command.newBuilder()
-            .setCommand(split[0])
-            .setArgs(if (split.size > 1) split[1] else "")
-            .build()
-    }
+//    private fun DefaultListModel<*>.getSelectedCommand(): Command {
+//        return buildCommand(this.get(commandHistory.selectedIndex) as String)
+//    }
+//
+//    private fun Command.getActionName(): String {
+//        val actionName = listModel.getValueAt(commandHistory.selectedRow, 0) as String
+//        return if (actionName.isNotEmpty()) command else "$command $args"
+//    }
+//
 
 }
