@@ -51,10 +51,10 @@ class CustomCommandDialog(
                 commandHistory.selectedIndex = commandHistory.locationToIndex(e?.point)
                 if (SwingUtilities.isRightMouseButton(e)) {
                     CommandListRMBMenu(commandHistory)
-                        .addItem("Run",0){
+                        .addItem("Run", 0) {
                             executeSelectedCommand()
                         }.show(e)
-                } else if(e?.clickCount == 2){
+                } else if (e?.clickCount == 2) {
                     executeSelectedCommand()
                 }
             }

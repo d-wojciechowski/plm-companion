@@ -6,9 +6,9 @@ data class CommandRepresenation(
     var name: String,
     var command: String
 ) {
+
     override fun toString(): String {
-//        return if (name.isNotEmpty()) name else command
-        return command
+        return if (name.isNotEmpty()) name else command
     }
 
     fun getCommand(): Command {
