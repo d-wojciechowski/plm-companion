@@ -9,6 +9,7 @@ import com.intellij.ui.components.JBList
 import pl.dwojciechowski.configuration.PluginConfiguration
 import pl.dwojciechowski.service.ActionExecutor
 import pl.dwojciechowski.service.WncConnectorService
+import pl.dwojciechowski.ui.component.CommandListCellRenderer
 import pl.dwojciechowski.ui.component.CommandListRMBMenu
 import pl.dwojciechowski.ui.component.CommandRepresenation
 import java.awt.event.MouseAdapter
@@ -40,6 +41,7 @@ class CustomCommandDialog(
     }
 
     init {
+        commandHistory.cellRenderer = CommandListCellRenderer()
         commandHistory.selectionModel.selectionMode = ListSelectionModel.SINGLE_SELECTION
         config.commandsHistory.forEach {
             val split = it.split(splitPattern)
