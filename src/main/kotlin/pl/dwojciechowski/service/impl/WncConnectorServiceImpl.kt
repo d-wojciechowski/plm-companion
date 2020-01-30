@@ -4,6 +4,8 @@ import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.Messages
+import io.reactivex.rxjava3.subjects.PublishSubject
+import io.reactivex.rxjava3.subjects.Subject
 import io.rsocket.RSocketFactory
 import io.rsocket.transport.netty.client.TcpClientTransport
 import pl.dwojciechowski.configuration.PluginConfiguration
@@ -15,6 +17,7 @@ import pl.dwojciechowski.service.WncConnectorService
 class WncConnectorServiceImpl(private val project: Project) : WncConnectorService {
 
     private val config = ServiceManager.getService(project, PluginConfiguration::class.java)
+    private val commandSubject: Subject<String> = PublishSubject.create<String>()
 
     override fun restartWnc(): Response {
         val response = stopWnc()
@@ -50,6 +53,7 @@ class WncConnectorServiceImpl(private val project: Project) : WncConnectorServic
 
     override fun execCommand(command: Command): Response {
         try {
+            commandSubject.onNext("Started execution of ${command.command} ${command.args}")
             val rSocket = RSocketFactory.connect()
                 .transport(TcpClientTransport.create(config.hostname, 4040))
                 .start()
@@ -57,9 +61,12 @@ class WncConnectorServiceImpl(private val project: Project) : WncConnectorServic
             val response = CommandServiceClient(rSocket)
                 .execute(command)
                 .block()
+            commandSubject.onNext(response?.message)
             rSocket?.dispose()
-            return response ?: throw Exception("Could not get response with result of command")
+            return response
+                ?: throw Exception("Could not get response with result of command ${command.command} ${command.args} ")
         } catch (e: Exception) {
+            commandSubject.onNext(e.message)
             ApplicationManager.getApplication().invokeLater {
                 Messages.showErrorDialog(project, e.toString(), e.message ?: "")
             }
@@ -67,5 +74,6 @@ class WncConnectorServiceImpl(private val project: Project) : WncConnectorServic
         return Response.newBuilder().setStatus(500).build()
     }
 
+    override fun getOutputSubject(): Subject<String> = commandSubject
 
 }
