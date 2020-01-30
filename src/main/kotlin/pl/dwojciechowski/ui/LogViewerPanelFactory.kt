@@ -50,11 +50,12 @@ class LogViewerPanelFactory : ToolWindowFactory, DumbAware {
         return object :
             DumbAwareAction("New Window", "Create new log window", AllIcons.General.Add) {
             override fun actionPerformed(e: AnActionEvent) {
-                val newPanel = LogViewerPanel(project, SourceEnum.CUSTOM)
-                if (!LogFileLocationDialog(project, newPanel.logLocation).showAndGet()) {
+                val logFileDialog = LogFileLocationDialog(project)
+                if (!logFileDialog.showAndGet()) {
                     return
                 }
-                val newContent = contentFactory.createContent(newPanel, newPanel.customLogFileLocation, false)
+                val newPanel = LogViewerPanel(project, SourceEnum.CUSTOM, logFileDialog.result)
+                val newContent = contentFactory.createContent(newPanel, logFileDialog.result, false)
                 newPanel.parentContent = newContent
                 newContent.preferredFocusableComponent = newPanel
                 toolWindow.contentManager.addContent(newContent)

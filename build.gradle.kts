@@ -29,7 +29,7 @@ dependencies {
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.3")
     implementation("com.github.kittinunf.fuel", "fuel", "2.2.1")
-    implementation("io.reactivex.rxjava3:rxjava:3.0.0-RC7")
+    implementation("io.reactivex.rxjava3:rxjava:3.0.0-RC8")
 
     implementation("io.rsocket:rsocket-core:$rsocketVersion")
     implementation("io.rsocket:rsocket-transport-local:$rsocketVersion")
