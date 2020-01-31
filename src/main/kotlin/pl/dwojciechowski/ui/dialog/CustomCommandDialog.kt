@@ -11,6 +11,7 @@ import pl.dwojciechowski.service.WncConnectorService
 import pl.dwojciechowski.ui.component.CommandList
 import pl.dwojciechowski.ui.component.CommandRepresenation
 import pl.dwojciechowski.ui.component.action.EditListAction
+import java.awt.event.KeyEvent
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
 import javax.swing.DefaultListModel
@@ -58,6 +59,12 @@ class CustomCommandDialog(
             }
         })
         commandHistory.setUpCommandHistoryRMBMenu()
+
+        commandHistory.addKeyPressedListener {
+            if (it?.keyChar?.toInt() == KeyEvent.VK_DELETE) {
+                listModel.remove(commandHistory.selectedIndex)
+            }
+        }
 
         executeCommandFromInputButton.icon = AllIcons.RunConfigurations.TestState.Run
         executeCommandFromInputButton.addActionListener { executeFromInput() }

@@ -1,10 +1,7 @@
 package pl.dwojciechowski.ui.component
 
 import com.intellij.ui.components.JBList
-import java.awt.event.ActionEvent
-import java.awt.event.ActionListener
-import java.awt.event.MouseAdapter
-import java.awt.event.MouseEvent
+import java.awt.event.*
 import javax.swing.ListModel
 import javax.swing.SwingUtilities
 
@@ -25,6 +22,14 @@ class CommandList : JBList<CommandRepresenation> {
                 if (hasRightClickMenu && SwingUtilities.isRightMouseButton(e)) {
                     popupMenu.show(e)
                 }
+            }
+        })
+    }
+
+    fun addKeyPressedListener(action: (KeyEvent?) -> Unit) {
+        addKeyListener(object : KeyAdapter() {
+            override fun keyPressed(e: KeyEvent?) {
+                action(e)
             }
         })
     }

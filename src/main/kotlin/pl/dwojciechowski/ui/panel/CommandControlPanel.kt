@@ -7,6 +7,7 @@ import com.intellij.openapi.ui.SimpleToolWindowPanel
 import pl.dwojciechowski.service.WncConnectorService
 import pl.dwojciechowski.ui.component.CommandList
 import pl.dwojciechowski.ui.component.CommandRepresenation
+import java.awt.event.KeyEvent
 import javax.swing.DefaultListModel
 import javax.swing.JButton
 import javax.swing.JPanel
@@ -39,13 +40,18 @@ class CommandControlPanel(project: Project) : SimpleToolWindowPanel(false, true)
         clearButton.addActionListener { contentArea.text = "" }
         clearButton.icon = AllIcons.Actions.GC
 
-
-        list.addRMBMenuEntry("Test") {
-            println("OMG IT WORKS")
-        }
         list.addRMBMenuEntry("ADD") {
             listModel.addElement(CommandRepresenation("TEST", "LEL"))
         }
+        list.addRMBMenuEntry("Delete") {
+            listModel.remove(list.selectedIndex)
+        }
+        list.addKeyPressedListener {
+            if (it?.keyChar?.toInt() == KeyEvent.VK_DELETE) {
+                listModel.remove(list.selectedIndex)
+            }
+        }
+
         autoScrollJButton.icon = AllIcons.General.AutoscrollFromSource
         autoScrollJButton.addActionListener {
             autoScroll = !autoScroll
