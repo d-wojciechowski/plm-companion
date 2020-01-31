@@ -5,16 +5,18 @@ import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.Messages
 import com.intellij.ui.RawCommandLineEditor
-import com.intellij.ui.components.JBList
 import pl.dwojciechowski.configuration.PluginConfiguration
 import pl.dwojciechowski.service.ActionExecutor
 import pl.dwojciechowski.service.WncConnectorService
-import pl.dwojciechowski.ui.component.CommandListCellRenderer
-import pl.dwojciechowski.ui.component.CommandListRMBMenu
+import pl.dwojciechowski.ui.component.CommandList
 import pl.dwojciechowski.ui.component.CommandRepresenation
+import pl.dwojciechowski.ui.component.action.EditListAction
 import java.awt.event.MouseAdapter
 import java.awt.event.MouseEvent
-import javax.swing.*
+import javax.swing.DefaultListModel
+import javax.swing.JButton
+import javax.swing.JPanel
+import javax.swing.ListSelectionModel
 
 class CustomCommandDialog(
     private val project: Project
@@ -32,16 +34,15 @@ class CustomCommandDialog(
     private lateinit var addButton: JButton
     private lateinit var executeCommandFromInputButton: JButton
 
-    private lateinit var commandHistory: JBList<CommandRepresenation>
+    private lateinit var commandHistory: CommandList
     private lateinit var listModel: DefaultListModel<CommandRepresenation>
 
     fun createUIComponents() {
         listModel = DefaultListModel()
-        commandHistory = JBList<CommandRepresenation>(listModel)
+        commandHistory = CommandList(listModel)
     }
 
     init {
-        commandHistory.cellRenderer = CommandListCellRenderer()
         commandHistory.selectionModel.selectionMode = ListSelectionModel.SINGLE_SELECTION
         config.commandsHistory.forEach {
             val split = it.split(splitPattern)
@@ -51,16 +52,12 @@ class CustomCommandDialog(
         commandHistory.addMouseListener(object : MouseAdapter() {
             override fun mousePressed(e: MouseEvent?) {
                 commandHistory.selectedIndex = commandHistory.locationToIndex(e?.point)
-                if (SwingUtilities.isRightMouseButton(e)) {
-                    CommandListRMBMenu(commandHistory)
-                        .addItem("Run", 0) {
-                            executeSelectedCommand()
-                        }.show(e)
-                } else if (e?.clickCount == 2) {
+                if (e?.clickCount == 2) {
                     executeSelectedCommand()
                 }
             }
         })
+        commandHistory.setUpCommandHistoryRMBMenu()
 
         executeCommandFromInputButton.icon = AllIcons.RunConfigurations.TestState.Run
         executeCommandFromInputButton.addActionListener { executeFromInput() }
@@ -76,6 +73,17 @@ class CustomCommandDialog(
                 dispose()
             }
         }
+    }
+
+    private fun CommandList.setUpCommandHistoryRMBMenu() {
+        this.addRMBMenuEntry("Run") {
+            executeSelectedCommand()
+        }
+            .addRMBMenuEntry("Edit", action = EditListAction(this))
+            .addRMBMenuEntry("Delete") {
+                listModel.remove(selectedIndex)
+            }
+            .addRMBMenuEntry("Alias", action = EditListAction(this, "name"))
     }
 
     private fun executeFromInput(): Boolean {

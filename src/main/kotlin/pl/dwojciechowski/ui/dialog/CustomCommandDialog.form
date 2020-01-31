@@ -23,7 +23,7 @@
         <properties/>
         <border type="none"/>
         <children>
-          <component id="b990f" class="com.intellij.ui.components.JBList" binding="commandHistory" custom-create="true">
+          <component id="b990f" class="pl.dwojciechowski.ui.component.CommandList" binding="commandHistory" custom-create="true">
             <constraints/>
             <properties/>
           </component>
