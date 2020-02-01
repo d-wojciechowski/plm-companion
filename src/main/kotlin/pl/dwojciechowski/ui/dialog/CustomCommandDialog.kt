@@ -6,14 +6,12 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.Messages
 import com.intellij.ui.RawCommandLineEditor
 import pl.dwojciechowski.configuration.PluginConfiguration
+import pl.dwojciechowski.model.CommandBean
 import pl.dwojciechowski.service.ActionExecutor
 import pl.dwojciechowski.service.WncConnectorService
 import pl.dwojciechowski.ui.component.CommandList
-import pl.dwojciechowski.ui.component.CommandRepresenation
 import pl.dwojciechowski.ui.component.action.EditListAction
 import java.awt.event.KeyEvent
-import java.awt.event.MouseAdapter
-import java.awt.event.MouseEvent
 import javax.swing.DefaultListModel
 import javax.swing.JButton
 import javax.swing.JPanel
@@ -36,7 +34,7 @@ class CustomCommandDialog(
     private lateinit var executeCommandFromInputButton: JButton
 
     private lateinit var commandHistory: CommandList
-    private lateinit var listModel: DefaultListModel<CommandRepresenation>
+    private lateinit var listModel: DefaultListModel<CommandBean>
 
     fun createUIComponents() {
         listModel = DefaultListModel()
@@ -47,17 +45,16 @@ class CustomCommandDialog(
         commandHistory.selectionModel.selectionMode = ListSelectionModel.SINGLE_SELECTION
         config.commandsHistory.forEach {
             val split = it.split(splitPattern)
-            listModel.add(0, CommandRepresenation(split[0], split[1]))
+            listModel.add(0, CommandBean(split[0], split[1]))
         }
 
-        commandHistory.addMouseListener(object : MouseAdapter() {
-            override fun mousePressed(e: MouseEvent?) {
-                commandHistory.selectedIndex = commandHistory.locationToIndex(e?.point)
-                if (e?.clickCount == 2) {
-                    executeSelectedCommand()
-                }
+        commandHistory.addMousePressedListener {
+            commandHistory.selectedIndex = commandHistory.locationToIndex(it?.point)
+            if (it?.clickCount == 2) {
+                executeSelectedCommand()
             }
-        })
+        }
+
         commandHistory.setUpCommandHistoryRMBMenu()
 
         commandHistory.addKeyPressedListener {
@@ -76,7 +73,7 @@ class CustomCommandDialog(
                     project, "Command field is empty", "No command provided", Messages.getErrorIcon()
                 )
             } else {
-                listModel.add(0, CommandRepresenation("", commandField.text))
+                listModel.add(0, CommandBean("", commandField.text))
                 dispose()
             }
         }
@@ -101,7 +98,7 @@ class CustomCommandDialog(
             false
         } else {
             actionExecutor.executeAction(commandField.text) {
-                windchillService.execCommand(CommandRepresenation("", commandField.text).getCommand())
+                windchillService.execCommand(CommandBean("", commandField.text))
             }
             true
         }
@@ -116,7 +113,7 @@ class CustomCommandDialog(
         } else {
             val command = commandHistory.selectedValue
             actionExecutor.executeAction(command.name) {
-                val execCommand = windchillService.execCommand(command.getCommand())
+                val execCommand = windchillService.execCommand(command.safeCopy())
                 execCommand
             }
             true

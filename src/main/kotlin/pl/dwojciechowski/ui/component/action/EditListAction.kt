@@ -2,7 +2,7 @@ package pl.dwojciechowski.ui.component.action
 
 import com.intellij.ui.components.JBList
 import com.intellij.ui.components.JBTextField
-import pl.dwojciechowski.ui.component.CommandRepresenation
+import pl.dwojciechowski.model.CommandBean
 import java.awt.Dimension
 import java.awt.event.*
 import javax.swing.AbstractAction
@@ -12,14 +12,14 @@ import javax.swing.UIManager
 import javax.swing.border.EmptyBorder
 
 class EditListAction(
-    private val list: JBList<CommandRepresenation>,
+    private val list: JBList<CommandBean>,
     private val commandFieldName: String = "command"
 ) : AbstractAction() {
 
     private lateinit var editPopup: JPopupMenu
     private lateinit var editTextField: JBTextField
     private var selectedIndex = -1
-    private val model = list.model as DefaultListModel<CommandRepresenation>
+    private val model = list.model as DefaultListModel<CommandBean>
 
     override fun actionPerformed(e: ActionEvent) {
         if (!this::editPopup.isInitialized) {

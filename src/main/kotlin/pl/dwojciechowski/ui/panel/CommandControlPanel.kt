@@ -4,9 +4,10 @@ import com.intellij.icons.AllIcons
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.SimpleToolWindowPanel
+import io.reactivex.rxjava3.disposables.Disposable
+import pl.dwojciechowski.model.CommandBean
 import pl.dwojciechowski.service.WncConnectorService
 import pl.dwojciechowski.ui.component.CommandList
-import pl.dwojciechowski.ui.component.CommandRepresenation
 import java.awt.event.KeyEvent
 import javax.swing.DefaultListModel
 import javax.swing.JButton
@@ -25,9 +26,11 @@ class CommandControlPanel(project: Project) : SimpleToolWindowPanel(false, true)
     private lateinit var autoScrollJButton: JButton
 
     private var autoScroll = true
+    private lateinit var lastSubscribe: Disposable
+
 
     private lateinit var list: CommandList
-    private lateinit var listModel: DefaultListModel<CommandRepresenation>
+    private lateinit var listModel: DefaultListModel<CommandBean>
 
     fun createUIComponents() {
         listModel = DefaultListModel()
@@ -40,9 +43,12 @@ class CommandControlPanel(project: Project) : SimpleToolWindowPanel(false, true)
         clearButton.addActionListener { contentArea.text = "" }
         clearButton.icon = AllIcons.Actions.GC
 
-        list.addRMBMenuEntry("ADD") {
-            listModel.addElement(CommandRepresenation("TEST", "LEL"))
+        autoScrollJButton.icon = AllIcons.General.AutoscrollFromSource
+        autoScrollJButton.addActionListener {
+            autoScroll = !autoScroll
+            autoScrollJButton.icon = if (autoScroll) AllIcons.General.AutoscrollFromSource else AllIcons.General.ZoomOut
         }
+
         list.addRMBMenuEntry("Delete") {
             listModel.remove(list.selectedIndex)
         }
@@ -51,18 +57,30 @@ class CommandControlPanel(project: Project) : SimpleToolWindowPanel(false, true)
                 listModel.remove(list.selectedIndex)
             }
         }
-
-        autoScrollJButton.icon = AllIcons.General.AutoscrollFromSource
-        autoScrollJButton.addActionListener {
-            autoScroll = !autoScroll
-            autoScrollJButton.icon = if (autoScroll) AllIcons.General.AutoscrollFromSource else AllIcons.General.ZoomOut
+        list.addMousePressedListener {
+            list.selectedIndex = list.locationToIndex(it?.point)
+            if (it?.clickCount == 2) {
+                registerNewCommand()
+            }
         }
 
         commandService.getOutputSubject().subscribe {
-            contentArea.append(it + "\n")
-            if (autoScroll) contentArea.caretPosition = contentArea.document.length
+            listModel.add(0, it)
+            list.selectedIndex = 0
+            registerNewCommand()
         }
+    }
 
+    private fun registerNewCommand() {
+        contentArea.text = ""
+        if (this::lastSubscribe.isInitialized) {
+            lastSubscribe.dispose()
+        }
+        lastSubscribe = listModel.get(list.selectedIndex).response
+            .subscribe { msg ->
+                contentArea.append(msg + "\n")
+                contentArea.caretPosition = contentArea.document.length
+            }
     }
 
 }

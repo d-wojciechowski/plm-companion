@@ -1,14 +1,15 @@
 package pl.dwojciechowski.ui.component
 
 import com.intellij.ui.components.JBList
+import pl.dwojciechowski.model.CommandBean
 import java.awt.event.*
 import javax.swing.ListModel
 import javax.swing.SwingUtilities
 
-class CommandList : JBList<CommandRepresenation> {
+class CommandList : JBList<CommandBean> {
 
     constructor() : super()
-    constructor(listModel: ListModel<CommandRepresenation>) : super(listModel)
+    constructor(listModel: ListModel<CommandBean>) : super(listModel)
 
     private var hasRightClickMenu = false
     private var popupMenu = CommandListRMBMenu(this)
@@ -29,6 +30,14 @@ class CommandList : JBList<CommandRepresenation> {
     fun addKeyPressedListener(action: (KeyEvent?) -> Unit) {
         addKeyListener(object : KeyAdapter() {
             override fun keyPressed(e: KeyEvent?) {
+                action(e)
+            }
+        })
+    }
+
+    fun addMousePressedListener(action: (MouseEvent?) -> Unit) {
+        addMouseListener(object : MouseAdapter() {
+            override fun mousePressed(e: MouseEvent?) {
                 action(e)
             }
         })

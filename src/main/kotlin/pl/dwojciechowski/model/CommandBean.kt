@@ -1,10 +1,12 @@
-package pl.dwojciechowski.ui.component
+package pl.dwojciechowski.model
 
+import io.reactivex.rxjava3.subjects.ReplaySubject
 import pl.dwojciechowski.proto.commands.Command
 
-data class CommandRepresenation(
+data class CommandBean(
     var name: String,
-    var command: String
+    var command: String,
+    var response : ReplaySubject<String> = ReplaySubject.create()
 ) {
 
     override fun toString(): String {
@@ -18,4 +20,7 @@ data class CommandRepresenation(
             .setArgs(if (split.size > 1) split[1] else "")
             .build()
     }
+
+    fun safeCopy() = CommandBean(name, command, ReplaySubject.create())
+
 }

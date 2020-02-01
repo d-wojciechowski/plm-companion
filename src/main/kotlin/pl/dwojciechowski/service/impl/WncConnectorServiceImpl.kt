@@ -9,7 +9,7 @@ import io.reactivex.rxjava3.subjects.Subject
 import io.rsocket.RSocketFactory
 import io.rsocket.transport.netty.client.TcpClientTransport
 import pl.dwojciechowski.configuration.PluginConfiguration
-import pl.dwojciechowski.proto.commands.Command
+import pl.dwojciechowski.model.CommandBean
 import pl.dwojciechowski.proto.commands.CommandServiceClient
 import pl.dwojciechowski.proto.commands.Response
 import pl.dwojciechowski.service.WncConnectorService
@@ -17,7 +17,7 @@ import pl.dwojciechowski.service.WncConnectorService
 class WncConnectorServiceImpl(private val project: Project) : WncConnectorService {
 
     private val config = ServiceManager.getService(project, PluginConfiguration::class.java)
-    private val commandSubject: Subject<String> = PublishSubject.create<String>()
+    private val commandSubject: Subject<CommandBean> = PublishSubject.create<CommandBean>()
 
     override fun restartWnc(): Response {
         val response = stopWnc()
@@ -25,35 +25,22 @@ class WncConnectorServiceImpl(private val project: Project) : WncConnectorServic
     }
 
     override fun stopWnc(): Response {
-        return execCommand(
-            Command.newBuilder()
-                .setCommand("windchill")
-                .setArgs("stop")
-                .build()
-        )
+        return execCommand(CommandBean("Windchill Stop", "windchill stop"))
     }
 
     override fun startWnc(): Response {
-        return execCommand(
-            Command.newBuilder()
-                .setCommand("windchill")
-                .setArgs("start")
-                .build()
-        )
+        return execCommand(CommandBean("Windchill Start", "windchill start"))
     }
 
     override fun xconf(): Response {
-        return execCommand(
-            Command.newBuilder()
-                .setCommand("xconfmanager")
-                .setArgs("-p")
-                .build()
-        )
+        return execCommand(CommandBean("xconfmanager -p", "xconfmanager -p"))
     }
 
-    override fun execCommand(command: Command): Response {
+    override fun execCommand(commandBean: CommandBean): Response {
         try {
-            commandSubject.onNext("Started execution of ${command.command} ${command.args}")
+            commandSubject.onNext(commandBean)
+            val command = commandBean.getCommand()
+            commandBean.response.onNext("Started execution of ${command.command} ${command.args}")
             val rSocket = RSocketFactory.connect()
                 .transport(TcpClientTransport.create(config.hostname, 4040))
                 .start()
@@ -61,12 +48,12 @@ class WncConnectorServiceImpl(private val project: Project) : WncConnectorServic
             val response = CommandServiceClient(rSocket)
                 .execute(command)
                 .block()
-            commandSubject.onNext(response?.message)
+            commandBean.response.onNext(response?.message)
             rSocket?.dispose()
             return response
                 ?: throw Exception("Could not get response with result of command ${command.command} ${command.args} ")
         } catch (e: Exception) {
-            commandSubject.onNext(e.message)
+            commandBean.response.onNext(e.message)
             ApplicationManager.getApplication().invokeLater {
                 Messages.showErrorDialog(project, e.toString(), e.message ?: "")
             }
@@ -74,6 +61,6 @@ class WncConnectorServiceImpl(private val project: Project) : WncConnectorServic
         return Response.newBuilder().setStatus(500).build()
     }
 
-    override fun getOutputSubject(): Subject<String> = commandSubject
+    override fun getOutputSubject(): Subject<CommandBean> = commandSubject
 
 }

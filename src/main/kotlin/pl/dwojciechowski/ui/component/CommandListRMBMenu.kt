@@ -3,13 +3,14 @@ package pl.dwojciechowski.ui.component
 import com.intellij.openapi.ui.JBMenuItem
 import com.intellij.openapi.ui.JBPopupMenu
 import com.intellij.ui.components.JBList
+import pl.dwojciechowski.model.CommandBean
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.awt.event.MouseEvent
 
 
 data class CommandListRMBMenu(
-    private val invoker: JBList<CommandRepresenation>
+    private val invoker: JBList<CommandBean>
 ) {
     private val menu = JBPopupMenu()
 

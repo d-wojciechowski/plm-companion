@@ -3,7 +3,7 @@ package pl.dwojciechowski.service
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
 import io.reactivex.rxjava3.subjects.Subject
-import pl.dwojciechowski.proto.commands.Command
+import pl.dwojciechowski.model.CommandBean
 import pl.dwojciechowski.proto.commands.Response
 
 interface WncConnectorService {
@@ -18,8 +18,8 @@ interface WncConnectorService {
     fun startWnc(): Response
     fun restartWnc(): Response
     fun xconf(): Response
-    fun execCommand(command: Command): Response
+    fun execCommand(commandBean: CommandBean): Response
 
-    fun getOutputSubject(): Subject<String>
+    fun getOutputSubject(): Subject<CommandBean>
 
 }
