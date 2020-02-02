@@ -40,6 +40,7 @@ class WncConnectorServiceImpl(private val project: Project) : WncConnectorServic
         try {
             commandSubject.onNext(commandBean)
             val command = commandBean.getCommand()
+            commandBean.status = CommandBean.ExecutionStatus.RUNNING
             commandBean.response.onNext("Started execution of ${command.command} ${command.args}")
             val rSocket = RSocketFactory.connect()
                 .transport(TcpClientTransport.create(config.hostname, 4040))
@@ -50,9 +51,11 @@ class WncConnectorServiceImpl(private val project: Project) : WncConnectorServic
                 .block()
             commandBean.response.onNext(response?.message)
             rSocket?.dispose()
+            commandBean.status = CommandBean.ExecutionStatus.COMPLETED
             return response
                 ?: throw Exception("Could not get response with result of command ${command.command} ${command.args} ")
         } catch (e: Exception) {
+            commandBean.status = CommandBean.ExecutionStatus.STOPPED
             commandBean.response.onNext(e.message)
             ApplicationManager.getApplication().invokeLater {
                 Messages.showErrorDialog(project, e.toString(), e.message ?: "")
