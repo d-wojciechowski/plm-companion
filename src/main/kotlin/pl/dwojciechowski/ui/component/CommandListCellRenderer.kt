@@ -20,7 +20,7 @@ class CommandListCellRenderer : DefaultListCellRenderer() {
         val command = value as CommandBean
 
         if(command.status != CommandBean.ExecutionStatus.NONE){
-            text = "$command | ${command.executionTime.format(DateTimeFormatter.ofPattern("HH:mm:ss"))}"
+            toolTipText = "Execution time: ${command.executionTime.format(DateTimeFormatter.ofPattern("HH:mm:ss"))}"
         }
         icon = when(command.status){
             CommandBean.ExecutionStatus.COMPLETED -> AllIcons.RunConfigurations.ToolbarPassed

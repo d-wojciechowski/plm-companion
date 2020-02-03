@@ -52,15 +52,6 @@ class CommandControlPanel(project: Project) : SimpleToolWindowPanel(false, true)
         list.addRMBMenuEntry("Delete") {
             listModel.remove(list.selectedIndex)
         }
-        list.addRMBMenuEntry("COMPLETED") {
-            listModel.get(list.selectedIndex).status = CommandBean.ExecutionStatus.COMPLETED
-        }
-        list.addRMBMenuEntry("RUNNING") {
-            listModel.get(list.selectedIndex).status = CommandBean.ExecutionStatus.RUNNING
-        }
-        list.addRMBMenuEntry("STOPPED") {
-            listModel.get(list.selectedIndex).status = CommandBean.ExecutionStatus.STOPPED
-        }
         list.addKeyPressedListener {
             if (it?.keyChar?.toInt() == KeyEvent.VK_DELETE) {
                 listModel.remove(list.selectedIndex)
