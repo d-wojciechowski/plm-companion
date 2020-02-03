@@ -16,22 +16,25 @@ class LogViewerServiceImpl(project: Project) : LogViewerService {
 
     override fun getLogFile(
         source: LogFileLocation.Source,
-        logsObserver: (LogLine) -> Unit
+        logsObserver: (LogLine) -> Unit,
+        logsErrorObserver: (Throwable) -> Unit
     ): Disposable {
-        return getLogs(config.logFileLocation, logsObserver, source)
+        return getLogs(config.logFileLocation, source, logsObserver, logsErrorObserver)
     }
 
     override fun getCustomLogFile(
         logFileLocation: String,
-        logsObserver: (LogLine) -> Unit
+        logsObserver: (LogLine) -> Unit,
+        logsErrorObserver: (Throwable) -> Unit
     ): Disposable {
-        return getLogs(logFileLocation, logsObserver, LogFileLocation.Source.CUSTOM)
+        return getLogs(logFileLocation, LogFileLocation.Source.CUSTOM, logsObserver, logsErrorObserver)
     }
 
     private fun getLogs(
         logFileLocation: String,
+        source: LogFileLocation.Source,
         logsObserver: (LogLine) -> Unit,
-        source: LogFileLocation.Source
+        logsErrorObserver: (Throwable) -> Unit = { println(it) }
     ): Disposable {
         val rSocket = RSocketFactory.connect()
             .fragment(1024)
@@ -44,6 +47,7 @@ class LogViewerServiceImpl(project: Project) : LogViewerService {
         return LogViewerServiceClient(rSocket)
             .getLogs(fileLocation)
             .doOnNext(logsObserver)
+            .doOnError(logsErrorObserver)
             .subscribe()
     }
 

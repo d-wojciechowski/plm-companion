@@ -16,12 +16,14 @@ interface LogViewerService {
 
     fun getLogFile(
         source: LogFileLocation.Source,
-        logsObserver: (LogLine) -> Unit
+        logsObserver: (LogLine) -> Unit,
+        logsErrorObserver: (Throwable) -> Unit = { println(it) }
     ): Disposable
 
     fun getCustomLogFile(
         logFileLocation: String,
-        logsObserver: (LogLine) -> Unit
+        logsObserver: (LogLine) -> Unit,
+        logsErrorObserver: (Throwable) -> Unit =  { println(it) }
     ): Disposable
 
 }

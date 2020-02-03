@@ -70,16 +70,28 @@ class LogViewerPanel(
         stopButton.isEnabled = true
 
         textArea.text = ""
+        val logsError: (Throwable) -> Unit = {
+            textArea.append(it.message + "\n")
+            stopLogViewer()
+        }
         if (SourceEnum.CUSTOM == type) {
-            channel = logService.getCustomLogFile(customLogFileLocation) {
-                textArea.append(it.message + "\n")
-                textArea.caretPosition = textArea.document.length
-            }
+            channel = logService.getCustomLogFile(
+                customLogFileLocation,
+                logsObserver = {
+                    textArea.append(it.message + "\n")
+                    textArea.caretPosition = textArea.document.length
+                },
+                logsErrorObserver = logsError
+            )
         } else {
-            channel = logService.getLogFile(type) {
-                textArea.append(it.message + "\n")
-                textArea.caretPosition = textArea.document.length
-            }
+            channel = logService.getLogFile(
+                type,
+                logsObserver = {
+                    textArea.append(it.message + "\n")
+                    textArea.caretPosition = textArea.document.length
+                },
+                logsErrorObserver = logsError
+            )
         }
     }
 
