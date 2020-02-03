@@ -19,6 +19,7 @@ interface WncConnectorService {
     fun restartWnc(): Response
     fun xconf(): Response
     fun execCommand(commandBean: CommandBean): Response
+    fun executeStreaming(commandBean: CommandBean)
 
     fun getOutputSubject(): Subject<CommandBean>
 

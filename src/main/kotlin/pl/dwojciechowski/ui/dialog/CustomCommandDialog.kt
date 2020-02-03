@@ -112,10 +112,7 @@ class CustomCommandDialog(
             false
         } else {
             val command = commandHistory.selectedValue
-            actionExecutor.executeAction(command.name) {
-                val execCommand = windchillService.execCommand(command.safeCopy())
-                execCommand
-            }
+            windchillService.executeStreaming(command.safeCopy())
             true
         }
     }

@@ -6,6 +6,7 @@ import com.intellij.openapi.ui.Messages
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import pl.dwojciechowski.proto.commands.Response
+import pl.dwojciechowski.proto.commands.Status
 import pl.dwojciechowski.service.ActionExecutor
 import pl.dwojciechowski.ui.PLMPluginNotification
 import pl.dwojciechowski.ui.PluginIcons
@@ -36,7 +37,7 @@ class ActionExecutorImpl(private val project: Project) : ActionExecutor {
     }
 
     private fun handle(response: Response) {
-        if (response.status == 200) {
+        if (response.status == Status.FINISHED) {
             PLMPluginNotification.notify(project, "Action executed successfully", PluginIcons.CONFIRMATION)
         } else {
             PLMPluginNotification.notify(project, "Action FAILED", PluginIcons.ERROR)

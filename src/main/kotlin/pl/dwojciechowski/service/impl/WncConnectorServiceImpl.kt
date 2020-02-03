@@ -12,6 +12,7 @@ import pl.dwojciechowski.configuration.PluginConfiguration
 import pl.dwojciechowski.model.CommandBean
 import pl.dwojciechowski.proto.commands.CommandServiceClient
 import pl.dwojciechowski.proto.commands.Response
+import pl.dwojciechowski.proto.commands.Status
 import pl.dwojciechowski.service.WncConnectorService
 
 class WncConnectorServiceImpl(private val project: Project) : WncConnectorService {
@@ -21,7 +22,7 @@ class WncConnectorServiceImpl(private val project: Project) : WncConnectorServic
 
     override fun restartWnc(): Response {
         val response = stopWnc()
-        return if (response.status == 200) startWnc() else response
+        return if (response.status == Status.FINISHED) startWnc() else response
     }
 
     override fun stopWnc(): Response {
@@ -34,6 +35,37 @@ class WncConnectorServiceImpl(private val project: Project) : WncConnectorServic
 
     override fun xconf(): Response {
         return execCommand(CommandBean("xconfmanager -p", "xconfmanager -p"))
+    }
+
+    override fun executeStreaming(commandBean: CommandBean) {
+        try {
+            commandSubject.onNext(commandBean)
+            val command = commandBean.getCommand()
+            commandBean.status = CommandBean.ExecutionStatus.RUNNING
+            commandBean.response.onNext("Started execution of ${command.command} ${command.args}")
+            val rSocket = RSocketFactory.connect()
+                .resume()
+                .transport(TcpClientTransport.create(config.hostname, 4040))
+                .start()
+                .block()
+            val response = CommandServiceClient(rSocket)
+                .executeStreaming(command)
+                .doOnNext {
+                    commandBean.response.onNext(it.message)
+                }.doOnError {
+                    commandBean.response.onNext(it.message)
+                    commandBean.status = CommandBean.ExecutionStatus.STOPPED
+                }.doOnComplete {
+                    commandBean.status = CommandBean.ExecutionStatus.COMPLETED
+                }.subscribe()
+
+        } catch (e: Exception) {
+            commandBean.status = CommandBean.ExecutionStatus.STOPPED
+            commandBean.response.onNext(e.message)
+            ApplicationManager.getApplication().invokeLater {
+                Messages.showErrorDialog(project, e.toString(), e.message ?: "")
+            }
+        }
     }
 
     override fun execCommand(commandBean: CommandBean): Response {
@@ -61,7 +93,7 @@ class WncConnectorServiceImpl(private val project: Project) : WncConnectorServic
                 Messages.showErrorDialog(project, e.toString(), e.message ?: "")
             }
         }
-        return Response.newBuilder().setStatus(500).build()
+        return Response.newBuilder().setStatus(Status.FINISHED).build()
     }
 
     override fun getOutputSubject(): Subject<CommandBean> = commandSubject
