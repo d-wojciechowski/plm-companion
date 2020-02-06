@@ -1,7 +1,9 @@
 package pl.dwojciechowski.model
 
+import reactor.core.Disposable
 import io.reactivex.rxjava3.subjects.ReplaySubject
 import pl.dwojciechowski.proto.commands.Command
+import reactor.core.Disposables
 import java.time.LocalTime
 
 data class CommandBean(
@@ -9,7 +11,8 @@ data class CommandBean(
     var command: String,
     var executionTime : LocalTime = LocalTime.MIN,
     var status: ExecutionStatus = ExecutionStatus.NONE,
-    var response: ReplaySubject<String> = ReplaySubject.create()
+    var response: ReplaySubject<String> = ReplaySubject.create(),
+    var actualSubscription: Disposable = Disposables.never()
 ) {
 
     override fun toString(): String {
@@ -24,7 +27,7 @@ data class CommandBean(
             .build()
     }
 
-    fun safeCopy() = CommandBean(name, command, LocalTime.now(), ExecutionStatus.NONE, ReplaySubject.create())
+    fun safeCopy() = CommandBean(name, command, LocalTime.now(), ExecutionStatus.NONE, ReplaySubject.create(), actualSubscription)
 
     enum class ExecutionStatus {
         RUNNING, STOPPED, COMPLETED, NONE

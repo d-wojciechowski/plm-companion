@@ -27,6 +27,7 @@ class CommandControlPanel(project: Project) : SimpleToolWindowPanel(false, true)
 
     private var autoScroll = true
     private lateinit var lastSubscribe: Disposable
+    private var subscribes = HashMap<Int, reactor.core.Disposable>()
 
 
     private lateinit var list: CommandList
@@ -51,6 +52,10 @@ class CommandControlPanel(project: Project) : SimpleToolWindowPanel(false, true)
 
         list.addRMBMenuEntry("Delete") {
             listModel.remove(list.selectedIndex)
+        }
+        list.addRMBMenuEntry("Stop") {
+            subscribes[list.selectedIndex]?.dispose()
+            subscribes.remove(list.selectedIndex)
         }
         list.addKeyPressedListener {
             if (it?.keyChar?.toInt() == KeyEvent.VK_DELETE) {
@@ -81,6 +86,7 @@ class CommandControlPanel(project: Project) : SimpleToolWindowPanel(false, true)
                 contentArea.append(msg + "\n")
                 contentArea.caretPosition = contentArea.document.length
             }
+        subscribes[list.selectedIndex] = listModel.get(list.selectedIndex).actualSubscription
     }
 
 }

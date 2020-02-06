@@ -39,7 +39,6 @@ class WncConnectorServiceImpl(private val project: Project) : WncConnectorServic
 
     override fun executeStreaming(commandBean: CommandBean) {
         try {
-            commandSubject.onNext(commandBean)
             val command = commandBean.getCommand()
             commandBean.status = CommandBean.ExecutionStatus.RUNNING
             commandBean.response.onNext("Started execution of ${command.command} ${command.args}")
@@ -48,7 +47,7 @@ class WncConnectorServiceImpl(private val project: Project) : WncConnectorServic
                 .transport(TcpClientTransport.create(config.hostname, 4040))
                 .start()
                 .block()
-            val response = CommandServiceClient(rSocket)
+            commandBean.actualSubscription = CommandServiceClient(rSocket)
                 .executeStreaming(command)
                 .doOnNext {
                     commandBean.response.onNext(it.message)
@@ -58,6 +57,7 @@ class WncConnectorServiceImpl(private val project: Project) : WncConnectorServic
                 }.doOnComplete {
                     commandBean.status = CommandBean.ExecutionStatus.COMPLETED
                 }.subscribe()
+            commandSubject.onNext(commandBean)
 
         } catch (e: Exception) {
             commandBean.status = CommandBean.ExecutionStatus.STOPPED
