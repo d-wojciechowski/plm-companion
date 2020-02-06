@@ -43,7 +43,7 @@ class WncConnectorServiceImpl(private val project: Project) : WncConnectorServic
             commandBean.status = CommandBean.ExecutionStatus.RUNNING
             commandBean.response.onNext("Started execution of ${command.command} ${command.args}")
             val rSocket = RSocketFactory.connect()
-                .resume()
+                .fragment(1024)
                 .transport(TcpClientTransport.create(config.hostname, 4040))
                 .start()
                 .block()
@@ -75,6 +75,7 @@ class WncConnectorServiceImpl(private val project: Project) : WncConnectorServic
             commandBean.status = CommandBean.ExecutionStatus.RUNNING
             commandBean.response.onNext("Started execution of ${command.command} ${command.args}")
             val rSocket = RSocketFactory.connect()
+                .fragment(1024)
                 .transport(TcpClientTransport.create(config.hostname, 4040))
                 .start()
                 .block()
