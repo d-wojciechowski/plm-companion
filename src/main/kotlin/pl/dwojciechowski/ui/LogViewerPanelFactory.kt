@@ -13,7 +13,7 @@ import com.intellij.ui.content.ContentFactory
 import pl.dwojciechowski.configuration.PluginConfiguration
 import pl.dwojciechowski.service.LogViewerService
 import pl.dwojciechowski.ui.dialog.LogFileLocationDialog
-import pl.dwojciechowski.ui.panel.CommandControlPanel
+import pl.dwojciechowski.ui.panel.CommandLogPanel
 import pl.dwojciechowski.ui.panel.LogViewerPanel
 import pl.dwojciechowski.proto.files.LogFileLocation.Source as SourceEnum
 
@@ -29,7 +29,7 @@ class LogViewerPanelFactory : ToolWindowFactory, DumbAware {
         val contentFactory = ContentFactory.SERVICE.getInstance()
         val logPane1 = LogViewerPanel(project, SourceEnum.METHOD_SERVER)
         val logPane2 = LogViewerPanel(project, SourceEnum.BACKGROUND_METHOD_SERVER)
-        val commandPanel = CommandControlPanel(project)
+        val commandPanel = CommandLogPanel(project)
 
         val content = contentFactory.createContent(logPane1, "Method Server", false)
         content.preferredFocusableComponent = logPane1

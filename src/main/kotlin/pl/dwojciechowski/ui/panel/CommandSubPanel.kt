@@ -1,4 +1,4 @@
-package pl.dwojciechowski.ui.dialog
+package pl.dwojciechowski.ui.panel
 
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.components.ServiceManager
@@ -17,7 +17,7 @@ import javax.swing.JButton
 import javax.swing.JPanel
 import javax.swing.ListSelectionModel
 
-class CustomCommandDialog(
+class CommandSubPanel(
     private val project: Project
 ) {
 
@@ -90,30 +90,25 @@ class CustomCommandDialog(
             .addRMBMenuEntry("Alias", action = EditListAction(this, "name"))
     }
 
-    private fun executeFromInput(): Boolean {
-        return if (commandField.text.isEmpty()) {
+    private fun executeFromInput() {
+        if (commandField.text.isEmpty()) {
             Messages.showMessageDialog(
                 project, "Command field is empty", "No command provided", Messages.getErrorIcon()
             )
-            false
         } else {
-            actionExecutor.executeAction(commandField.text) {
-                windchillService.execCommand(CommandBean("", commandField.text))
-            }
-            true
+            //TODO MESSAGES ON UI THREAD
+            windchillService.executeStreaming(CommandBean("", commandField.text))
         }
     }
 
-    private fun executeSelectedCommand(): Boolean {
-        return if (commandHistory.selectedIndex == -1) {
+    private fun executeSelectedCommand() {
+        if (commandHistory.selectedIndex == -1) {
             Messages.showMessageDialog(
                 project, "No command selected", "Missing selection error", Messages.getErrorIcon()
             )
-            false
         } else {
-            val command = commandHistory.selectedValue
-            windchillService.executeStreaming(command.safeCopy())
-            true
+            //TODO MESSAGES ON UI THREAD
+            windchillService.executeStreaming(commandHistory.selectedValue.safeCopy())
         }
     }
 

@@ -14,7 +14,6 @@ import pl.dwojciechowski.service.HttpService
 import pl.dwojciechowski.service.WncConnectorService
 import pl.dwojciechowski.ui.PLMPluginNotification
 import pl.dwojciechowski.ui.PluginIcons
-import pl.dwojciechowski.ui.dialog.CustomCommandDialog
 import javax.swing.JButton
 import javax.swing.JPanel
 
@@ -36,7 +35,7 @@ internal class PLMCompanionPanel(private val project: Project) {
     private var previousStatus = ServerStatus.DOWN
 
     fun createUIComponents() {
-        customCommandPanel = CustomCommandDialog(project).content
+        customCommandPanel = CommandSubPanel(project).content
     }
 
     init {
@@ -71,7 +70,7 @@ internal class PLMCompanionPanel(private val project: Project) {
         val status = HttpService.getInstance().getStatus(HttpStatusConfig(config))
         when (status) {
             previousStatus -> Unit
-            ServerStatus.REACHABLE -> PLMPluginNotification.apacheOK(project)
+            ServerStatus.AVAILABLE -> PLMPluginNotification.apacheOK(project)
             ServerStatus.RUNNING -> PLMPluginNotification.serverOK(project)
             else -> PLMPluginNotification.serverKO(project)
         }

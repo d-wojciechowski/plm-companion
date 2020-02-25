@@ -18,7 +18,7 @@ class HttpServiceImpl : HttpService {
             when (response.statusCode) {
                 200 -> ServerStatus.RUNNING
                 401 -> ServerStatus.UNAUTHORIZED
-                503 -> ServerStatus.REACHABLE
+                503 -> ServerStatus.AVAILABLE
                 else -> ServerStatus.DOWN
             }
         } catch (e: Exception) {

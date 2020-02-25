@@ -6,6 +6,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.Messages
 import io.reactivex.rxjava3.subjects.PublishSubject
 import io.reactivex.rxjava3.subjects.Subject
+import io.rsocket.RSocket
 import io.rsocket.RSocketFactory
 import io.rsocket.transport.netty.client.TcpClientTransport
 import pl.dwojciechowski.configuration.PluginConfiguration
@@ -41,13 +42,9 @@ class WncConnectorServiceImpl(private val project: Project) : WncConnectorServic
         try {
             val command = commandBean.getCommand()
             commandBean.status = CommandBean.ExecutionStatus.RUNNING
-            commandBean.response.onNext("Started execution of ${command.command} ${command.args}")
-            val rSocket = RSocketFactory.connect()
-                .fragment(1024)
-                .transport(TcpClientTransport.create(config.hostname, 4040))
-                .start()
-                .block()
-            commandBean.actualSubscription = CommandServiceClient(rSocket)
+            commandBean.response.onNext("Started execution of ${command.command}")
+            val rSocket = establishConnection()
+            CommandServiceClient(rSocket)
                 .executeStreaming(command)
                 .doOnNext {
                     commandBean.response.onNext(it.message)
@@ -57,8 +54,8 @@ class WncConnectorServiceImpl(private val project: Project) : WncConnectorServic
                 }.doOnComplete {
                     commandBean.status = CommandBean.ExecutionStatus.COMPLETED
                 }.subscribe()
+            commandBean.actualSubscription = rSocket?: commandBean.actualSubscription
             commandSubject.onNext(commandBean)
-
         } catch (e: Exception) {
             commandBean.status = CommandBean.ExecutionStatus.STOPPED
             commandBean.response.onNext(e.message)
@@ -73,12 +70,8 @@ class WncConnectorServiceImpl(private val project: Project) : WncConnectorServic
             commandSubject.onNext(commandBean)
             val command = commandBean.getCommand()
             commandBean.status = CommandBean.ExecutionStatus.RUNNING
-            commandBean.response.onNext("Started execution of ${command.command} ${command.args}")
-            val rSocket = RSocketFactory.connect()
-                .fragment(1024)
-                .transport(TcpClientTransport.create(config.hostname, 4040))
-                .start()
-                .block()
+            commandBean.response.onNext("Started execution of ${command.command}")
+            val rSocket = establishConnection()
             val response = CommandServiceClient(rSocket)
                 .execute(command)
                 .block()
@@ -86,7 +79,7 @@ class WncConnectorServiceImpl(private val project: Project) : WncConnectorServic
             rSocket?.dispose()
             commandBean.status = CommandBean.ExecutionStatus.COMPLETED
             return response
-                ?: throw Exception("Could not get response with result of command ${command.command} ${command.args} ")
+                ?: throw Exception("Could not get response with result of command ${command.command}")
         } catch (e: Exception) {
             commandBean.status = CommandBean.ExecutionStatus.STOPPED
             commandBean.response.onNext(e.message)
@@ -95,6 +88,14 @@ class WncConnectorServiceImpl(private val project: Project) : WncConnectorServic
             }
         }
         return Response.newBuilder().setStatus(Status.FINISHED).build()
+    }
+
+    private fun establishConnection(): RSocket? {
+        return RSocketFactory.connect()
+            .fragment(1024)
+            .transport(TcpClientTransport.create(config.hostname, 4040))
+            .start()
+            .block()
     }
 
     override fun getOutputSubject(): Subject<CommandBean> = commandSubject

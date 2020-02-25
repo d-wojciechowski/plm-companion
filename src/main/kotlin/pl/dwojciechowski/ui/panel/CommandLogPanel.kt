@@ -14,7 +14,7 @@ import javax.swing.JButton
 import javax.swing.JPanel
 import javax.swing.JTextArea
 
-class CommandControlPanel(project: Project) : SimpleToolWindowPanel(false, true) {
+class CommandLogPanel(project: Project) : SimpleToolWindowPanel(false, true) {
 
     private val commandService: WncConnectorService =
         ServiceManager.getService(project, WncConnectorService::class.java)
@@ -28,7 +28,6 @@ class CommandControlPanel(project: Project) : SimpleToolWindowPanel(false, true)
     private var autoScroll = true
     private lateinit var lastSubscribe: Disposable
     private var subscribes = HashMap<Int, reactor.core.Disposable>()
-
 
     private lateinit var list: CommandList
     private lateinit var listModel: DefaultListModel<CommandBean>
@@ -50,24 +49,7 @@ class CommandControlPanel(project: Project) : SimpleToolWindowPanel(false, true)
             autoScrollJButton.icon = if (autoScroll) AllIcons.General.AutoscrollFromSource else AllIcons.General.ZoomOut
         }
 
-        list.addRMBMenuEntry("Delete") {
-            listModel.remove(list.selectedIndex)
-        }
-        list.addRMBMenuEntry("Stop") {
-            subscribes[list.selectedIndex]?.dispose()
-            subscribes.remove(list.selectedIndex)
-        }
-        list.addKeyPressedListener {
-            if (it?.keyChar?.toInt() == KeyEvent.VK_DELETE) {
-                listModel.remove(list.selectedIndex)
-            }
-        }
-        list.addMousePressedListener {
-            list.selectedIndex = list.locationToIndex(it?.point)
-            if (it?.clickCount == 2) {
-                registerNewCommand()
-            }
-        }
+        list.init()
 
         commandService.getOutputSubject().subscribe {
             listModel.add(0, it)
@@ -76,17 +58,51 @@ class CommandControlPanel(project: Project) : SimpleToolWindowPanel(false, true)
         }
     }
 
+    private fun CommandList.init() {
+        addRMBMenuEntry("Delete") {
+            listModel.remove(selectedIndex)
+            removeSubscription()
+        }
+        addRMBMenuEntry("Stop") {
+            listModel.selected().status = CommandBean.ExecutionStatus.STOPPED
+            removeSubscription()
+        }
+        addKeyPressedListener {
+            if (it?.keyChar?.toInt() == KeyEvent.VK_DELETE) {
+                listModel.remove(selectedIndex)
+            }
+        }
+        addMousePressedListener {
+            selectedIndex = locationToIndex(it?.point)
+            if (it?.clickCount == 2) {
+                registerNewCommand()
+            }
+        }
+    }
+
     private fun registerNewCommand() {
         contentArea.text = ""
-        if (this::lastSubscribe.isInitialized) {
-            lastSubscribe.dispose()
-        }
-        lastSubscribe = listModel.get(list.selectedIndex).response
+        stopListeningToCurrentCommand()
+        lastSubscribe = listModel.selected().response
             .subscribe { msg ->
                 contentArea.append(msg + "\n")
                 contentArea.caretPosition = contentArea.document.length
             }
-        subscribes[list.selectedIndex] = listModel.get(list.selectedIndex).actualSubscription
+        subscribes[list.selectedIndex] = listModel.selected().actualSubscription
     }
+
+    private fun removeSubscription() {
+        subscribes[list.selectedIndex]?.dispose()
+        subscribes.remove(list.selectedIndex)
+        stopListeningToCurrentCommand()
+    }
+
+    private fun stopListeningToCurrentCommand() {
+        if (this::lastSubscribe.isInitialized) {
+            lastSubscribe.dispose()
+        }
+    }
+
+    private fun DefaultListModel<CommandBean>.selected() = listModel.get(list.selectedIndex)
 
 }
