@@ -8,8 +8,6 @@ import kotlinx.coroutines.launch
 import pl.dwojciechowski.configuration.PluginConfiguration
 import pl.dwojciechowski.model.HttpStatusConfig
 import pl.dwojciechowski.model.ServerStatus
-import pl.dwojciechowski.proto.commands.Response
-import pl.dwojciechowski.service.ActionExecutor
 import pl.dwojciechowski.service.HttpService
 import pl.dwojciechowski.service.WncConnectorService
 import pl.dwojciechowski.ui.PLMPluginNotification
@@ -21,7 +19,6 @@ internal class PLMCompanionPanel(private val project: Project) {
 
     private val config = ServiceManager.getService(project, PluginConfiguration::class.java)
     private val windchillService = ServiceManager.getService(project, WncConnectorService::class.java)
-    private val actionExecutor = ServiceManager.getService(project, ActionExecutor::class.java)
 
     lateinit var content: JPanel
     private lateinit var customCommandPanel: JPanel
@@ -44,10 +41,10 @@ internal class PLMCompanionPanel(private val project: Project) {
         wncStatusButton.background = null
         wncStatusButton.isOpaque = false
 
-        restartWindchillButton.addListener { windchillService.restartWnc() }
-        stopWindchillButton.addListener { windchillService.stopWnc() }
-        startWindchillButton.addListener { windchillService.startWnc() }
-        xconfManagerButton.addListener { windchillService.xconf() }
+        restartWindchillButton.addActionListener { windchillService.restartWnc() }
+        stopWindchillButton.addActionListener { windchillService.stopWnc() }
+        startWindchillButton.addActionListener { windchillService.startWnc() }
+        xconfManagerButton.addActionListener { windchillService.xconf() }
         configurationButton.addActionListener { PluginSettingsDialog(project).show() }
         wncStatusButton.addActionListener {
             config.scanWindchill = !config.scanWindchill
@@ -60,10 +57,6 @@ internal class PLMCompanionPanel(private val project: Project) {
                 delay(config.refreshRate.toLong())
             }
         }
-    }
-
-    private fun JButton.addListener(function: () -> Response) {
-        this.addActionListener { actionExecutor.executeAction(this, function) }
     }
 
     private fun scanServer() {

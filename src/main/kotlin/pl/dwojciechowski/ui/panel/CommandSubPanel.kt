@@ -7,11 +7,11 @@ import com.intellij.openapi.ui.Messages
 import com.intellij.ui.RawCommandLineEditor
 import pl.dwojciechowski.configuration.PluginConfiguration
 import pl.dwojciechowski.model.CommandBean
-import pl.dwojciechowski.service.ActionExecutor
 import pl.dwojciechowski.service.WncConnectorService
 import pl.dwojciechowski.ui.component.CommandList
 import pl.dwojciechowski.ui.component.action.EditListAction
 import java.awt.event.KeyEvent
+import java.util.*
 import javax.swing.DefaultListModel
 import javax.swing.JButton
 import javax.swing.JPanel
@@ -22,7 +22,6 @@ class CommandSubPanel(
 ) {
 
     private val config: PluginConfiguration = ServiceManager.getService(project, PluginConfiguration::class.java)
-    private val actionExecutor = ServiceManager.getService(project, ActionExecutor::class.java)
     private val windchillService = ServiceManager.getService(project, WncConnectorService::class.java)
 
     private val splitPattern = "|#*#$"
@@ -67,16 +66,29 @@ class CommandSubPanel(
         executeCommandFromInputButton.addActionListener { executeFromInput() }
 
         addButton.icon = AllIcons.General.Add
-        addButton.addActionListener {
-            if (commandField.text.isEmpty()) {
-                Messages.showMessageDialog(
-                    project, "Command field is empty", "No command provided", Messages.getErrorIcon()
-                )
-            } else {
-                listModel.add(0, CommandBean("", commandField.text))
-                dispose()
+        addButton.addActionListener { handleAddToListModel() }
+    }
+
+    private fun handleAddToListModel() {
+        if (commandField.text.isEmpty()) {
+            Messages.showMessageDialog(
+                project, "Command field is empty", "No command provided", Messages.getErrorIcon()
+            )
+        } else if (Collections.list(listModel.elements()).stream().noneMatch { it.command == commandField.text }) {
+            addToModel()
+        } else {
+            val confirmed = Messages.showConfirmationDialog(
+                addButton, "Given command allready exists. Add anyway?", "", "Yes", "No"
+            ) == 0
+            if (confirmed) {
+                addToModel()
             }
         }
+    }
+
+    private fun addToModel() {
+        listModel.add(0, CommandBean("", commandField.text))
+        dispose()
     }
 
     private fun CommandList.setUpCommandHistoryRMBMenu() {
@@ -96,7 +108,6 @@ class CommandSubPanel(
                 project, "Command field is empty", "No command provided", Messages.getErrorIcon()
             )
         } else {
-            //TODO MESSAGES ON UI THREAD
             windchillService.executeStreaming(CommandBean("", commandField.text))
         }
     }
@@ -107,7 +118,6 @@ class CommandSubPanel(
                 project, "No command selected", "Missing selection error", Messages.getErrorIcon()
             )
         } else {
-            //TODO MESSAGES ON UI THREAD
             windchillService.executeStreaming(commandHistory.selectedValue.safeCopy())
         }
     }

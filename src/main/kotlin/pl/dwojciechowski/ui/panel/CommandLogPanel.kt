@@ -86,7 +86,9 @@ class CommandLogPanel(project: Project) : SimpleToolWindowPanel(false, true) {
         lastSubscribe = listModel.selected().response
             .subscribe { msg ->
                 contentArea.append(msg + "\n")
-                contentArea.caretPosition = contentArea.document.length
+                if (autoScroll) {
+                    contentArea.caretPosition = contentArea.document.length
+                }
             }
         subscribes[list.selectedIndex] = listModel.selected().actualSubscription
     }
