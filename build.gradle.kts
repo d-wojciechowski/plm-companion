@@ -3,12 +3,15 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 group = "pl.dwojciechowski"
 version = "0.4.0"
-val protobufVersion = "3.11.1"
+val protobufVersion = "3.11.4"
 val rsocketRpcVersion = "0.2.18"
-val rsocketVersion = "1.0.0-RC5"
+val rsocketVersion = "1.0.0-RC6"
+val coroutinesVersion = "1.3.3"
+val fuelVersion = "2.2.1"
+val rxJavaVersion = "3.0.0"
 
 plugins {
-    id("org.jetbrains.intellij") version "0.4.15"
+    id("org.jetbrains.intellij") version "0.4.16"
     id("com.google.protobuf") version "0.8.11"
     kotlin("jvm") version "1.3.61"
     java
@@ -21,15 +24,14 @@ repositories {
     mavenCentral()
     jcenter()
     maven("https://dl.bintray.com/kittinunf/maven")
-//    maven("https://dl.bintray.com/netifi/netifi-oss/")
 }
 
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
 
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.3")
-    implementation("com.github.kittinunf.fuel", "fuel", "2.2.1")
-    implementation("io.reactivex.rxjava3:rxjava:3.0.0-RC7")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
+    implementation("com.github.kittinunf.fuel", "fuel", fuelVersion)
+    implementation("io.reactivex.rxjava3:rxjava:$rxJavaVersion")
 
     implementation("io.rsocket:rsocket-core:$rsocketVersion")
     implementation("io.rsocket:rsocket-transport-local:$rsocketVersion")
@@ -50,7 +52,7 @@ sourceSets {
 }
 
 intellij {
-    version = "2019.3.2"
+    version = "2019.3.3"
     updateSinceUntilBuild = true
     pluginName = "PLM Companion"
 }

@@ -2,8 +2,8 @@ package pl.dwojciechowski.service
 
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
-import pl.dwojciechowski.proto.commands.Command
-import pl.dwojciechowski.proto.commands.Response
+import io.reactivex.rxjava3.subjects.Subject
+import pl.dwojciechowski.model.CommandBean
 
 interface WncConnectorService {
 
@@ -13,10 +13,12 @@ interface WncConnectorService {
         }
     }
 
-    fun stopWnc(): Response
-    fun startWnc(): Response
-    fun restartWnc(): Response
-    fun xconf(): Response
-    fun execCommand(command: Command): Response
+    fun stopWnc()
+    fun startWnc()
+    fun restartWnc()
+    fun xconf()
+    fun executeStreaming(commandBean: CommandBean)
+
+    fun getOutputSubject(): Subject<CommandBean>
 
 }
