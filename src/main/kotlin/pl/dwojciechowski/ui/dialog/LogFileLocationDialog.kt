@@ -4,13 +4,11 @@ import com.intellij.icons.AllIcons
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.ui.Messages
-import io.reactivex.rxjava3.subjects.PublishSubject
 import java.awt.event.ActionEvent
 import javax.swing.*
 
 class LogFileLocationDialog(
     private val project: Project,
-    private val logLocation: PublishSubject<String>,
     initTFValue: String = ""
 ) : DialogWrapper(project), org.picocontainer.Disposable {
 
@@ -18,6 +16,8 @@ class LogFileLocationDialog(
 
     private lateinit var logFileLocationTF: JTextField
     private lateinit var remotePickerButton: JButton
+
+    var result = initTFValue
 
     init {
         init()
@@ -47,9 +47,9 @@ class LogFileLocationDialog(
                     )
                     return
                 }
-                this@LogFileLocationDialog.logLocation.onNext(logFileLocationTF.text)
                 dispose()
                 close(OK_EXIT_CODE)
+                result = logFileLocationTF.text
             }
         }
 

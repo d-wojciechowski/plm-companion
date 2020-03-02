@@ -1,61 +1,93 @@
 package pl.dwojciechowski.service.impl
 
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
-import io.grpc.Deadline
-import io.grpc.ManagedChannelBuilder
+import com.intellij.openapi.ui.Messages
+import io.reactivex.rxjava3.subjects.PublishSubject
+import io.reactivex.rxjava3.subjects.Subject
+import io.rsocket.RSocket
+import io.rsocket.RSocketFactory
+import io.rsocket.transport.netty.client.TcpClientTransport
 import pl.dwojciechowski.configuration.PluginConfiguration
-import pl.dwojciechowski.proto.CommandServiceGrpc
-import pl.dwojciechowski.proto.Service
+import pl.dwojciechowski.model.CommandBean
+import pl.dwojciechowski.proto.commands.Command
+import pl.dwojciechowski.proto.commands.CommandServiceClient
+import pl.dwojciechowski.proto.commands.Status
 import pl.dwojciechowski.service.WncConnectorService
-import java.util.concurrent.TimeUnit
+import pl.dwojciechowski.ui.PLMPluginNotification
+import pl.dwojciechowski.ui.PluginIcons
 
-class WncConnectorServiceImpl(project: Project) : WncConnectorService {
+class WncConnectorServiceImpl(private val project: Project) : WncConnectorService {
 
     private val config = ServiceManager.getService(project, PluginConfiguration::class.java)
+    private val commandSubject: Subject<CommandBean> = PublishSubject.create<CommandBean>()
 
-    override fun restartWnc(): Service.Response {
-        val response = stopWnc()
-        return if (response.status == 200) startWnc() else response
+    override fun restartWnc() {
+        executeStreaming(CommandBean("Windchill Restart", "windchill stop && windchill start"))
     }
 
-    override fun stopWnc(): Service.Response {
-        return execCommand(
-            Service.Command.newBuilder()
-                .setCommand("windchill")
-                .setArgs("stop")
-                .build()
-        )
+    override fun stopWnc() {
+        return executeStreaming(CommandBean("Windchill Stop", "windchill stop"))
     }
 
-    override fun startWnc(): Service.Response {
-        return execCommand(
-            Service.Command.newBuilder()
-                .setCommand("windchill")
-                .setArgs("start")
-                .build()
-        )
+    override fun startWnc() {
+        return executeStreaming(CommandBean("Windchill Start", "windchill start"))
     }
 
-    override fun xconf(): Service.Response {
-        return execCommand(
-            Service.Command.newBuilder()
-                .setCommand("xconfmanager")
-                .setArgs("-p")
-                .build()
-        )
+    override fun xconf() {
+        return executeStreaming(CommandBean("Xconfmanager Reload", "xconfmanager -p"))
     }
 
-    override fun execCommand(command: Service.Command): Service.Response {
-        val channel = ManagedChannelBuilder.forAddress(config.hostname, 4040)
-            .usePlaintext()
-            .build()
-
-        val stub = CommandServiceGrpc.newBlockingStub(channel)
-            .withDeadline(Deadline.after(config.timeout.toLong(), TimeUnit.SECONDS))
-        val response = stub.execute(command)
-        channel.shutdown()
-        return response
+    override fun executeStreaming(commandBean: CommandBean) {
+        try {
+            val command = commandBean.getCommand()
+            commandBean.status = CommandBean.ExecutionStatus.RUNNING
+            PLMPluginNotification.notify(project, "$commandBean started", PluginIcons.CONFIRMATION)
+            commandBean.response.onNext("Started execution of $commandBean")
+            val rSocket = establishConnection()
+            rSocket.executeStreamingCall(command, commandBean)
+            commandBean.actualSubscription = rSocket ?: commandBean.actualSubscription
+            commandSubject.onNext(commandBean)
+        } catch (e: Exception) {
+            commandBean.status = CommandBean.ExecutionStatus.STOPPED
+            commandBean.response.onNext(e.message)
+            ApplicationManager.getApplication().invokeLater {
+                Messages.showErrorDialog(project, e.toString(), e.message ?: "")
+            }
+        }
     }
+
+    private fun RSocket?.executeStreamingCall(command: Command, commandBean: CommandBean) {
+        CommandServiceClient(this)
+            .executeStreaming(command)
+            .doOnNext {
+                commandBean.response.onNext(it.message)
+                if (it.status == Status.FAILED) {
+                    commandBean.status = CommandBean.ExecutionStatus.STOPPED
+                }
+            }.doOnError {
+                commandBean.response.onNext(it.message)
+                PLMPluginNotification.notify(project, "Error on $commandBean", PluginIcons.ERROR)
+                commandBean.status = CommandBean.ExecutionStatus.STOPPED
+            }.doOnComplete {
+                if (commandBean.status != CommandBean.ExecutionStatus.STOPPED) {
+                    commandBean.status = CommandBean.ExecutionStatus.COMPLETED
+                    PLMPluginNotification.notify(project, "$commandBean completed", PluginIcons.CONFIRMATION)
+                } else {
+                    PLMPluginNotification.notify(project, "Error on $commandBean", PluginIcons.ERROR)
+                }
+            }.subscribe()
+    }
+
+    private fun establishConnection(): RSocket? {
+        return RSocketFactory.connect()
+            .fragment(1024)
+            .transport(TcpClientTransport.create(config.hostname, 4040))
+            .start()
+            .block()
+    }
+
+    override fun getOutputSubject(): Subject<CommandBean> = commandSubject
 
 }

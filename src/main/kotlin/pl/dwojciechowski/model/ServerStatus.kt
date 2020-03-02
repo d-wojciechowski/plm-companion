@@ -11,7 +11,7 @@ enum class ServerStatus(
 
     RUNNING(PluginIcons.RUNNING, "Running"),
     DOWN(PluginIcons.ERROR, "Turned Off"),
-    REACHABLE(PluginIcons.WARNING, "Server reachable"),
+    AVAILABLE(PluginIcons.WARNING, "Server available"),
     NOT_SCANNING(AllIcons.Debugger.Db_field_breakpoint, "Scanning Stopped"),
     UNAUTHORIZED(AllIcons.Ide.Readonly, "Unauthorized");
 

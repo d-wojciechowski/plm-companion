@@ -6,7 +6,7 @@ import com.intellij.notification.NotificationType
 import com.intellij.openapi.project.Project
 import javax.swing.Icon
 
-internal object WindchillNotification {
+internal object PLMPluginNotification {
 
     private val GROUP = NotificationGroup(
         "Windchill", NotificationDisplayType.BALLOON, true
