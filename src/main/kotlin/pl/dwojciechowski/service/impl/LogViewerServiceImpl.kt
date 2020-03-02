@@ -2,6 +2,7 @@ package pl.dwojciechowski.service.impl
 
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
+import io.rsocket.RSocket
 import io.rsocket.RSocketFactory
 import io.rsocket.transport.netty.client.TcpClientTransport
 import pl.dwojciechowski.configuration.PluginConfiguration
@@ -36,10 +37,7 @@ class LogViewerServiceImpl(project: Project) : LogViewerService {
         logsObserver: (LogLine) -> Unit,
         logsErrorObserver: (Throwable) -> Unit = { println(it) }
     ): Disposable {
-        val rSocket = RSocketFactory.connect()
-            .fragment(1024)
-            .transport(TcpClientTransport.create(config.hostname, 4040))
-            .start().block()
+        val rSocket = establishConnection()
         val fileLocation = LogFileLocation.newBuilder()
             .setFileLocation(logFileLocation)
             .setLogType(source)
@@ -49,6 +47,14 @@ class LogViewerServiceImpl(project: Project) : LogViewerService {
             .doOnNext(logsObserver)
             .doOnError(logsErrorObserver)
             .subscribe()
+    }
+
+    private fun establishConnection(): RSocket? {
+        return RSocketFactory.connect()
+            .fragment(1024)
+            .transport(TcpClientTransport.create(config.hostname, 4040))
+            .start()
+            .block()
     }
 
 }
