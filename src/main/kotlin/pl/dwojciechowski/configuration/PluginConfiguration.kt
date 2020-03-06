@@ -25,6 +25,12 @@ class PluginConfiguration : PersistentStateComponent<PluginConfiguration> {
 
     var commandsHistory = mutableListOf<String>()
 
+    // Load From file
+    var lffFolder: String = ""
+    var lffTarget: Int = 0
+    var lffOrgName: String = ""
+    var lffContName: String = ""
+
     override fun getState() = this
 
     override fun loadState(config: PluginConfiguration) {
