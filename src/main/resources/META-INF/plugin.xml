@@ -22,4 +22,12 @@
                             serviceImplementation="pl.dwojciechowski.service.impl.HttpServiceImpl"/>
     </extensions>
 
+    <actions>
+        <action id="PLMCompanion.LoadFromFile"
+                class="pl.dwojciechowski.ui.actions.LoadFromFileAction"
+                text="Load from File">
+            <add-to-group group-id="ProjectViewPopupMenu"/>
+        </action>
+    </actions>
+
 </idea-plugin>

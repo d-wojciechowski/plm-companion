@@ -4,7 +4,9 @@ import com.intellij.icons.AllIcons
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.Messages
+import com.intellij.openapi.ui.showYesNoDialog
 import com.intellij.ui.RawCommandLineEditor
+import com.intellij.util.ui.UIUtil
 import pl.dwojciechowski.configuration.PluginConfiguration
 import pl.dwojciechowski.model.CommandBean
 import pl.dwojciechowski.service.WncConnectorService
@@ -77,12 +79,13 @@ class CommandSubPanel(
         } else if (Collections.list(listModel.elements()).stream().noneMatch { it.command == commandField.text }) {
             addToModel()
         } else {
-            val confirmed = Messages.showConfirmationDialog(
-                addButton, "Given command allready exists. Add anyway?", "", "Yes", "No"
-            ) == 0
-            if (confirmed) {
-                addToModel()
-            }
+            val confirmed = showYesNoDialog(
+                title = "",
+                message = "Given command allready exists. Add anyway?",
+                project = project,
+                icon = UIUtil.getQuestionIcon()
+            )
+            if (confirmed) addToModel()
         }
     }
 
