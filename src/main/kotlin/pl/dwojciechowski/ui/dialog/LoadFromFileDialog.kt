@@ -1,6 +1,7 @@
 package pl.dwojciechowski.ui.dialog
 
 import com.intellij.icons.AllIcons
+import com.intellij.openapi.Disposable
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper
@@ -16,7 +17,7 @@ import javax.swing.*
 class LoadFromFileDialog(
     private val project: Project,
     private val vfiles: List<VirtualFile>
-) : DialogWrapper(project), org.picocontainer.Disposable {
+) : DialogWrapper(project), Disposable {
 
     private val config: PluginConfiguration = ServiceManager.getService(project, PluginConfiguration::class.java)
     private val commandService: WncConnectorService =
