@@ -12,6 +12,7 @@ import pl.dwojciechowski.service.HttpService
 import pl.dwojciechowski.service.WncConnectorService
 import pl.dwojciechowski.ui.PLMPluginNotification
 import pl.dwojciechowski.ui.PluginIcons
+import pl.dwojciechowski.ui.dialog.PluginSettingsDialog
 import javax.swing.JButton
 import javax.swing.JPanel
 

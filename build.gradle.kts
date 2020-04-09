@@ -6,14 +6,14 @@ version = "0.5.0"
 val protobufVersion = "3.11.4"
 val rsocketRpcVersion = "0.2.18"
 val rsocketVersion = "1.0.0-RC6"
-val coroutinesVersion = "1.3.3"
+val coroutinesVersion = "1.3.5"
 val fuelVersion = "2.2.1"
-val rxJavaVersion = "3.0.0"
+val rxJavaVersion = "3.0.2"
 
 plugins {
-    id("org.jetbrains.intellij") version "0.4.16"
-    id("com.google.protobuf") version "0.8.11"
-    kotlin("jvm") version "1.3.61"
+    id("org.jetbrains.intellij") version "0.4.18"
+    id("com.google.protobuf") version "0.8.12"
+    kotlin("jvm") version "1.3.71"
     java
     idea
 }
@@ -52,7 +52,7 @@ sourceSets {
 }
 
 intellij {
-    version = "2019.3.3"
+    version = "2020.1"
     updateSinceUntilBuild = true
     pluginName = "PLM Companion"
 }

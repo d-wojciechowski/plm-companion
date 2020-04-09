@@ -8,7 +8,7 @@ import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.wm.ToolWindow
 import com.intellij.openapi.wm.ToolWindowFactory
-import com.intellij.openapi.wm.impl.ToolWindowImpl
+import com.intellij.openapi.wm.ex.ToolWindowEx
 import com.intellij.ui.content.ContentFactory
 import pl.dwojciechowski.configuration.PluginConfiguration
 import pl.dwojciechowski.service.LogViewerService
@@ -46,13 +46,13 @@ class LogViewerPanelFactory : ToolWindowFactory, DumbAware {
         toolWindow.contentManager.addContent(content)
         toolWindow.contentManager.addContent(content2)
         toolWindow.contentManager.addContent(commandContentPanel)
-        (toolWindow as ToolWindowImpl).setTabActions(createNewTabAction(project, contentFactory, toolWindow))
+        (toolWindow as ToolWindowEx).setTabActions(createNewTabAction(project, contentFactory, toolWindow))
     }
 
     private fun createNewTabAction(
         project: Project,
         contentFactory: ContentFactory,
-        toolWindow: ToolWindowImpl
+        toolWindow: ToolWindowEx
     ): DumbAwareAction {
         return object :
             DumbAwareAction("New Window", "Create new log window", AllIcons.General.Add) {

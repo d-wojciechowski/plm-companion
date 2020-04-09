@@ -1,14 +1,13 @@
-package pl.dwojciechowski.ui.panel
+package pl.dwojciechowski.ui.dialog
 
 import com.intellij.icons.AllIcons
+import com.intellij.openapi.Disposable
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.ComboBox
 import com.intellij.openapi.ui.DialogWrapper
-import org.picocontainer.Disposable
 import pl.dwojciechowski.configuration.PluginConfiguration
 import pl.dwojciechowski.ui.PLMPluginNotification
-import pl.dwojciechowski.ui.dialog.RemoteFilePickerDialog
 import java.awt.Dimension
 import java.awt.event.ActionEvent
 import javax.swing.*
