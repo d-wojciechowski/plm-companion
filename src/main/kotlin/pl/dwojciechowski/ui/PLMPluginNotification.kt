@@ -9,7 +9,7 @@ import javax.swing.Icon
 internal object PLMPluginNotification {
 
     private val GROUP = NotificationGroup(
-        "Windchill", NotificationDisplayType.BALLOON, true
+        "Windchill", NotificationDisplayType.BALLOON, true, null, null
     )
 
     fun serverOK(project: Project) {
