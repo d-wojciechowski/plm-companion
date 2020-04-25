@@ -7,7 +7,7 @@ val protobufVersion = "3.11.4"
 val rsocketRpcVersion = "0.2.18"
 val rsocketVersion = "1.0.0-RC6"
 val coroutinesVersion = "1.3.5"
-val fuelVersion = "2.2.1"
+val fuelVersion = "2.2.2"
 val rxJavaVersion = "3.0.2"
 
 plugins {

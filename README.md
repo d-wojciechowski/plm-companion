@@ -1,7 +1,7 @@
-[![pipeline status](https://gitlab.com/wojciechowskid/wncplugin/badges/master/pipeline.svg)](https://gitlab.com/wojciechowskid/wncplugin/commits/master)
-# Windchill Intellij Plugin
+<!-- [![pipeline status](https://gitlab.com/wojciechowskid/wncplugin/badges/master/pipeline.svg)](https://gitlab.com/wojciechowskid/wncplugin/commits/master) -->
+# PLM Companion Plugin
 
-Plugin for Intellij Idea to interact with Windchill.
+Plugin for Intellij Idea to interact with PLM System.
 
 ## Getting Started
 
@@ -31,12 +31,11 @@ Nice to have:
 
 ### Installing
 
-Go to plugin section in Intellij Idea and install it from disk (poit to artifact which came from build)
+Go to plugin section in Intellij Idea and install it from disk (point to artifact which came from build) or from JetBrains plugin marketplace: [Link](https://plugins.jetbrains.com/plugin/13154-plm-companion/versions)
 ## Authors
 
 * **Dominik Wojciechowski** - [wojciechowskid](https://gitlab.com/wojciechowskid)
 * **Michał Celniak** - [Michal1993r](https://gitlab.com/Michal1993r)
-* **Mateusz Sliwa** - [mati220i](https://gitlab.com/mati220i)
 
 ## License
 

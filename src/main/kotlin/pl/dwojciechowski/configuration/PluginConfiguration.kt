@@ -20,6 +20,7 @@ class PluginConfiguration : PersistentStateComponent<PluginConfiguration> {
     var scanWindchill: Boolean = false
 
     var port: Int = 80
+    var addonPort: Int = 4040
     var refreshRate: Int = 1000
     var timeout: Int = 5000
 

@@ -7,20 +7,18 @@ import com.intellij.openapi.ui.Messages
 import io.reactivex.rxjava3.subjects.PublishSubject
 import io.reactivex.rxjava3.subjects.Subject
 import io.rsocket.RSocket
-import io.rsocket.RSocketFactory
-import io.rsocket.transport.netty.client.TcpClientTransport
-import pl.dwojciechowski.configuration.PluginConfiguration
 import pl.dwojciechowski.model.CommandBean
 import pl.dwojciechowski.proto.commands.Command
 import pl.dwojciechowski.proto.commands.CommandServiceClient
 import pl.dwojciechowski.proto.commands.Status
-import pl.dwojciechowski.service.WncConnectorService
+import pl.dwojciechowski.service.ConnectorService
+import pl.dwojciechowski.service.RemoteService
 import pl.dwojciechowski.ui.PLMPluginNotification
 import pl.dwojciechowski.ui.PluginIcons
 
-class WncConnectorServiceImpl(private val project: Project) : WncConnectorService {
+class RemoteServiceImpl(private val project: Project) : RemoteService {
 
-    private val config = ServiceManager.getService(project, PluginConfiguration::class.java)
+    private val connector = ServiceManager.getService(project, ConnectorService::class.java)
     private val commandSubject: Subject<CommandBean> = PublishSubject.create<CommandBean>()
 
     override fun restartWnc() {
@@ -45,7 +43,7 @@ class WncConnectorServiceImpl(private val project: Project) : WncConnectorServic
             commandBean.status = CommandBean.ExecutionStatus.RUNNING
             PLMPluginNotification.notify(project, "$commandBean started", PluginIcons.CONFIRMATION)
             commandBean.response.onNext("Started execution of $commandBean")
-            val rSocket = establishConnection()
+            val rSocket = connector.establishConnection()
             rSocket.executeStreamingCall(command, commandBean)
             commandBean.actualSubscription = rSocket ?: commandBean.actualSubscription
             commandSubject.onNext(commandBean)
@@ -78,14 +76,6 @@ class WncConnectorServiceImpl(private val project: Project) : WncConnectorServic
                     PLMPluginNotification.notify(project, "Error on $commandBean", PluginIcons.ERROR)
                 }
             }.subscribe()
-    }
-
-    private fun establishConnection(): RSocket? {
-        return RSocketFactory.connect()
-            .fragment(1024)
-            .transport(TcpClientTransport.create(config.hostname, 4040))
-            .start()
-            .block()
     }
 
     override fun getOutputSubject(): Subject<CommandBean> = commandSubject

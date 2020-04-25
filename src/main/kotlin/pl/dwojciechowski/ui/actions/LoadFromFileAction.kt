@@ -10,9 +10,7 @@ class LoadFromFileAction : AnAction() {
 
     override fun actionPerformed(e: AnActionEvent) {
         val project = e.project ?: throw Exception("Project not defined exception")
-        val data = PlatformDataKeys.VIRTUAL_FILE_ARRAY.getData(e.dataContext)
-        data?.first()?.fileType
-        val flatMap = data?.flatMap {
+        val flatMap = PlatformDataKeys.VIRTUAL_FILE_ARRAY.getData(e.dataContext)?.flatMap {
             if (it.isDirectory) {
                 collectNestedFiles(it)
             } else {
@@ -23,8 +21,8 @@ class LoadFromFileAction : AnAction() {
         LoadFromFileDialog(project, flatMap).showAndGet()
     }
 
-    private fun collectNestedFiles(vfile: VirtualFile): List<VirtualFile> {
-        return vfile.children.flatMap {
+    private fun collectNestedFiles(vFile: VirtualFile): List<VirtualFile> {
+        return vFile.children.flatMap {
             if (it.isDirectory) {
                 collectNestedFiles(it)
             } else {
