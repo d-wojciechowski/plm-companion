@@ -9,19 +9,18 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.ui.components.JBList
 import pl.dwojciechowski.configuration.PluginConfiguration
 import pl.dwojciechowski.model.CommandBean
-import pl.dwojciechowski.service.WncConnectorService
+import pl.dwojciechowski.service.RemoteService
 import pl.dwojciechowski.ui.component.CustomVirtualFileListCellRenderer
 import java.awt.event.ActionEvent
 import javax.swing.*
 
 class LoadFromFileDialog(
     private val project: Project,
-    private val vfiles: List<VirtualFile>
+    private val vFiles: List<VirtualFile>
 ) : DialogWrapper(project), Disposable {
 
     private val config: PluginConfiguration = ServiceManager.getService(project, PluginConfiguration::class.java)
-    private val commandService: WncConnectorService =
-        ServiceManager.getService(project, WncConnectorService::class.java)
+    private val commandService: RemoteService = ServiceManager.getService(project, RemoteService::class.java)
 
     lateinit var content: JPanel
 
@@ -44,7 +43,7 @@ class LoadFromFileDialog(
 
     fun createUIComponents() {
         listModel = DefaultListModel()
-        vfiles.forEach {
+        vFiles.forEach {
             listModel.addElement(it)
         }
 

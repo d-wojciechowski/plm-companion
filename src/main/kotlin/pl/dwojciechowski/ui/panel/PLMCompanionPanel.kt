@@ -9,7 +9,7 @@ import pl.dwojciechowski.configuration.PluginConfiguration
 import pl.dwojciechowski.model.HttpStatusConfig
 import pl.dwojciechowski.model.ServerStatus
 import pl.dwojciechowski.service.HttpService
-import pl.dwojciechowski.service.WncConnectorService
+import pl.dwojciechowski.service.RemoteService
 import pl.dwojciechowski.ui.PLMPluginNotification
 import pl.dwojciechowski.ui.PluginIcons
 import pl.dwojciechowski.ui.dialog.PluginSettingsDialog
@@ -19,7 +19,7 @@ import javax.swing.JPanel
 internal class PLMCompanionPanel(private val project: Project) {
 
     private val config = ServiceManager.getService(project, PluginConfiguration::class.java)
-    private val windchillService = ServiceManager.getService(project, WncConnectorService::class.java)
+    private val windchillService = ServiceManager.getService(project, RemoteService::class.java)
 
     lateinit var content: JPanel
     private lateinit var customCommandPanel: JPanel

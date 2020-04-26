@@ -5,11 +5,11 @@ import com.intellij.openapi.project.Project
 import io.reactivex.rxjava3.subjects.Subject
 import pl.dwojciechowski.model.CommandBean
 
-interface WncConnectorService {
+interface RemoteService {
 
     companion object {
-        fun getInstance(project: Project): WncConnectorService {
-            return ServiceManager.getService(project, WncConnectorService::class.java)
+        fun getInstance(project: Project): RemoteService {
+            return ServiceManager.getService(project, RemoteService::class.java)
         }
     }
 

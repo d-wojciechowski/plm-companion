@@ -9,10 +9,11 @@ import com.intellij.ui.RawCommandLineEditor
 import com.intellij.util.ui.UIUtil
 import pl.dwojciechowski.configuration.PluginConfiguration
 import pl.dwojciechowski.model.CommandBean
-import pl.dwojciechowski.service.WncConnectorService
+import pl.dwojciechowski.service.RemoteService
 import pl.dwojciechowski.ui.component.CommandList
 import pl.dwojciechowski.ui.component.action.EditListAction
 import java.awt.event.KeyEvent
+import java.time.LocalTime
 import java.util.*
 import javax.swing.DefaultListModel
 import javax.swing.JButton
@@ -24,7 +25,7 @@ class CommandSubPanel(
 ) {
 
     private val config: PluginConfiguration = ServiceManager.getService(project, PluginConfiguration::class.java)
-    private val windchillService = ServiceManager.getService(project, WncConnectorService::class.java)
+    private val windchillService = ServiceManager.getService(project, RemoteService::class.java)
 
     private val splitPattern = "|#*#$"
 
@@ -121,7 +122,9 @@ class CommandSubPanel(
                 project, "No command selected", "Missing selection error", Messages.getErrorIcon()
             )
         } else {
-            windchillService.executeStreaming(commandHistory.selectedValue.safeCopy())
+            val commandBean = commandHistory.selectedValue.safeCopy()
+            commandBean.executionTime = LocalTime.now()
+            windchillService.executeStreaming(commandBean)
         }
     }
 

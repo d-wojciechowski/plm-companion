@@ -2,18 +2,18 @@ package pl.dwojciechowski.service.impl
 
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
-import io.rsocket.RSocket
-import io.rsocket.RSocketFactory
-import io.rsocket.transport.netty.client.TcpClientTransport
 import pl.dwojciechowski.configuration.PluginConfiguration
 import pl.dwojciechowski.proto.files.LogFileLocation
 import pl.dwojciechowski.proto.files.LogLine
 import pl.dwojciechowski.proto.files.LogViewerServiceClient
+import pl.dwojciechowski.service.ConnectorService
 import pl.dwojciechowski.service.LogViewerService
 import reactor.core.Disposable
 
 class LogViewerServiceImpl(project: Project) : LogViewerService {
+
     private val config = ServiceManager.getService(project, PluginConfiguration::class.java)
+    private val connector = ServiceManager.getService(project, ConnectorService::class.java)
 
     override fun getLogFile(
         source: LogFileLocation.Source,
@@ -37,7 +37,7 @@ class LogViewerServiceImpl(project: Project) : LogViewerService {
         logsObserver: (LogLine) -> Unit,
         logsErrorObserver: (Throwable) -> Unit = { println(it) }
     ): Disposable {
-        val rSocket = establishConnection()
+        val rSocket = connector.establishConnection()
         val fileLocation = LogFileLocation.newBuilder()
             .setFileLocation(logFileLocation)
             .setLogType(source)
@@ -47,14 +47,6 @@ class LogViewerServiceImpl(project: Project) : LogViewerService {
             .doOnNext(logsObserver)
             .doOnError(logsErrorObserver)
             .subscribe()
-    }
-
-    private fun establishConnection(): RSocket? {
-        return RSocketFactory.connect()
-            .fragment(1024)
-            .transport(TcpClientTransport.create(config.hostname, 4040))
-            .start()
-            .block()
     }
 
 }

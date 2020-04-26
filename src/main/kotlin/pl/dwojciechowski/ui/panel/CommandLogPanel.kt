@@ -6,7 +6,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.SimpleToolWindowPanel
 import io.reactivex.rxjava3.disposables.Disposable
 import pl.dwojciechowski.model.CommandBean
-import pl.dwojciechowski.service.WncConnectorService
+import pl.dwojciechowski.service.RemoteService
 import pl.dwojciechowski.ui.component.CommandList
 import java.awt.event.KeyEvent
 import javax.swing.DefaultListModel
@@ -16,8 +16,7 @@ import javax.swing.JTextArea
 
 class CommandLogPanel(project: Project) : SimpleToolWindowPanel(false, true) {
 
-    private val commandService: WncConnectorService =
-        ServiceManager.getService(project, WncConnectorService::class.java)
+    private val commandService: RemoteService = ServiceManager.getService(project, RemoteService::class.java)
 
     lateinit var panel: JPanel
 
@@ -105,6 +104,6 @@ class CommandLogPanel(project: Project) : SimpleToolWindowPanel(false, true) {
         }
     }
 
-    private fun DefaultListModel<CommandBean>.selected() = listModel.get(list.selectedIndex)
+    private fun DefaultListModel<CommandBean>.selected() = this.get(list.selectedIndex)
 
 }

@@ -22,6 +22,7 @@ class PluginSettingsDialog(private val project: Project) : DialogWrapper(project
     private lateinit var hostnameField: JTextField
     private lateinit var windchillRelativeTextField: JTextField
     private lateinit var portSpinner: JSpinner
+    private lateinit var addonPortSpinner: JSpinner
     private lateinit var loginField: JTextField
     private lateinit var passwordField: JPasswordField
     private lateinit var refreshRateSpinner: JSpinner
@@ -36,6 +37,8 @@ class PluginSettingsDialog(private val project: Project) : DialogWrapper(project
         portSpinner = JSpinner(SpinnerNumberModel(8080, 1, 9999, 1))
             .withFixedSize(Dimension(70, 5))
         portSpinner.editor = JSpinner.NumberEditor(portSpinner, ":#")
+        addonPortSpinner = JSpinner(SpinnerNumberModel(4040, 1, 9999, 1))
+        addonPortSpinner.editor = JSpinner.NumberEditor(addonPortSpinner, "#")
     }
 
     init {
@@ -47,6 +50,7 @@ class PluginSettingsDialog(private val project: Project) : DialogWrapper(project
 
         remotePickerButton.icon = AllIcons.General.OpenDisk
         remotePickerButton.addActionListener {
+            saveConfig()
             val remoteFilePickerDialog = RemoteFilePickerDialog(project, logFileLocation.text)
             if (remoteFilePickerDialog.showAndGet()) {
                 logFileLocation.text = remoteFilePickerDialog.chosenItems.first()
@@ -71,6 +75,7 @@ class PluginSettingsDialog(private val project: Project) : DialogWrapper(project
         refreshRateSpinner.value = config.refreshRate
         timeoutSpinner.value = config.timeout
         logFileLocation.text = config.logFileLocation
+        addonPortSpinner.value = config.addonPort
     }
 
     private fun saveConfig() {
@@ -84,7 +89,7 @@ class PluginSettingsDialog(private val project: Project) : DialogWrapper(project
         config.refreshRate = refreshRateSpinner.value as Int
         config.timeout = timeoutSpinner.value as Int
         config.logFileLocation = logFileLocation.text
-
+        config.addonPort = addonPortSpinner.value as Int
     }
 
 
