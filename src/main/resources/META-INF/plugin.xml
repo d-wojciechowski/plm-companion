@@ -1,5 +1,5 @@
 <idea-plugin>
-    <id>pl.dominikw.PLMCompanion</id>
+    <id>pl.dominikw.Windchill-Intellij-Plugin</id>
     <name>PLM Companion</name>
     <vendor email="doominikwoojciechowski@gmail.com">Dominik Wojciechowski</vendor>
 
