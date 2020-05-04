@@ -15,7 +15,7 @@ class FatButtonPanel(private val project: Project) {
 
     private val config = ServiceManager.getService(project, PluginConfiguration::class.java)
     private val windchillService = ServiceManager.getService(project, RemoteService::class.java)
-    private val httpService = ServiceManager.getService(project, StatusService::class.java)
+    private val statusService = ServiceManager.getService(project, StatusService::class.java)
 
     lateinit var content: JPanel
 
@@ -39,7 +39,7 @@ class FatButtonPanel(private val project: Project) {
         configurationButton.addActionListener { PluginSettingsDialog(project).show() }
         wncStatusButton.addActionListener { config.scanWindchill = !config.scanWindchill }
 
-        httpService.getOutputSubject().subscribe { wncStatusButton.set(it) }
+        statusService.getOutputSubject().subscribe { wncStatusButton.set(it) }
     }
 
     private fun JButton.set(status: ServerStatus) {
