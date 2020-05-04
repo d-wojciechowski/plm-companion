@@ -2,11 +2,12 @@ package pl.dwojciechowski.service.impl
 
 import com.github.kittinunf.fuel.core.extensions.authentication
 import com.github.kittinunf.fuel.httpGet
+import com.intellij.openapi.project.Project
 import pl.dwojciechowski.model.HttpStatusConfig
 import pl.dwojciechowski.model.ServerStatus
 import pl.dwojciechowski.service.HttpService
 
-class HttpServiceImpl : HttpService {
+class HttpServiceImpl(private val project: Project) : HttpService {
 
     override fun getStatus(config: HttpStatusConfig): ServerStatus =
         try {
