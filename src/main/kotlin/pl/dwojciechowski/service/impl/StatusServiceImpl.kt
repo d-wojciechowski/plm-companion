@@ -13,31 +13,23 @@ import pl.dwojciechowski.configuration.PluginConfiguration
 import pl.dwojciechowski.model.HttpStatusConfig
 import pl.dwojciechowski.model.ServerStatus
 import pl.dwojciechowski.service.StatusService
-import pl.dwojciechowski.ui.PLMPluginNotification
 
 class StatusServiceImpl(project: Project) : StatusService {
 
     private val config = ServiceManager.getService(project, PluginConfiguration::class.java)
     private val commandSubject = PublishSubject.create<ServerStatus>()
 
-    private var previousStatus = ServerStatus.DOWN
-
     init {
         GlobalScope.launch {
             while (true) {
-                val status = if (config.scanWindchill) {
-                    getStatus(HttpStatusConfig(config))
-                } else {
-                    ServerStatus.NOT_SCANNING
-                }
-                commandSubject.onNext(status)
-                when (status) {
-                    previousStatus -> Unit
-                    ServerStatus.AVAILABLE -> PLMPluginNotification.apacheOK(project)
-                    ServerStatus.RUNNING -> PLMPluginNotification.serverOK(project)
-                    else -> PLMPluginNotification.serverKO(project)
-                }
-                previousStatus = status
+                commandSubject.onNext(
+                    if (config.scanWindchill) {
+                        getStatus(HttpStatusConfig(config))
+                    } else {
+                        ServerStatus.NOT_SCANNING
+                    }
+                )
+
                 delay(config.refreshRate.toLong())
             }
         }
