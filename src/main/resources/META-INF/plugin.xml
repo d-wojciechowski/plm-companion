@@ -35,6 +35,7 @@
 
         <group id="PLMCompanion.NavBarGroup" text="PLM" compact="true">
             <action id="PLMCompanion.Label" class="pl.dwojciechowski.ui.actions.PLMLabelAction"/>
+            <separator/>
             <action id="PLMCompanion.Start" class="pl.dwojciechowski.ui.actions.StartWncAction" text="Start WNC"
                     icon="/runConfigurations/testState/run.svg"/>
             <action id="PLMCompanion.Stop" class="pl.dwojciechowski.ui.actions.StopWncAction" text="Stop WNC"
