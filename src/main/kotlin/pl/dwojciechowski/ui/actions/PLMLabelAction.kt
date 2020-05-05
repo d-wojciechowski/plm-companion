@@ -29,16 +29,15 @@ class PLMLabelAction : DumbAwareAction(), CustomComponentAction {
             val statusService = ServiceManager.getService(project!!, StatusService::class.java)
             if (this::subscription.isInitialized) subscription.dispose()
             subscription = statusService.getOutputSubject().subscribe {
-                if(clientProperty is MyLabel){
+                if (clientProperty is MyLabel) {
                     clientProperty.icon = it.icon
                 }
-                println(" STATUS UPDATED ${it.label}")
             }
         }
     }
 
     override fun actionPerformed(e: AnActionEvent) {
-        //do nothing
+        // Just a label, so no action is performed on click
     }
 
     override fun createCustomComponent(
@@ -51,8 +50,8 @@ class PLMLabelAction : DumbAwareAction(), CustomComponentAction {
     }
 
 
-    class MyLabel(private val myPresentation: Presentation) :
-        JBLabel() {
+    class MyLabel(private val myPresentation: Presentation) : JBLabel() {
+
         private fun updatePresentation() {
             text = StringUtil.notNullize(myPresentation.text)
             toolTipText = StringUtil.nullize(myPresentation.description)
@@ -62,11 +61,16 @@ class PLMLabelAction : DumbAwareAction(), CustomComponentAction {
         init {
             myPresentation.addPropertyChangeListener { e ->
                 val propertyName = e.propertyName
-                if (Presentation.PROP_TEXT == propertyName || Presentation.PROP_DESCRIPTION == propertyName || Presentation.PROP_ICON == propertyName) {
+                if (Presentation.PROP_TEXT == propertyName
+                    || Presentation.PROP_DESCRIPTION == propertyName
+                    || Presentation.PROP_ICON == propertyName
+                ) {
                     updatePresentation()
                 }
             }
             updatePresentation()
         }
+
     }
+
 }

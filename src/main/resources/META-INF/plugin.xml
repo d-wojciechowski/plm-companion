@@ -33,7 +33,8 @@
             <add-to-group group-id="ProjectViewPopupMenu"/>
         </action>
 
-        <group id="PLMCompanion.NavBarGroup" text="PLM" compact="true">
+        <group id="PLMCompanion.NavBarGroup" class="pl.dwojciechowski.ui.actions.PLMActionGroup" text="PLM"
+               compact="true">
             <action id="PLMCompanion.Label" class="pl.dwojciechowski.ui.actions.PLMLabelAction"/>
             <separator/>
             <action id="PLMCompanion.Start" class="pl.dwojciechowski.ui.actions.StartWncAction" text="Start WNC"
@@ -42,7 +43,8 @@
                     icon="/actions/suspend.svg"/>
             <action id="PLMCompanion.Restart" class="pl.dwojciechowski.ui.actions.RestartWncAction" text="Restart WNC"
                     icon="/actions/restart.svg"/>
-            <action id="PLMCompanion.XconfReload" class="pl.dwojciechowski.ui.actions.XConfReloadWncAction" text="Reload XConf"
+            <action id="PLMCompanion.XconfReload" class="pl.dwojciechowski.ui.actions.XConfReloadWncAction"
+                    text="Reload XConf"
                     icon="/actions/forceRefresh.svg"/>
             <separator/>
             <add-to-group group-id="NavBarToolBar" anchor="first"/>

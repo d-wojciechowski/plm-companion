@@ -37,6 +37,7 @@ class StatusServiceImpl(project: Project) : StatusService {
                     ServerStatus.RUNNING -> PLMPluginNotification.serverOK(project)
                     else -> PLMPluginNotification.serverKO(project)
                 }
+                previousStatus = status
                 delay(config.refreshRate.toLong())
             }
         }
