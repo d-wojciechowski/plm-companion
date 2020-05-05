@@ -5,6 +5,7 @@ import com.intellij.openapi.components.State
 import com.intellij.openapi.components.Storage
 import com.intellij.openapi.components.StoragePathMacros
 import com.intellij.util.xmlb.XmlSerializerUtil
+import pl.dwojciechowski.model.ActionPresentationOption
 
 @State(name = "PLMCompanionConfiguration", storages = [Storage(value = StoragePathMacros.WORKSPACE_FILE)])
 class PluginConfiguration : PersistentStateComponent<PluginConfiguration> {
@@ -16,6 +17,7 @@ class PluginConfiguration : PersistentStateComponent<PluginConfiguration> {
     var relativePath: String = ""
     var protocol: String = ""
     var logFileLocation: String = ""
+    var actionPresentation: String = ActionPresentationOption.NAVIGATION_AND_PANE
 
     var scanWindchill: Boolean = false
 

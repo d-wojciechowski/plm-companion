@@ -6,7 +6,9 @@ import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.ComboBox
 import com.intellij.openapi.ui.DialogWrapper
+import com.intellij.util.containers.toArray
 import pl.dwojciechowski.configuration.PluginConfiguration
+import pl.dwojciechowski.model.ActionPresentationOption
 import pl.dwojciechowski.ui.PLMPluginNotification
 import java.awt.Dimension
 import java.awt.event.ActionEvent
@@ -29,10 +31,12 @@ class PluginSettingsDialog(private val project: Project) : DialogWrapper(project
     private lateinit var timeoutSpinner: JSpinner
     private lateinit var logFileLocation: JTextField
     private lateinit var remotePickerButton: JButton
+    private lateinit var actionPresentationCB: JComboBox<String>
 
     fun createUIComponents() {
         hostnameField = JTextField("enter domain like \" google.com \"", 35)
         protocolCB = ComboBox(arrayOf("http", "https")).withFixedSize(Dimension(65, 5))
+        actionPresentationCB = ComboBox(ActionPresentationOption.ALL_OPTIONS.toArray(arrayOf()))
 
         portSpinner = JSpinner(SpinnerNumberModel(8080, 1, 9999, 1))
             .withFixedSize(Dimension(70, 5))
@@ -47,6 +51,10 @@ class PluginSettingsDialog(private val project: Project) : DialogWrapper(project
         refreshRateSpinner.editor = JSpinner.NumberEditor(refreshRateSpinner, "# ms")
         timeoutSpinner.model = SpinnerNumberModel(5000, 500, Int.MAX_VALUE, 100)
         timeoutSpinner.editor = JSpinner.NumberEditor(timeoutSpinner, "# ms")
+
+        actionPresentationCB.addActionListener {
+            config.actionPresentation = actionPresentationCB.selectedItem as String
+        }
 
         remotePickerButton.icon = AllIcons.General.OpenDisk
         remotePickerButton.addActionListener {
@@ -76,6 +84,7 @@ class PluginSettingsDialog(private val project: Project) : DialogWrapper(project
         timeoutSpinner.value = config.timeout
         logFileLocation.text = config.logFileLocation
         addonPortSpinner.value = config.addonPort
+        actionPresentationCB.selectedItem = config.actionPresentation
     }
 
     private fun saveConfig() {
@@ -90,6 +99,7 @@ class PluginSettingsDialog(private val project: Project) : DialogWrapper(project
         config.timeout = timeoutSpinner.value as Int
         config.logFileLocation = logFileLocation.text
         config.addonPort = addonPortSpinner.value as Int
+        config.actionPresentation = actionPresentationCB.selectedItem as String
     }
 
 
