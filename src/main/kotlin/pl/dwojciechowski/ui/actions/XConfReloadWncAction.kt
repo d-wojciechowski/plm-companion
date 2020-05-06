@@ -1,16 +1,27 @@
 package pl.dwojciechowski.ui.actions
 
-import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
-import com.intellij.openapi.components.ServiceManager
+import com.intellij.openapi.project.DumbAwareAction
+import pl.dwojciechowski.model.ServerStatus
 import pl.dwojciechowski.service.RemoteService
+import pl.dwojciechowski.ui.actions.utils.ActionSubscription
 
-class XConfReloadWncAction : AnAction() {
+class XConfReloadWncAction : DumbAwareAction() {
+
+    private val actionSubscription = ActionSubscription()
+
+    private val enabledStatusList = listOf(ServerStatus.RUNNING)
+    private var isEnabled = false
+
+    override fun update(e: AnActionEvent) {
+        actionSubscription.subscriptionRoutine(e) {
+            isEnabled = it == ServerStatus.NOT_SCANNING || enabledStatusList.contains(it)
+        }
+        e.presentation.isEnabled = isEnabled
+    }
 
     override fun actionPerformed(e: AnActionEvent) {
-        val project = e.project ?: throw Exception("Project not defined exception")
-        val remoteServiceImpl = ServiceManager.getService(project, RemoteService::class.java)
-        remoteServiceImpl.xconf()
+        e.project?.let { RemoteService.getInstance(it).xconf() }
     }
 
 }

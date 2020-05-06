@@ -39,12 +39,33 @@ class FatButtonPanel(private val project: Project) {
         configurationButton.addActionListener { PluginSettingsDialog(project).show() }
         wncStatusButton.addActionListener { config.scanWindchill = !config.scanWindchill }
 
-        statusService.getOutputSubject().subscribe { wncStatusButton.set(it) }
+        statusService.getOutputSubject().subscribe {
+            wncStatusButton.set(it)
+            when (it) {
+                ServerStatus.RUNNING -> set(
+                    listOf(stopWindchillButton, restartWindchillButton, xconfManagerButton),
+                    listOf(startWindchillButton)
+                )
+                ServerStatus.NOT_SCANNING -> set(
+                    listOf(stopWindchillButton, restartWindchillButton, xconfManagerButton, startWindchillButton),
+                    listOf()
+                )
+                else -> set(
+                    listOf(startWindchillButton),
+                    listOf(stopWindchillButton, restartWindchillButton, xconfManagerButton)
+                )
+            }
+        }
     }
 
     private fun JButton.set(status: ServerStatus) {
         this.icon = PluginIcons.scaleToSize(status.icon, 20)
         this.text = status.label
+    }
+
+    private fun set(toEnable: List<JButton>, toDisable: List<JButton>) {
+        toEnable.forEach { it.isEnabled = true }
+        toDisable.forEach { it.isEnabled = false }
     }
 
 }

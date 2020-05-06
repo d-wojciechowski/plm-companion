@@ -4,34 +4,22 @@ import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.Presentation
 import com.intellij.openapi.actionSystem.ex.CustomComponentAction
 import com.intellij.openapi.actionSystem.ex.CustomComponentAction.COMPONENT_KEY
-import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.DumbAwareAction
-import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.text.StringUtil
 import com.intellij.ui.components.JBLabel
 import com.intellij.util.ui.JBUI
-import io.reactivex.rxjava3.disposables.Disposable
-import pl.dwojciechowski.service.StatusService
-import pl.dwojciechowski.ui.PluginIcons
+import pl.dwojciechowski.ui.actions.utils.ActionSubscription
 import javax.swing.JComponent
 
 class PLMLabelAction : DumbAwareAction(), CustomComponentAction {
 
-    lateinit var subscription: Disposable
-    var project: Project? = null
+    private val actionSubscription = ActionSubscription()
 
     override fun update(e: AnActionEvent) {
-        e.presentation.text = "PLM: "
-        e.presentation.icon = PluginIcons.ERROR
-        if (project != e.project && e.project != null) {
+        actionSubscription.subscriptionRoutine(e) {
             val clientProperty = e.presentation.getClientProperty(COMPONENT_KEY)
-            project = e.project
-            val statusService = ServiceManager.getService(project!!, StatusService::class.java)
-            if (this::subscription.isInitialized) subscription.dispose()
-            subscription = statusService.getOutputSubject().subscribe {
-                if (clientProperty is MyLabel) {
-                    clientProperty.icon = it.icon
-                }
+            if (clientProperty is MyLabel) {
+                clientProperty.icon = it.icon
             }
         }
     }
@@ -44,6 +32,7 @@ class PLMLabelAction : DumbAwareAction(), CustomComponentAction {
         presentation: Presentation,
         place: String
     ): JComponent {
+        presentation.text = "PLM: "
         return MyLabel(presentation)
             .withFont(JBUI.Fonts.toolbarFont())
             .withBorder(JBUI.Borders.empty(0, 6, 0, 5))
