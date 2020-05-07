@@ -14,8 +14,8 @@ class StopWncAction : DumbAwareAction() {
     private var isEnabled = false
 
     override fun update(e: AnActionEvent) {
-        actionSubscription.subscriptionRoutine(e) {
-            isEnabled = it == ServerStatus.NOT_SCANNING || enabledStatusList.contains(it)
+        actionSubscription.subscriptionRoutine(e) { status, statusControlled ->
+            isEnabled = !statusControlled || status == ServerStatus.NOT_SCANNING || enabledStatusList.contains(status)
         }
         e.presentation.isEnabled = isEnabled
     }

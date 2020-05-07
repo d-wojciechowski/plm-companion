@@ -16,7 +16,7 @@ class PLMLabelAction : DumbAwareAction(), CustomComponentAction {
     private val actionSubscription = ActionSubscription()
 
     override fun update(e: AnActionEvent) {
-        actionSubscription.subscriptionRoutine(e) {
+        actionSubscription.subscriptionRoutine(e) { it, _ ->
             val clientProperty = e.presentation.getClientProperty(COMPONENT_KEY)
             if (clientProperty is MyLabel) {
                 clientProperty.icon = it.icon

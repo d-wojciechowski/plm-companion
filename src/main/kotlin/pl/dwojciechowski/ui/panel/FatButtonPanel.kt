@@ -41,20 +41,28 @@ class FatButtonPanel(private val project: Project) {
 
         statusService.getOutputSubject().subscribe {
             wncStatusButton.set(it)
+            setEnableStateBasedOnStatus(it)
+        }
+    }
+
+    private fun setEnableStateBasedOnStatus(it: ServerStatus?) {
+        if (config.statusControlled) {
             when (it) {
-                ServerStatus.RUNNING -> set(
-                    listOf(stopWindchillButton, restartWindchillButton, xconfManagerButton),
-                    listOf(startWindchillButton)
-                )
                 ServerStatus.NOT_SCANNING -> set(
                     listOf(stopWindchillButton, restartWindchillButton, xconfManagerButton, startWindchillButton),
                     listOf()
+                )
+                ServerStatus.RUNNING -> set(
+                    listOf(stopWindchillButton, restartWindchillButton, xconfManagerButton),
+                    listOf(startWindchillButton)
                 )
                 else -> set(
                     listOf(startWindchillButton),
                     listOf(stopWindchillButton, restartWindchillButton, xconfManagerButton)
                 )
             }
+        } else {
+            set(listOf(stopWindchillButton, restartWindchillButton, xconfManagerButton, startWindchillButton))
         }
     }
 
@@ -63,7 +71,7 @@ class FatButtonPanel(private val project: Project) {
         this.text = status.label
     }
 
-    private fun set(toEnable: List<JButton>, toDisable: List<JButton>) {
+    private fun set(toEnable: List<JButton>, toDisable: List<JButton> = listOf()) {
         toEnable.forEach { it.isEnabled = true }
         toDisable.forEach { it.isEnabled = false }
     }

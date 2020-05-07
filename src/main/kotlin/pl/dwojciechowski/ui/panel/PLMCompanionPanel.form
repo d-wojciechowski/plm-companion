@@ -18,7 +18,7 @@
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints border-constraint="Center"/>
         <properties/>
-        <border type="etched" title="Custom Command">
+        <border type="none">
           <font/>
           <title-color color="-4473925"/>
         </border>
