@@ -30,4 +30,5 @@ class LoadFromFileAction : AnAction() {
             }
         }.toList()
     }
+
 }

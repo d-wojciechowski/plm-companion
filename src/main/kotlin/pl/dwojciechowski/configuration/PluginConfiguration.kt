@@ -20,6 +20,7 @@ class PluginConfiguration : PersistentStateComponent<PluginConfiguration> {
     var actionPresentation: String = ActionPresentationOption.NAVIGATION_AND_PANE
 
     var scanWindchill: Boolean = false
+    var statusControlled: Boolean = true
 
     var port: Int = 80
     var addonPort: Int = 4040
