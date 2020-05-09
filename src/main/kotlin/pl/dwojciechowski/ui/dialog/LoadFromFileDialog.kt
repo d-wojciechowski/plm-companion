@@ -147,7 +147,6 @@ class LoadFromFileDialog(
             ProgramRunnerUtil.executeConfigurationAsync(
                 executorEnv, true, true
             ) {
-                println("RUN CONFIG POST")
                 it.processHandler?.addProcessListener(object : ProcessAdapter() {
                     override fun processTerminated(event: ProcessEvent) {
                         super.processTerminated(event)
