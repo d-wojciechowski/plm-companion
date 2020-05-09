@@ -34,6 +34,7 @@ class PluginConfiguration : PersistentStateComponent<PluginConfiguration> {
     var lffTarget: Int = 0
     var lffOrgName: String = ""
     var lffContName: String = ""
+    var lfPreRunUniqueID: String = ""
 
     override fun getState() = this
 

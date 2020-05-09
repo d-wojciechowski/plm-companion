@@ -19,9 +19,11 @@ class ActionSubscription {
             if (this::subscription.isInitialized) {
                 subscription.dispose()
             }
-            subscription = StatusService.getInstance(project!!).getOutputSubject().subscribe {
-                val statCtrld = ServiceManager.getService(project!!, PluginConfiguration::class.java).statusControlled
-                method(it, statCtrld)
+            subscription = StatusService.getInstance(project!!).getOutputSubject().subscribe { status ->
+                project?.let {
+                    val statCtrld = ServiceManager.getService(it, PluginConfiguration::class.java)?.statusControlled
+                    method(status, statCtrld ?: false)
+                }
             }
         }
     }
