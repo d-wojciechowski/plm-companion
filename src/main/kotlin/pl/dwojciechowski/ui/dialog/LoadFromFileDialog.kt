@@ -4,6 +4,7 @@ import com.intellij.execution.ProgramRunnerUtil
 import com.intellij.execution.executors.DefaultRunExecutor
 import com.intellij.execution.process.ProcessAdapter
 import com.intellij.execution.process.ProcessEvent
+import com.intellij.execution.runners.ExecutionEnvironment
 import com.intellij.execution.runners.ExecutionEnvironmentBuilder
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.Disposable
@@ -144,18 +145,22 @@ class LoadFromFileDialog(
             val builder = ExecutionEnvironmentBuilder.create(executor, runConfig)
             val executorEnv = builder.contentToReuse(null).dataContext(null).activeTarget().build()
 
-            ProgramRunnerUtil.executeConfigurationAsync(
-                executorEnv, true, true
-            ) {
-                it.processHandler?.addProcessListener(object : ProcessAdapter() {
-                    override fun processTerminated(event: ProcessEvent) {
-                        super.processTerminated(event)
-                        commandService.executeStreaming(CommandBean("Load from file", finalCommand))
-                    }
-                })
-            }
+            execAsync(executorEnv, finalCommand)
         }
 
+    }
+
+    private fun execAsync(executorEnv: ExecutionEnvironment, finalCommand: String) {
+        ProgramRunnerUtil.executeConfigurationAsync(
+            executorEnv, true, true
+        ) {
+            it.processHandler?.addProcessListener(object : ProcessAdapter() {
+                override fun processTerminated(event: ProcessEvent) {
+                    super.processTerminated(event)
+                    commandService.executeStreaming(CommandBean("Load from file", finalCommand))
+                }
+            })
+        }
     }
 
     private fun getContPath() =
