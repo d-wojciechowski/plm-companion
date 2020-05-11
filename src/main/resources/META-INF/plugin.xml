@@ -53,5 +53,9 @@
         </group>
     </actions>
 
+    <projectListeners>
+        <listener class="pl.dwojciechowski.listener.ProjectChangedListener"
+                  topic="com.intellij.openapi.project.ProjectManagerListener"/>
+    </projectListeners>
 
 </idea-plugin>
