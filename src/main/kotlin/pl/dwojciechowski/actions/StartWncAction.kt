@@ -1,10 +1,10 @@
-package pl.dwojciechowski.ui.actions
+package pl.dwojciechowski.actions
 
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.project.DumbAwareAction
+import pl.dwojciechowski.actions.utils.ActionSubscription
 import pl.dwojciechowski.model.ServerStatus
 import pl.dwojciechowski.service.RemoteService
-import pl.dwojciechowski.ui.actions.utils.ActionSubscription
 
 class StartWncAction : DumbAwareAction() {
 

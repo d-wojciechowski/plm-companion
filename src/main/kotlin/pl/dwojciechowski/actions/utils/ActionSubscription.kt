@@ -1,4 +1,4 @@
-package pl.dwojciechowski.ui.actions.utils
+package pl.dwojciechowski.actions.utils
 
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.components.ServiceManager

@@ -1,12 +1,14 @@
 package pl.dwojciechowski.ui
 
 import com.intellij.icons.AllIcons
+import com.intellij.ui.IconManager
 import com.intellij.ui.SizedIcon
 import com.intellij.util.IconUtil
 import javax.swing.Icon
 
 object PluginIcons {
 
+    val PLUGIN = load("/META-INF/pluginIcon.svg")
     val CONFIRMATION = AllIcons.Actions.Commit
     val RUNNING = AllIcons.RunConfigurations.TestState.Run
     val ERROR = AllIcons.General.BalloonError
@@ -16,6 +18,10 @@ object PluginIcons {
         val scale = targetSize / icon.iconHeight.toDouble().toFloat()
         val sizedIcon = SizedIcon(icon, targetSize, targetSize).scale(scale)
         return IconUtil.toSize(sizedIcon, targetSize, targetSize)
+    }
+
+    private fun load(path: String): Icon {
+        return IconManager.getInstance().getIcon(path, AllIcons::class.java)
     }
 
 }
