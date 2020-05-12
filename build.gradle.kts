@@ -63,6 +63,10 @@ tasks {
         kotlinOptions.jvmTarget = "1.8"
     }
 
+    runIde {
+        systemProperty("idea.auto.reload.plugins", false)
+    }
+
     register("myClean", Delete::class) {
         delete("src/generated")
     }

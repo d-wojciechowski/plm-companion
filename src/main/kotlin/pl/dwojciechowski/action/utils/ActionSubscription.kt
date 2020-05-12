@@ -1,4 +1,4 @@
-package pl.dwojciechowski.actions.utils
+package pl.dwojciechowski.action.utils
 
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.components.ServiceManager
@@ -20,11 +20,17 @@ class ActionSubscription {
                 subscription.dispose()
             }
             subscription = StatusService.getInstance(project!!).getOutputSubject().subscribe { status ->
-                project?.let {
-                    val statCtrld = ServiceManager.getService(it, PluginConfiguration::class.java)?.statusControlled
-                    method(status, statCtrld ?: false)
+                project.onValid {
+                    val statCtrld = ServiceManager.getService(it, PluginConfiguration::class.java).statusControlled
+                    method(status, statCtrld)
                 }
             }
+        }
+    }
+
+    private fun Project?.onValid(method: (Project) -> Unit) {
+        this?.let {
+            if (!isDisposed && project == this) method(it)
         }
     }
 

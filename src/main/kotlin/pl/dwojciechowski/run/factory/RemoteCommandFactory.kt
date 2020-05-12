@@ -9,6 +9,8 @@ import pl.dwojciechowski.run.config.RemoteCommandConfigurationBase
 class RemoteCommandFactory(configurationType: ConfigurationType) : ConfigurationFactory(configurationType) {
 
     override fun createTemplateConfiguration(project: Project) =
-        RemoteCommandConfigurationBase(project, this, "Remote Command")
+        RemoteCommandConfigurationBase(project, this, "")
+
+    override fun getId() = "PLM_COMPANION.REMOTE_COMMAND"
 
 }

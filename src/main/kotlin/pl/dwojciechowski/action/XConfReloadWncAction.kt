@@ -1,12 +1,12 @@
-package pl.dwojciechowski.actions
+package pl.dwojciechowski.action
 
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.project.DumbAwareAction
-import pl.dwojciechowski.actions.utils.ActionSubscription
+import pl.dwojciechowski.action.utils.ActionSubscription
 import pl.dwojciechowski.model.ServerStatus
 import pl.dwojciechowski.service.RemoteService
 
-class StopWncAction : DumbAwareAction() {
+class XConfReloadWncAction : DumbAwareAction() {
 
     private val actionSubscription = ActionSubscription()
 
@@ -21,7 +21,7 @@ class StopWncAction : DumbAwareAction() {
     }
 
     override fun actionPerformed(e: AnActionEvent) {
-        e.project?.let { RemoteService.getInstance(it).stopWnc() }
+        e.project?.let { RemoteService.getInstance(it).xconf() }
     }
 
 }

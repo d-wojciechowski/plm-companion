@@ -1,4 +1,4 @@
-package pl.dwojciechowski.actions
+package pl.dwojciechowski.action
 
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
