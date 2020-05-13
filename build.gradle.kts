@@ -11,9 +11,10 @@ val fuelVersion = "2.2.2"
 val rxJavaVersion = "3.0.3"
 
 plugins {
-    id("org.jetbrains.intellij") version "0.4.18"
+    id("com.github.ben-manes.versions") version "0.28.0"
+    id("org.jetbrains.intellij") version "0.4.21"
     id("com.google.protobuf") version "0.8.12"
-    kotlin("jvm") version "1.3.71"
+    kotlin("jvm") version "1.3.72"
     java
     idea
 }
