@@ -3,10 +3,10 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 group = "pl.dwojciechowski"
 version = "0.7.0"
-val protobufVersion = "3.11.4"
+val protobufVersion = "3.12.0"
 val rsocketRpcVersion = "0.2.18"
 val rsocketVersion = "1.0.0-RC7"
-val coroutinesVersion = "1.3.5"
+val coroutinesVersion = "1.3.6"
 val fuelVersion = "2.2.2"
 val rxJavaVersion = "3.0.3"
 
