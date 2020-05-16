@@ -8,6 +8,8 @@ import com.intellij.execution.configurations.RunProfileState
 import com.intellij.execution.runners.ExecutionEnvironment
 import com.intellij.openapi.options.SettingsEditor
 import com.intellij.openapi.project.Project
+import com.intellij.util.xmlb.XmlSerializer
+import org.jdom.Element
 import pl.dwojciechowski.run.editor.RemoteCommandSettingsEditor
 import pl.dwojciechowski.run.state.RemoteCommandState
 
@@ -30,8 +32,28 @@ class RemoteCommandConfigurationBase(
     override fun checkConfiguration() {
     }
 
-    data class RemoteCommandSettings(val command: String) : Cloneable {
-        val TAG = "RemoteCommandSettings"
+    data class RemoteCommandSettings(var command: String) : Cloneable {
+        companion object {
+            const val TAG = "RemoteCommandSettings"
+        }
+
+        /**
+         * For serialization
+         */
+        constructor() : this(command = "")
+    }
+
+    override fun readExternal(element: Element) {
+        super.readExternal(element)
+
+        element.getChild(RemoteCommandSettings.TAG)?.let {
+            settings = XmlSerializer.deserialize(it, RemoteCommandSettings::class.java)
+        }
+    }
+
+    override fun writeExternal(element: Element) {
+        super.writeExternal(element)
+        element.addContent(XmlSerializer.serialize(settings))
     }
 
 }

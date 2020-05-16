@@ -21,10 +21,12 @@ class RemoteCommandSettingsEditor(private val project: Project) : SettingsEditor
 //        commandSubPanelPanel = commandSubPanel.content
     }
 
-    override fun resetEditorFrom(s: RemoteCommandConfigurationBase) {}
+    override fun resetEditorFrom(s: RemoteCommandConfigurationBase) {
+        commandTF.text = s.settings.command
+    }
 
     override fun applyEditorTo(s: RemoteCommandConfigurationBase) {
-        print("")
+        s.settings.command = commandTF.text
     }
 
     override fun createEditor(): JComponent {

@@ -21,7 +21,7 @@ object PluginIcons {
     }
 
     private fun load(path: String): Icon {
-        return IconManager.getInstance().getIcon(path, AllIcons::class.java)
+        return IconManager.getInstance().getIcon(path, PluginIcons::class.java)
     }
 
 }
