@@ -3,7 +3,6 @@ package pl.dwojciechowski.run.state
 import com.intellij.execution.ExecutionResult
 import com.intellij.execution.Executor
 import com.intellij.execution.configurations.RunProfileState
-import com.intellij.execution.impl.RunnerAndConfigurationSettingsImpl
 import com.intellij.execution.runners.ExecutionEnvironment
 import com.intellij.execution.runners.ProgramRunner
 import com.intellij.openapi.wm.ToolWindowManager
@@ -25,8 +24,7 @@ class RemoteCommandState(private val environment: ExecutionEnvironment) : RunPro
 
     private fun buildCommandBean(): CommandBean {
         val configurationBase = environment.runProfile as RemoteCommandConfigurationBase
-        val runnerSettings = environment.runnerAndConfigurationSettings as RunnerAndConfigurationSettingsImpl
-        return CommandBean(runnerSettings.uniqueID, configurationBase.settings.command, now())
+        return CommandBean(configurationBase.settings.command, configurationBase.settings.command, now())
     }
 
     private fun focusCommandPane() {
@@ -34,6 +32,7 @@ class RemoteCommandState(private val environment: ExecutionEnvironment) : RunPro
         instance.getToolWindow("PLM Companion Log")?.let { toolWindow ->
             val contentManager = toolWindow.contentManager
             contentManager.getContent(2)?.let { content ->
+                toolWindow.show()
                 contentManager.setSelectedContent(content, true, false)
             }
         }
