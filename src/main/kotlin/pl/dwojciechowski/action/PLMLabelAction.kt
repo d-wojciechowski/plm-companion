@@ -1,4 +1,4 @@
-package pl.dwojciechowski.ui.actions
+package pl.dwojciechowski.action
 
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.Presentation
@@ -8,7 +8,7 @@ import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.openapi.util.text.StringUtil
 import com.intellij.ui.components.JBLabel
 import com.intellij.util.ui.JBUI
-import pl.dwojciechowski.ui.actions.utils.ActionSubscription
+import pl.dwojciechowski.action.utils.ActionSubscription
 import javax.swing.JComponent
 
 class PLMLabelAction : DumbAwareAction(), CustomComponentAction {

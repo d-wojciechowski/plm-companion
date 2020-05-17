@@ -6,6 +6,9 @@
     <depends>com.intellij.modules.platform</depends>
 
     <extensions defaultExtensionNs="com.intellij">
+
+        <configurationType implementation="pl.dwojciechowski.run.RemoteCommandConfigurationType" />
+
         <toolWindow id="PLM Companion" anchor="right" factoryClass="pl.dwojciechowski.ui.MainSubWindowFactory"
                     icon="/META-INF/pluginIcon.svg"/>
         <toolWindow id="PLM Companion Log" anchor="bottom"
@@ -30,22 +33,22 @@
     <actions>
 
         <action id="PLMCompanion.LoadFromFile"
-                class="pl.dwojciechowski.ui.actions.LoadFromFileAction"
+                class="pl.dwojciechowski.action.LoadFromFileAction"
                 text="Load from File">
             <add-to-group group-id="ProjectViewPopupMenu"/>
         </action>
 
-        <group id="PLMCompanion.NavBarGroup" class="pl.dwojciechowski.ui.actions.PLMActionGroup" text="PLM"
+        <group id="PLMCompanion.NavBarGroup" class="pl.dwojciechowski.action.PLMActionGroup" text="PLM"
                compact="true">
-            <action id="PLMCompanion.Label" class="pl.dwojciechowski.ui.actions.PLMLabelAction"/>
+            <action id="PLMCompanion.Label" class="pl.dwojciechowski.action.PLMLabelAction"/>
             <separator/>
-            <action id="PLMCompanion.Start" class="pl.dwojciechowski.ui.actions.StartWncAction" text="Start WNC"
+            <action id="PLMCompanion.Start" class="pl.dwojciechowski.action.StartWncAction" text="Start WNC"
                     icon="/runConfigurations/testState/run.svg"/>
-            <action id="PLMCompanion.Stop" class="pl.dwojciechowski.ui.actions.StopWncAction" text="Stop WNC"
+            <action id="PLMCompanion.Stop" class="pl.dwojciechowski.action.StopWncAction" text="Stop WNC"
                     icon="/actions/suspend.svg"/>
-            <action id="PLMCompanion.Restart" class="pl.dwojciechowski.ui.actions.RestartWncAction" text="Restart WNC"
+            <action id="PLMCompanion.Restart" class="pl.dwojciechowski.action.RestartWncAction" text="Restart WNC"
                     icon="/actions/restart.svg"/>
-            <action id="PLMCompanion.XconfReload" class="pl.dwojciechowski.ui.actions.XConfReloadWncAction"
+            <action id="PLMCompanion.XconfReload" class="pl.dwojciechowski.action.XConfReloadWncAction"
                     text="Reload XConf"
                     icon="/actions/forceRefresh.svg"/>
             <separator/>
