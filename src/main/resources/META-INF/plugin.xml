@@ -6,7 +6,11 @@
     <depends>com.intellij.modules.platform</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <toolWindow id="PLM Companion" anchor="right" factoryClass="pl.dwojciechowski.ui.MainSubWindowFactory" icon="/META-INF/pluginIcon.svg"/>
+
+        <configurationType implementation="pl.dwojciechowski.run.RemoteCommandConfigurationType" />
+
+        <toolWindow id="PLM Companion" anchor="right" factoryClass="pl.dwojciechowski.ui.MainSubWindowFactory"
+                    icon="/META-INF/pluginIcon.svg"/>
         <toolWindow id="PLM Companion Log" anchor="bottom"
                     factoryClass="pl.dwojciechowski.ui.LogViewerPanelFactory" icon="/META-INF/pluginIcon.svg"
                     canCloseContents="true"
@@ -18,18 +22,43 @@
                         serviceImplementation="pl.dwojciechowski.service.impl.LogViewerServiceImpl"/>
         <projectService serviceInterface="pl.dwojciechowski.service.FileService"
                         serviceImplementation="pl.dwojciechowski.service.impl.FileServiceImpl"/>
-        <applicationService serviceInterface="pl.dwojciechowski.service.HttpService"
-                            serviceImplementation="pl.dwojciechowski.service.impl.HttpServiceImpl"/>
+        <projectService serviceInterface="pl.dwojciechowski.service.StatusService"
+                        serviceImplementation="pl.dwojciechowski.service.impl.StatusServiceImpl"/>
         <projectService serviceInterface="pl.dwojciechowski.service.ConnectorService"
                         serviceImplementation="pl.dwojciechowski.service.impl.ConnectorServiceImpl"/>
+        <projectService serviceInterface="pl.dwojciechowski.service.NotificationService"
+                        serviceImplementation="pl.dwojciechowski.service.impl.NotificationServiceImpl"/>
     </extensions>
 
     <actions>
+
         <action id="PLMCompanion.LoadFromFile"
-                class="pl.dwojciechowski.ui.actions.LoadFromFileAction"
+                class="pl.dwojciechowski.action.LoadFromFileAction"
                 text="Load from File">
             <add-to-group group-id="ProjectViewPopupMenu"/>
         </action>
+
+        <group id="PLMCompanion.NavBarGroup" class="pl.dwojciechowski.action.PLMActionGroup" text="PLM"
+               compact="true">
+            <action id="PLMCompanion.Label" class="pl.dwojciechowski.action.PLMLabelAction"/>
+            <separator/>
+            <action id="PLMCompanion.Start" class="pl.dwojciechowski.action.StartWncAction" text="Start WNC"
+                    icon="/runConfigurations/testState/run.svg"/>
+            <action id="PLMCompanion.Stop" class="pl.dwojciechowski.action.StopWncAction" text="Stop WNC"
+                    icon="/actions/suspend.svg"/>
+            <action id="PLMCompanion.Restart" class="pl.dwojciechowski.action.RestartWncAction" text="Restart WNC"
+                    icon="/actions/restart.svg"/>
+            <action id="PLMCompanion.XconfReload" class="pl.dwojciechowski.action.XConfReloadWncAction"
+                    text="Reload XConf"
+                    icon="/actions/forceRefresh.svg"/>
+            <separator/>
+            <add-to-group group-id="NavBarToolBar" anchor="first"/>
+        </group>
     </actions>
+
+    <projectListeners>
+        <listener class="pl.dwojciechowski.listener.ProjectChangedListener"
+                  topic="com.intellij.openapi.project.ProjectManagerListener"/>
+    </projectListeners>
 
 </idea-plugin>

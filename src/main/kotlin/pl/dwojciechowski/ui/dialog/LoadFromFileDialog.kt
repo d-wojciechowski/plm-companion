@@ -1,5 +1,11 @@
 package pl.dwojciechowski.ui.dialog
 
+import com.intellij.execution.ProgramRunnerUtil
+import com.intellij.execution.executors.DefaultRunExecutor
+import com.intellij.execution.process.ProcessAdapter
+import com.intellij.execution.process.ProcessEvent
+import com.intellij.execution.runners.ExecutionEnvironment
+import com.intellij.execution.runners.ExecutionEnvironmentBuilder
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.components.ServiceManager
@@ -11,6 +17,7 @@ import pl.dwojciechowski.configuration.PluginConfiguration
 import pl.dwojciechowski.model.CommandBean
 import pl.dwojciechowski.service.RemoteService
 import pl.dwojciechowski.ui.component.CustomVirtualFileListCellRenderer
+import pl.dwojciechowski.ui.component.RunConfigurationComboBox
 import java.awt.event.ActionEvent
 import javax.swing.*
 
@@ -36,6 +43,8 @@ class LoadFromFileDialog(
     private lateinit var libraryRadio: JRadioButton
     private lateinit var projectRadio: JRadioButton
 
+    private lateinit var runConfigurationComboBox: RunConfigurationComboBox
+
     private lateinit var orgTextField: JTextField
     private lateinit var containerTextField: JTextField
 
@@ -50,6 +59,8 @@ class LoadFromFileDialog(
         fileList = JBList(listModel)
         fileList.cellRenderer = CustomVirtualFileListCellRenderer(project)
         fileList.setSelectionInterval(0, listModel.size())
+
+        runConfigurationComboBox = RunConfigurationComboBox(project)
     }
 
     init {
@@ -118,12 +129,39 @@ class LoadFromFileDialog(
                             " -d ${config.lffFolder + parentPath} -CONT_PATH ${getContPath()}"
                 }
                 if (finalCommand.isNotEmpty()) {
-                    commandService.executeStreaming(CommandBean("Load from file", finalCommand))
+                    runCommand(finalCommand)
                 }
                 dispose()
                 close(OK_EXIT_CODE)
             }
         }
+
+    private fun runCommand(finalCommand: String) {
+        val runConfig = runConfigurationComboBox.getSelectedConfiguration().value
+        if (runConfig == null) {
+            commandService.executeStreaming(CommandBean("Load from file", finalCommand))
+        } else {
+            val executor = DefaultRunExecutor.getRunExecutorInstance()
+            val builder = ExecutionEnvironmentBuilder.create(executor, runConfig)
+            val executorEnv = builder.contentToReuse(null).dataContext(null).activeTarget().build()
+
+            execAsync(executorEnv, finalCommand)
+        }
+
+    }
+
+    private fun execAsync(executorEnv: ExecutionEnvironment, finalCommand: String) {
+        ProgramRunnerUtil.executeConfigurationAsync(
+            executorEnv, true, true
+        ) {
+            it.processHandler?.addProcessListener(object : ProcessAdapter() {
+                override fun processTerminated(event: ProcessEvent) {
+                    super.processTerminated(event)
+                    commandService.executeStreaming(CommandBean("Load from file", finalCommand))
+                }
+            })
+        }
+    }
 
     private fun getContPath() =
         ContPath.values()[config.lffTarget].getContPath(orgTextField.text, containerTextField.text)

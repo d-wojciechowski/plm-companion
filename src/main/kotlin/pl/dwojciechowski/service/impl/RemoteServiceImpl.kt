@@ -15,6 +15,7 @@ import pl.dwojciechowski.service.ConnectorService
 import pl.dwojciechowski.service.RemoteService
 import pl.dwojciechowski.ui.PLMPluginNotification
 import pl.dwojciechowski.ui.PluginIcons
+import reactor.core.Exceptions
 
 class RemoteServiceImpl(private val project: Project) : RemoteService {
 
@@ -51,7 +52,7 @@ class RemoteServiceImpl(private val project: Project) : RemoteService {
             commandBean.status = CommandBean.ExecutionStatus.STOPPED
             commandBean.response.onNext(e.message)
             ApplicationManager.getApplication().invokeLater {
-                Messages.showErrorDialog(project, e.toString(), e.message ?: "")
+                Messages.showErrorDialog(project, Exceptions.unwrap(e).message ?: "", "Connection exception")
             }
         }
     }
