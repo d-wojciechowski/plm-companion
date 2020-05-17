@@ -6,7 +6,7 @@ import pl.dwojciechowski.run.factory.RemoteCommandFactory
 import pl.dwojciechowski.ui.PluginIcons
 
 class RemoteCommandConfigurationType : ConfigurationTypeBase(
-    "PLMCompanion.RemoteCommand", "Remote Command", "TBD", PluginIcons.PLUGIN
+    "PLMCompanion.RemoteCommand", "Remote Command", "Remote Command execution configuration", PluginIcons.PLUGIN
 ) {
 
     override fun getConfigurationFactories(): Array<ConfigurationFactory> {
