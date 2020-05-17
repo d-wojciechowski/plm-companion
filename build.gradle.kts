@@ -125,6 +125,6 @@ tasks {
     named<org.jetbrains.intellij.tasks.PatchPluginXmlTask>("patchPluginXml") {
         changeNotes(htmlFixer("src/main/resources/META-INF/change-notes.html"))
         pluginDescription(htmlFixer("src/main/resources/META-INF/description.html"))
-        sinceBuild("192")
+        sinceBuild("200")
     }
 }
