@@ -1,10 +1,8 @@
 package pl.dwojciechowski.run.config
 
 import com.intellij.execution.Executor
-import com.intellij.execution.configurations.ConfigurationFactory
-import com.intellij.execution.configurations.RunConfiguration
-import com.intellij.execution.configurations.RunConfigurationBase
-import com.intellij.execution.configurations.RunProfileState
+import com.intellij.execution.configurations.*
+import com.intellij.execution.process.ProcessHandler
 import com.intellij.execution.runners.ExecutionEnvironment
 import com.intellij.openapi.options.SettingsEditor
 import com.intellij.openapi.project.Project
@@ -30,6 +28,16 @@ class RemoteCommandConfigurationBase(
     override fun getConfigurationEditor(): SettingsEditor<out RunConfiguration> {
         return RemoteCommandSettingsEditor(project)
     }
+
+    override fun isShowConsoleOnStdOut() = false
+
+    override fun createAdditionalTabComponents(
+        manager: AdditionalTabComponentManager?,
+        startedProcess: ProcessHandler?
+    ) {
+
+    }
+
 
     override fun getState(executor: Executor, environment: ExecutionEnvironment): RunProfileState {
         return RemoteCommandState(environment)
