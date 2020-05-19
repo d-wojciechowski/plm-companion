@@ -1,15 +1,15 @@
-package pl.dwojciechowski.run.editor
+package pl.dwojciechowski.execution.editor
 
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.options.SettingsEditor
 import com.intellij.openapi.project.Project
 import pl.dwojciechowski.configuration.PluginConfiguration
+import pl.dwojciechowski.execution.config.RemoteCommandRunConfig
 import pl.dwojciechowski.model.CommandBean
-import pl.dwojciechowski.run.config.RemoteCommandConfigurationBase
 import pl.dwojciechowski.ui.component.CommandList
 import javax.swing.*
 
-class RemoteCommandSettingsEditor(private val project: Project) : SettingsEditor<RemoteCommandConfigurationBase>() {
+class RemoteCommandSettingsEditor(private val project: Project) : SettingsEditor<RemoteCommandRunConfig>() {
 
     private val config: PluginConfiguration = ServiceManager.getService(project, PluginConfiguration::class.java)
 
@@ -41,11 +41,11 @@ class RemoteCommandSettingsEditor(private val project: Project) : SettingsEditor
         }
     }
 
-    override fun resetEditorFrom(s: RemoteCommandConfigurationBase) {
+    override fun resetEditorFrom(s: RemoteCommandRunConfig) {
         commandTF.text = s.settings.command
     }
 
-    override fun applyEditorTo(s: RemoteCommandConfigurationBase) {
+    override fun applyEditorTo(s: RemoteCommandRunConfig) {
         s.settings.command = commandTF.text
     }
 

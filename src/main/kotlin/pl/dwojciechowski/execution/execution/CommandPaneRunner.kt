@@ -1,4 +1,4 @@
-package pl.dwojciechowski.run.execution
+package pl.dwojciechowski.execution.execution
 
 import com.intellij.execution.ExecutionException
 import com.intellij.execution.configurations.RunProfile
@@ -9,9 +9,9 @@ import com.intellij.execution.runners.ProgramRunner
 import com.intellij.openapi.wm.ToolWindow
 import com.intellij.openapi.wm.ToolWindowManager
 import com.intellij.ui.content.Content
-import pl.dwojciechowski.run.config.RemoteCommandConfigurationBase
+import pl.dwojciechowski.execution.config.RemoteCommandRunConfig
 
-class NoSwitchRunner : ProgramRunner<RunnerSettings> {
+class CommandPaneRunner : ProgramRunner<RunnerSettings> {
 
     val EXECUTOR_ID = "RemoteCommandExecutionRunner"
 
@@ -30,7 +30,7 @@ class NoSwitchRunner : ProgramRunner<RunnerSettings> {
     }
 
     override fun canRun(executorId: String, profile: RunProfile): Boolean {
-        return DefaultRunExecutor.EXECUTOR_ID == executorId && profile is RemoteCommandConfigurationBase
+        return DefaultRunExecutor.EXECUTOR_ID == executorId && profile is RemoteCommandRunConfig
     }
 
     private fun withCommandPane(environment: ExecutionEnvironment, method: (ToolWindow, Content) -> Unit) {
