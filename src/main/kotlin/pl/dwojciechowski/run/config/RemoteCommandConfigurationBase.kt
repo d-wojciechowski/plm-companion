@@ -21,6 +21,12 @@ class RemoteCommandConfigurationBase(
 
     var settings = RemoteCommandSettings("")
 
+    override fun clone(): RunConfiguration {
+        val runConfiguration = super.clone()
+        (runConfiguration as RemoteCommandConfigurationBase).settings = RemoteCommandSettings("")
+        return runConfiguration
+    }
+
     override fun getConfigurationEditor(): SettingsEditor<out RunConfiguration> {
         return RemoteCommandSettingsEditor(project)
     }
