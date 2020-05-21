@@ -1,15 +1,14 @@
-package pl.dwojciechowski.execution.editor
+package pl.dwojciechowski.execution.command
 
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.options.SettingsEditor
 import com.intellij.openapi.project.Project
 import pl.dwojciechowski.configuration.PluginConfiguration
-import pl.dwojciechowski.execution.config.RemoteCommandRunConfig
 import pl.dwojciechowski.model.CommandBean
 import pl.dwojciechowski.ui.component.CommandList
 import javax.swing.*
 
-class RemoteCommandSettingsEditor(private val project: Project) : SettingsEditor<RemoteCommandRunConfig>() {
+class RemoteCommandSettingsEditor(project: Project) : SettingsEditor<RemoteCommandRunConfig>() {
 
     private val config: PluginConfiguration = ServiceManager.getService(project, PluginConfiguration::class.java)
 
@@ -52,9 +51,6 @@ class RemoteCommandSettingsEditor(private val project: Project) : SettingsEditor
         s.settings.async = async.isSelected
     }
 
-    override fun createEditor(): JComponent {
-        return myPanel
-    }
-
+    override fun createEditor() = myPanel
 
 }
