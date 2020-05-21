@@ -7,7 +7,6 @@ import com.intellij.openapi.options.SettingsEditor
 import com.intellij.openapi.project.Project
 import com.intellij.util.xmlb.XmlSerializer
 import org.jdom.Element
-import pl.dwojciechowski.execution.editor.RemoteCommandSettingsEditor
 
 class RemoteCommandRunConfig(
     project: Project,
