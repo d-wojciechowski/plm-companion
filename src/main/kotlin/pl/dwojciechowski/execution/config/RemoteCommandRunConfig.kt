@@ -19,7 +19,7 @@ class RemoteCommandRunConfig(
     name: String
 ) : RunConfigurationBase<RemoteCommandRunConfig>(project, factory, name) {
 
-    var settings = RemoteCommandSettings("")
+    var settings = RemoteCommandSettings()
 
     override fun clone(): RunConfiguration {
         val runConfiguration = super.clone()
@@ -35,13 +35,14 @@ class RemoteCommandRunConfig(
         return RemoteCommandState(environment)
     }
 
-    override fun checkConfiguration() {
-    }
-
-    data class RemoteCommandSettings(var command: String) : Cloneable {
+    data class RemoteCommandSettings(
+        var command: String = "",
+        var async: Boolean = true
+    ) : Cloneable {
         companion object {
             const val TAG = "RemoteCommandSettings"
         }
+
         constructor() : this(command = "")
     }
 

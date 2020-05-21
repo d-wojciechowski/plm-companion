@@ -18,6 +18,7 @@ class RemoteCommandSettingsEditor(private val project: Project) : SettingsEditor
     private lateinit var commandTF: JTextField
     private lateinit var commandHistory: CommandList
     private lateinit var listModel: DefaultListModel<CommandBean>
+    private lateinit var async: JCheckBox
 
     private val splitPattern = "|#*#$"
 
@@ -43,10 +44,12 @@ class RemoteCommandSettingsEditor(private val project: Project) : SettingsEditor
 
     override fun resetEditorFrom(s: RemoteCommandRunConfig) {
         commandTF.text = s.settings.command
+        async.isSelected = s.settings.async
     }
 
     override fun applyEditorTo(s: RemoteCommandRunConfig) {
         s.settings.command = commandTF.text
+        s.settings.async = async.isSelected
     }
 
     override fun createEditor(): JComponent {

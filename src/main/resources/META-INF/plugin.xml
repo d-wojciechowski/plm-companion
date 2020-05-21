@@ -8,7 +8,6 @@
     <extensions defaultExtensionNs="com.intellij">
 
         <configurationType implementation="pl.dwojciechowski.execution.RemoteCommandConfigType" />
-<!--        <programRunner implementation="pl.dwojciechowski.execution.execution.CommandPaneRunner"/>-->
 
         <toolWindow id="PLM Companion" anchor="right" factoryClass="pl.dwojciechowski.ui.MainSubWindowFactory"
                     icon="/META-INF/pluginIcon.svg"/>
