@@ -2,13 +2,13 @@ import com.google.protobuf.gradle.*
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 group = "pl.dwojciechowski"
-version = "0.7.0"
-val protobufVersion = "3.12.0"
+version = "0.7.1"
+val protobufVersion = "3.12.1"
 val rsocketRpcVersion = "0.2.18"
 val rsocketVersion = "1.0.0-RC7"
-val coroutinesVersion = "1.3.6"
+val coroutinesVersion = "1.3.7"
 val fuelVersion = "2.2.2"
-val rxJavaVersion = "3.0.3"
+val rxJavaVersion = "3.0.4"
 
 plugins {
     id("com.github.ben-manes.versions") version "0.28.0"

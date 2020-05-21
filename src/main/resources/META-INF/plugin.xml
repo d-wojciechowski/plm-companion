@@ -7,7 +7,7 @@
 
     <extensions defaultExtensionNs="com.intellij">
 
-        <configurationType implementation="pl.dwojciechowski.run.RemoteCommandConfigurationType" />
+        <configurationType implementation="pl.dwojciechowski.execution.RemoteCommandConfigType" />
 
         <toolWindow id="PLM Companion" anchor="right" factoryClass="pl.dwojciechowski.ui.MainSubWindowFactory"
                     icon="/META-INF/pluginIcon.svg"/>

@@ -39,25 +39,30 @@ class RemoteServiceImpl(private val project: Project) : RemoteService {
     }
 
     override fun executeStreaming(commandBean: CommandBean) {
+        executeStreaming(commandBean) {}
+    }
+
+    override fun executeStreaming(commandBean: CommandBean, doFinally: () -> Unit) {
         try {
             val command = commandBean.getCommand()
             commandBean.status = CommandBean.ExecutionStatus.RUNNING
             PLMPluginNotification.notify(project, "$commandBean started", PluginIcons.CONFIRMATION)
             commandBean.response.onNext("Started execution of $commandBean")
             val rSocket = connector.establishConnection()
-            rSocket.executeStreamingCall(command, commandBean)
+            rSocket.executeStreamingCall(command, commandBean, doFinally)
             commandBean.actualSubscription = rSocket ?: commandBean.actualSubscription
             commandSubject.onNext(commandBean)
         } catch (e: Exception) {
             commandBean.status = CommandBean.ExecutionStatus.STOPPED
             commandBean.response.onNext(e.message)
+            doFinally()
             ApplicationManager.getApplication().invokeLater {
                 Messages.showErrorDialog(project, Exceptions.unwrap(e).message ?: "", "Connection exception")
             }
         }
     }
 
-    private fun RSocket?.executeStreamingCall(command: Command, commandBean: CommandBean) {
+    private fun RSocket?.executeStreamingCall(command: Command, commandBean: CommandBean, doFinally: () -> Unit) {
         CommandServiceClient(this)
             .executeStreaming(command)
             .doOnNext {
@@ -76,6 +81,8 @@ class RemoteServiceImpl(private val project: Project) : RemoteService {
                 } else {
                     PLMPluginNotification.notify(project, "Error on $commandBean", PluginIcons.ERROR)
                 }
+            }.doFinally {
+                doFinally()
             }.subscribe()
     }
 

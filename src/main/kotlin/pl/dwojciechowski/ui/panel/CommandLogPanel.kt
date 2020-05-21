@@ -1,5 +1,6 @@
 package pl.dwojciechowski.ui.panel
 
+import com.intellij.execution.ui.ExecutionConsole
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
@@ -14,7 +15,7 @@ import javax.swing.JButton
 import javax.swing.JPanel
 import javax.swing.JTextArea
 
-class CommandLogPanel(project: Project) : SimpleToolWindowPanel(false, true) {
+class CommandLogPanel(project: Project) : SimpleToolWindowPanel(false, true), ExecutionConsole {
 
     private val commandService: RemoteService = ServiceManager.getService(project, RemoteService::class.java)
 
@@ -105,5 +106,11 @@ class CommandLogPanel(project: Project) : SimpleToolWindowPanel(false, true) {
     }
 
     private fun DefaultListModel<CommandBean>.selected() = this.get(list.selectedIndex)
+
+    override fun getPreferredFocusableComponent() = panel
+
+    override fun getComponent() = panel
+
+    override fun dispose() {}
 
 }
