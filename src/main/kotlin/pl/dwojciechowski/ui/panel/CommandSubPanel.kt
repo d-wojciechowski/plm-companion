@@ -13,7 +13,6 @@ import pl.dwojciechowski.service.RemoteService
 import pl.dwojciechowski.ui.component.CommandList
 import pl.dwojciechowski.ui.component.action.EditListAction
 import java.awt.event.KeyEvent
-import java.time.LocalTime
 import java.util.*
 import javax.swing.DefaultListModel
 import javax.swing.JButton
@@ -92,18 +91,19 @@ class CommandSubPanel(
 
     private fun addToModel() {
         listModel.add(0, CommandBean("", commandField.text))
-        dispose()
+        saveToConfig()
     }
 
     private fun CommandList.setUpCommandHistoryRMBMenu() {
-        this.addRMBMenuEntry("Run") {
+        addRMBMenuEntry("Run") {
             executeSelectedCommand()
         }
-            .addRMBMenuEntry("Edit", action = EditListAction(this))
-            .addRMBMenuEntry("Delete") {
-                listModel.remove(selectedIndex)
-            }
-            .addRMBMenuEntry("Alias", action = EditListAction(this, "name"))
+        addRMBMenuEntry("Delete") {
+            listModel.remove(selectedIndex)
+            saveToConfig()
+        }
+        addRMBMenuEntry("Edit", action = EditListAction(this) { saveToConfig() })
+        addRMBMenuEntry("Alias", action = EditListAction(this, "name") { saveToConfig() })
     }
 
     private fun executeFromInput() {
@@ -122,13 +122,11 @@ class CommandSubPanel(
                 project, "No command selected", "Missing selection error", Messages.getErrorIcon()
             )
         } else {
-            val commandBean = commandHistory.selectedValue.safeCopy()
-            commandBean.executionTime = LocalTime.now()
-            windchillService.executeStreaming(commandBean)
+            windchillService.executeStreaming(commandHistory.selectedValue.clone())
         }
     }
 
-    fun dispose() {
+    private fun saveToConfig() {
         config.commandsHistory = listModel.elements().toList()
             .reversed()
             .map { "${it.name}$splitPattern${it.command}" }
