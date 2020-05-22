@@ -9,6 +9,7 @@ import com.intellij.ui.RawCommandLineEditor
 import com.intellij.util.ui.UIUtil
 import pl.dwojciechowski.configuration.PluginConfiguration
 import pl.dwojciechowski.model.CommandBean
+import pl.dwojciechowski.service.IdeControlService
 import pl.dwojciechowski.service.RemoteService
 import pl.dwojciechowski.ui.component.CommandList
 import pl.dwojciechowski.ui.component.action.EditListAction
@@ -25,6 +26,7 @@ class CommandSubPanel(
 
     private val config: PluginConfiguration = ServiceManager.getService(project, PluginConfiguration::class.java)
     private val windchillService = ServiceManager.getService(project, RemoteService::class.java)
+    private val ideControlService = ServiceManager.getService(project, IdeControlService::class.java)
 
     private val splitPattern = "|#*#$"
 
@@ -114,6 +116,9 @@ class CommandSubPanel(
         } else {
             windchillService.executeStreaming(CommandBean("", commandField.text))
         }
+        if (config.autoOpenCommandPane) {
+            ideControlService.switchToCommandTab()
+        }
     }
 
     private fun executeSelectedCommand() {
@@ -123,6 +128,9 @@ class CommandSubPanel(
             )
         } else {
             windchillService.executeStreaming(commandHistory.selectedValue.clone())
+        }
+        if (config.autoOpenCommandPane) {
+            ideControlService.switchToCommandTab()
         }
     }
 
