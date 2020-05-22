@@ -28,6 +28,8 @@
                         serviceImplementation="pl.dwojciechowski.service.impl.ConnectorServiceImpl"/>
         <projectService serviceInterface="pl.dwojciechowski.service.NotificationService"
                         serviceImplementation="pl.dwojciechowski.service.impl.NotificationServiceImpl"/>
+        <projectService serviceInterface="pl.dwojciechowski.service.IdeControlService"
+                        serviceImplementation="pl.dwojciechowski.service.impl.IdeControlServiceImpl"/>
     </extensions>
 
     <actions>

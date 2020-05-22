@@ -21,6 +21,7 @@ class PluginConfiguration : PersistentStateComponent<PluginConfiguration> {
 
     var scanWindchill: Boolean = false
     var statusControlled: Boolean = true
+    var autoOpenCommandPane: Boolean = false
 
     var port: Int = 80
     var addonPort: Int = 4040
