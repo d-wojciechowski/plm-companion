@@ -12,6 +12,7 @@ import pl.dwojciechowski.ui.PLMPluginNotification
 import pl.dwojciechowski.ui.PluginIcons
 import reactor.core.Exceptions
 import reactor.util.retry.Retry
+import reactor.util.retry.RetryBackoffSpec
 import java.time.Duration
 
 class ConnectorServiceImpl(private val project: Project) : ConnectorService {
@@ -29,19 +30,10 @@ class ConnectorServiceImpl(private val project: Project) : ConnectorService {
     private fun establishConnection(): RSocket {
         val resumeStrategy = Resume()
             .sessionDuration(Duration.ofMinutes(5))
-            .retry(
-                Retry.fixedDelay(Long.MAX_VALUE, Duration.ofSeconds(1))
-                    .doBeforeRetry {
-                        PLMPluginNotification.notify(
-                            project,
-                            "Addon connection lost, attempt to reconnect",
-                            PluginIcons.WARNING
-                        )
-                    }
-            )
+            .retry(retryByConfig().doAfterRetry { retryAction(it) })
         try {
             return RSocketConnector.create()
-                .reconnect(Retry.fixedDelay(2L, Duration.ofSeconds(1)))
+                .reconnect(retryByConfig())
                 .resume(resumeStrategy)
                 .fragment(1024)
                 .connect(TcpClientTransport.create(config.hostname, config.addonPort))
@@ -52,5 +44,20 @@ class ConnectorServiceImpl(private val project: Project) : ConnectorService {
 
     }
 
+    private fun retryByConfig(): RetryBackoffSpec {
+        return Retry.fixedDelay(
+            config.timeout / config.refreshRate.toLong(), Duration.ofMillis(config.refreshRate.toLong())
+        )
+    }
+
+    private fun retryAction(it: Retry.RetrySignal) {
+        if (it.failure() != null && it.totalRetriesInARow() % 10 == 0L) {
+            PLMPluginNotification.notify(
+                project, "Addon connection lost, attempt to reconnect", PluginIcons.WARNING
+            )
+        } else if (it.failure() == null) {
+            PLMPluginNotification.notify(project, "Addon connection recovered.", PluginIcons.CONFIRMATION)
+        }
+    }
 
 }
