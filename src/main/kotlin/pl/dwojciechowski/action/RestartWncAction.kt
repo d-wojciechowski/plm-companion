@@ -2,6 +2,8 @@ package pl.dwojciechowski.action
 
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.project.DumbAwareAction
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import pl.dwojciechowski.action.utils.ActionSubscription
 import pl.dwojciechowski.model.ServerStatus
 import pl.dwojciechowski.service.RemoteService
@@ -21,7 +23,11 @@ class RestartWncAction : DumbAwareAction() {
     }
 
     override fun actionPerformed(e: AnActionEvent) {
-        e.project?.let { RemoteService.getInstance(it).restartWnc() }
+        GlobalScope.launch {
+            e.project?.let {
+                RemoteService.getInstance(it).restartWnc()
+            }
+        }
     }
 
 }

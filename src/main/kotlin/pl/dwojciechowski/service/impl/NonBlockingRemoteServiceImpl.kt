@@ -21,20 +21,20 @@ class NonBlockingRemoteServiceImpl(private val project: Project) : RemoteService
     private val connector = ServiceManager.getService(project, ConnectorService::class.java)
     private val commandSubject: Subject<CommandBean> = PublishSubject.create<CommandBean>()
 
-    override fun restartWnc() {
-        executeStreaming(CommandBean("Windchill Restart", "windchill stop && windchill start"))
+    override fun restartWnc(doFinally: () -> Unit) {
+        executeStreaming(CommandBean("Windchill Restart", "windchill stop && windchill start"), doFinally)
     }
 
-    override fun stopWnc() {
-        return executeStreaming(CommandBean("Windchill Stop", "windchill stop"))
+    override fun stopWnc(doFinally: () -> Unit) {
+        return executeStreaming(CommandBean("Windchill Stop", "windchill stop"), doFinally)
     }
 
-    override fun startWnc() {
-        return executeStreaming(CommandBean("Windchill Start", "windchill start"))
+    override fun startWnc(doFinally: () -> Unit) {
+        return executeStreaming(CommandBean("Windchill Start", "windchill start"), doFinally)
     }
 
-    override fun xconf() {
-        return executeStreaming(CommandBean("Xconfmanager Reload", "xconfmanager -p"))
+    override fun xconf(doFinally: () -> Unit) {
+        return executeStreaming(CommandBean("Xconfmanager Reload", "xconfmanager -p"), doFinally)
     }
 
     override fun executeStreaming(commandBean: CommandBean, doFinally: () -> Unit) {
@@ -47,11 +47,13 @@ class NonBlockingRemoteServiceImpl(private val project: Project) : RemoteService
             commandBean.actualSubscription = rSocket.executeStreamingCall(command, commandBean, doFinally)
             commandSubject.onNext(commandBean)
         } catch (e: Exception) {
+            val message =
+                "There was an error during execution of command : ${commandBean}\n${Exceptions.unwrap(e).message ?: ""}"
             commandBean.status = CommandBean.ExecutionStatus.STOPPED
             commandBean.response.onNext(e.message)
             doFinally()
             ApplicationManager.getApplication().invokeLater {
-                Messages.showErrorDialog(project, Exceptions.unwrap(e).message ?: "", "Connection exception")
+                Messages.showErrorDialog(project, message, "Connection exception")
             }
         }
 

@@ -13,10 +13,10 @@ interface RemoteService {
         }
     }
 
-    fun stopWnc()
-    fun startWnc()
-    fun restartWnc()
-    fun xconf()
+    fun stopWnc(doFinally: () -> Unit = {})
+    fun startWnc(doFinally: () -> Unit = {})
+    fun restartWnc(doFinally: () -> Unit = {})
+    fun xconf(doFinally: () -> Unit = {})
     fun executeStreaming(commandBean: CommandBean, doFinally: () -> Unit = {})
 
     fun getOutputSubject(): Subject<CommandBean>
