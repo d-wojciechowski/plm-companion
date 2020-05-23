@@ -13,9 +13,10 @@ import pl.dwojciechowski.proto.commands.CommandServiceClient
 import pl.dwojciechowski.proto.commands.Status
 import pl.dwojciechowski.service.ConnectorService
 import pl.dwojciechowski.service.RemoteService
+import reactor.core.Disposable
 import reactor.core.Exceptions
 
-class RemoteServiceImpl(private val project: Project) : RemoteService {
+class NonBlockingRemoteServiceImpl(private val project: Project) : RemoteService {
 
     private val connector = ServiceManager.getService(project, ConnectorService::class.java)
     private val commandSubject: Subject<CommandBean> = PublishSubject.create<CommandBean>()
@@ -41,9 +42,9 @@ class RemoteServiceImpl(private val project: Project) : RemoteService {
             val command = commandBean.getCommand()
             commandBean.status = CommandBean.ExecutionStatus.RUNNING
             commandBean.response.onNext("Started execution of $commandBean")
+
             val rSocket = connector.getConnection()
-            rSocket.executeStreamingCall(command, commandBean, doFinally)
-            commandBean.actualSubscription = rSocket ?: commandBean.actualSubscription
+            commandBean.actualSubscription = rSocket.executeStreamingCall(command, commandBean, doFinally)
             commandSubject.onNext(commandBean)
         } catch (e: Exception) {
             commandBean.status = CommandBean.ExecutionStatus.STOPPED
@@ -53,10 +54,15 @@ class RemoteServiceImpl(private val project: Project) : RemoteService {
                 Messages.showErrorDialog(project, Exceptions.unwrap(e).message ?: "", "Connection exception")
             }
         }
+
     }
 
-    private fun RSocket?.executeStreamingCall(command: Command, commandBean: CommandBean, doFinally: () -> Unit) {
-        CommandServiceClient(this)
+    private fun RSocket?.executeStreamingCall(
+        command: Command,
+        commandBean: CommandBean,
+        doFinally: () -> Unit
+    ): Disposable {
+        return CommandServiceClient(this)
             .executeStreaming(command)
             .doOnNext {
                 commandBean.response.onNext(it.message)

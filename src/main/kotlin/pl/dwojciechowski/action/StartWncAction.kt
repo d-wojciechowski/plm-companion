@@ -1,6 +1,7 @@
 package pl.dwojciechowski.action
 
 import com.intellij.openapi.actionSystem.AnActionEvent
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.project.DumbAwareAction
 import pl.dwojciechowski.action.utils.ActionSubscription
 import pl.dwojciechowski.model.ServerStatus
@@ -21,7 +22,9 @@ class StartWncAction : DumbAwareAction() {
     }
 
     override fun actionPerformed(e: AnActionEvent) {
-        e.project?.let { RemoteService.getInstance(it).startWnc() }
+        ApplicationManager.getApplication().invokeLater {
+            e.project?.let { RemoteService.getInstance(it).startWnc() }
+        }
     }
 
 }

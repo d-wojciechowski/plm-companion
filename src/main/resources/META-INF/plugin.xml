@@ -17,7 +17,7 @@
         />
         <projectService serviceImplementation="pl.dwojciechowski.configuration.PluginConfiguration"/>
         <projectService serviceInterface="pl.dwojciechowski.service.RemoteService"
-                        serviceImplementation="pl.dwojciechowski.service.impl.RemoteServiceImpl"/>
+                        serviceImplementation="pl.dwojciechowski.service.impl.NonBlockingRemoteServiceImpl"/>
         <projectService serviceInterface="pl.dwojciechowski.service.LogViewerService"
                         serviceImplementation="pl.dwojciechowski.service.impl.LogViewerServiceImpl"/>
         <projectService serviceInterface="pl.dwojciechowski.service.FileService"

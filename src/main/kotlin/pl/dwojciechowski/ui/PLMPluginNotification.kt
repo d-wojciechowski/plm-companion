@@ -4,6 +4,7 @@ import com.intellij.notification.NotificationDisplayType
 import com.intellij.notification.NotificationGroup
 import com.intellij.notification.NotificationType
 import com.intellij.openapi.project.Project
+import pl.dwojciechowski.model.CommandBean
 import javax.swing.Icon
 
 internal object PLMPluginNotification {
@@ -26,6 +27,10 @@ internal object PLMPluginNotification {
 
     fun settingsSaved(project: Project) {
         notify(project, "Settings Saved", PluginIcons.CONFIRMATION)
+    }
+
+    fun notifyCommandBeanChange(project: Project, commandBean: CommandBean){
+
     }
 
     fun notify(project: Project, text: String, icon: Icon) {

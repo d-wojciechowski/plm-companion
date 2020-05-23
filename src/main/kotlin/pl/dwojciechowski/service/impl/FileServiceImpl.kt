@@ -14,7 +14,7 @@ class FileServiceImpl(project: Project) : FileService {
     private val connector = ServiceManager.getService(project, ConnectorService::class.java)
 
     override fun getDirContent(path: String, fullExpand: Boolean): FileResponse {
-        val rSocket = connector.establishConnection()
+        val rSocket = connector.getConnection()
         val pathObj = Path.newBuilder()
             .setName(path)
             .setFullExpand(fullExpand)
