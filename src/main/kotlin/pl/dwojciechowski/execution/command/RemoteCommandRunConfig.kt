@@ -1,25 +1,26 @@
-package pl.dwojciechowski.run.config
+package pl.dwojciechowski.execution.command
 
 import com.intellij.execution.Executor
-import com.intellij.execution.configurations.ConfigurationFactory
-import com.intellij.execution.configurations.RunConfiguration
-import com.intellij.execution.configurations.RunConfigurationBase
-import com.intellij.execution.configurations.RunProfileState
+import com.intellij.execution.configurations.*
 import com.intellij.execution.runners.ExecutionEnvironment
 import com.intellij.openapi.options.SettingsEditor
 import com.intellij.openapi.project.Project
 import com.intellij.util.xmlb.XmlSerializer
 import org.jdom.Element
-import pl.dwojciechowski.run.editor.RemoteCommandSettingsEditor
-import pl.dwojciechowski.run.state.RemoteCommandState
 
-class RemoteCommandConfigurationBase(
+class RemoteCommandRunConfig(
     project: Project,
     factory: ConfigurationFactory,
     name: String
-) : RunConfigurationBase<RemoteCommandConfigurationBase>(project, factory, name) {
+) : RunConfigurationBase<RemoteCommandRunConfig>(project, factory, name) {
 
-    var settings = RemoteCommandSettings("")
+    var settings = RemoteCommandSettings()
+
+    override fun clone(): RunConfiguration {
+        val runConfiguration = super.clone()
+        (runConfiguration as RemoteCommandRunConfig).settings = RemoteCommandSettings()
+        return runConfiguration
+    }
 
     override fun getConfigurationEditor(): SettingsEditor<out RunConfiguration> {
         return RemoteCommandSettingsEditor(project)
@@ -30,17 +31,9 @@ class RemoteCommandConfigurationBase(
     }
 
     override fun checkConfiguration() {
-    }
-
-    data class RemoteCommandSettings(var command: String) : Cloneable {
-        companion object {
-            const val TAG = "RemoteCommandSettings"
+        if (settings.command.isEmpty()) {
+            throw RuntimeConfigurationWarning("Command may not be empty, provide non empty command")
         }
-
-        /**
-         * For serialization
-         */
-        constructor() : this(command = "")
     }
 
     override fun readExternal(element: Element) {

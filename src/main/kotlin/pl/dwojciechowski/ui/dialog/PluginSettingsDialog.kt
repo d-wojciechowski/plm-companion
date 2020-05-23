@@ -42,6 +42,7 @@ class PluginSettingsDialog(private val project: Project) : DialogWrapper(project
     private lateinit var addonPortSpinner: JSpinner
     private lateinit var actionPresentationCB: JComboBox<String>
     private lateinit var statusControlled: JCheckBox
+    private lateinit var autoOpenCommandPane: JCheckBox
 
     fun createUIComponents() {
         actionPresentationCB = ComboBox(ActionPresentationOption.ALL_OPTIONS.toArray(arrayOf()))
@@ -111,6 +112,7 @@ class PluginSettingsDialog(private val project: Project) : DialogWrapper(project
         actionPresentationCB.selectedItem = config.actionPresentation
         folderPathTextFile.text = config.lffFolder
         statusControlled.isSelected = config.statusControlled
+        autoOpenCommandPane.isSelected = config.autoOpenCommandPane
 
         resultingTextField.composeURL()
     }
@@ -130,6 +132,7 @@ class PluginSettingsDialog(private val project: Project) : DialogWrapper(project
         config.actionPresentation = actionPresentationCB.selectedItem as String
         config.lffFolder = folderPathTextFile.text
         config.statusControlled = statusControlled.isSelected
+        config.autoOpenCommandPane = autoOpenCommandPane.isSelected
     }
 
     private fun JTextField.composeURL() {

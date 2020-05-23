@@ -13,7 +13,8 @@ import javax.swing.border.EmptyBorder
 
 class EditListAction(
     private val list: JBList<CommandBean>,
-    private val commandFieldName: String = "command"
+    private val commandFieldName: String = "command",
+    private val doFinally: () -> Unit = {}
 ) : AbstractAction() {
 
     private lateinit var editPopup: JPopupMenu
@@ -70,6 +71,7 @@ class EditListAction(
             model.get(selectedIndex).name = value
         }
         editPopup.isVisible = false
+        doFinally()
     }
 
 }

@@ -1,15 +1,14 @@
-package pl.dwojciechowski.run.editor
+package pl.dwojciechowski.execution.command
 
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.options.SettingsEditor
 import com.intellij.openapi.project.Project
 import pl.dwojciechowski.configuration.PluginConfiguration
 import pl.dwojciechowski.model.CommandBean
-import pl.dwojciechowski.run.config.RemoteCommandConfigurationBase
 import pl.dwojciechowski.ui.component.CommandList
 import javax.swing.*
 
-class RemoteCommandSettingsEditor(private val project: Project) : SettingsEditor<RemoteCommandConfigurationBase>() {
+class RemoteCommandSettingsEditor(project: Project) : SettingsEditor<RemoteCommandRunConfig>() {
 
     private val config: PluginConfiguration = ServiceManager.getService(project, PluginConfiguration::class.java)
 
@@ -18,6 +17,7 @@ class RemoteCommandSettingsEditor(private val project: Project) : SettingsEditor
     private lateinit var commandTF: JTextField
     private lateinit var commandHistory: CommandList
     private lateinit var listModel: DefaultListModel<CommandBean>
+    private lateinit var async: JCheckBox
 
     private val splitPattern = "|#*#$"
 
@@ -41,17 +41,16 @@ class RemoteCommandSettingsEditor(private val project: Project) : SettingsEditor
         }
     }
 
-    override fun resetEditorFrom(s: RemoteCommandConfigurationBase) {
+    override fun resetEditorFrom(s: RemoteCommandRunConfig) {
         commandTF.text = s.settings.command
+        async.isSelected = s.settings.async
     }
 
-    override fun applyEditorTo(s: RemoteCommandConfigurationBase) {
+    override fun applyEditorTo(s: RemoteCommandRunConfig) {
         s.settings.command = commandTF.text
+        s.settings.async = async.isSelected
     }
 
-    override fun createEditor(): JComponent {
-        return myPanel
-    }
-
+    override fun createEditor() = myPanel
 
 }

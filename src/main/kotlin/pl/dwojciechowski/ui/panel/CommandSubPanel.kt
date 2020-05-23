@@ -9,11 +9,11 @@ import com.intellij.ui.RawCommandLineEditor
 import com.intellij.util.ui.UIUtil
 import pl.dwojciechowski.configuration.PluginConfiguration
 import pl.dwojciechowski.model.CommandBean
+import pl.dwojciechowski.service.IdeControlService
 import pl.dwojciechowski.service.RemoteService
 import pl.dwojciechowski.ui.component.CommandList
 import pl.dwojciechowski.ui.component.action.EditListAction
 import java.awt.event.KeyEvent
-import java.time.LocalTime
 import java.util.*
 import javax.swing.DefaultListModel
 import javax.swing.JButton
@@ -26,6 +26,7 @@ class CommandSubPanel(
 
     private val config: PluginConfiguration = ServiceManager.getService(project, PluginConfiguration::class.java)
     private val windchillService = ServiceManager.getService(project, RemoteService::class.java)
+    private val ideControlService = ServiceManager.getService(project, IdeControlService::class.java)
 
     private val splitPattern = "|#*#$"
 
@@ -92,18 +93,19 @@ class CommandSubPanel(
 
     private fun addToModel() {
         listModel.add(0, CommandBean("", commandField.text))
-        dispose()
+        saveToConfig()
     }
 
     private fun CommandList.setUpCommandHistoryRMBMenu() {
-        this.addRMBMenuEntry("Run") {
+        addRMBMenuEntry("Run") {
             executeSelectedCommand()
         }
-            .addRMBMenuEntry("Edit", action = EditListAction(this))
-            .addRMBMenuEntry("Delete") {
-                listModel.remove(selectedIndex)
-            }
-            .addRMBMenuEntry("Alias", action = EditListAction(this, "name"))
+        addRMBMenuEntry("Delete") {
+            listModel.remove(selectedIndex)
+            saveToConfig()
+        }
+        addRMBMenuEntry("Edit", action = EditListAction(this) { saveToConfig() })
+        addRMBMenuEntry("Alias", action = EditListAction(this, "name") { saveToConfig() })
     }
 
     private fun executeFromInput() {
@@ -114,6 +116,9 @@ class CommandSubPanel(
         } else {
             windchillService.executeStreaming(CommandBean("", commandField.text))
         }
+        if (config.autoOpenCommandPane) {
+            ideControlService.switchToCommandTab()
+        }
     }
 
     private fun executeSelectedCommand() {
@@ -122,13 +127,14 @@ class CommandSubPanel(
                 project, "No command selected", "Missing selection error", Messages.getErrorIcon()
             )
         } else {
-            val commandBean = commandHistory.selectedValue.safeCopy()
-            commandBean.executionTime = LocalTime.now()
-            windchillService.executeStreaming(commandBean)
+            windchillService.executeStreaming(commandHistory.selectedValue.clone())
+        }
+        if (config.autoOpenCommandPane) {
+            ideControlService.switchToCommandTab()
         }
     }
 
-    fun dispose() {
+    private fun saveToConfig() {
         config.commandsHistory = listModel.elements().toList()
             .reversed()
             .map { "${it.name}$splitPattern${it.command}" }
