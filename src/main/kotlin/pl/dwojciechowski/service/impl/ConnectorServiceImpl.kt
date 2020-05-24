@@ -28,8 +28,9 @@ class ConnectorServiceImpl(private val project: Project) : ConnectorService {
     }
 
     private fun establishConnection(): RSocket {
+        //TODO timeout on connection lost
         val resumeStrategy = Resume()
-            .sessionDuration(Duration.ofMinutes(5))
+            .sessionDuration(Duration.ofMillis(config.timeout.toLong()))
             .retry(retryByConfig().doAfterRetry { retryAction(it) })
         try {
             return RSocketConnector.create()
@@ -37,21 +38,20 @@ class ConnectorServiceImpl(private val project: Project) : ConnectorService {
                 .resume(resumeStrategy)
                 .fragment(1024)
                 .connect(TcpClientTransport.create(config.hostname, config.addonPort))
+                .timeout(Duration.ofMillis(config.timeout.toLong()))
                 .block() ?: throw Exception()
         } catch (e: Exception) {
-            throw Exceptions.retryExhausted("Could not connect to server, 2 retries made", null)
+            throw Exceptions.retryExhausted("Could not connect to server, ${maxAttempts()} retries made", null)
         }
 
     }
 
     private fun retryByConfig(): RetryBackoffSpec {
-        return Retry.fixedDelay(
-            config.timeout / config.refreshRate.toLong(), Duration.ofMillis(config.refreshRate.toLong())
-        )
+        return Retry.fixedDelay(maxAttempts(), Duration.ofMillis(config.refreshRate.toLong()))
     }
 
     private fun retryAction(it: Retry.RetrySignal) {
-        if (it.failure() != null && it.totalRetriesInARow() % 10 == 0L) {
+        if (it.failure() != null && it.totalRetriesInARow() == 1L) {
             PLMPluginNotification.notify(
                 project, "Addon connection lost, attempt to reconnect", PluginIcons.WARNING
             )
@@ -59,5 +59,7 @@ class ConnectorServiceImpl(private val project: Project) : ConnectorService {
             PLMPluginNotification.notify(project, "Addon connection recovered.", PluginIcons.CONFIRMATION)
         }
     }
+
+    private fun maxAttempts() = config.timeout / config.refreshRate.toLong()
 
 }
