@@ -7,6 +7,7 @@ import com.intellij.openapi.ui.Messages
 import io.reactivex.rxjava3.subjects.PublishSubject
 import io.reactivex.rxjava3.subjects.Subject
 import io.rsocket.RSocket
+import pl.dwojciechowski.configuration.PluginConfiguration
 import pl.dwojciechowski.model.CommandBean
 import pl.dwojciechowski.model.ExecutionStatus
 import pl.dwojciechowski.proto.commands.Command
@@ -20,6 +21,7 @@ import reactor.core.Exceptions
 class NonBlockingRemoteServiceImpl(private val project: Project) : RemoteService {
 
     private val connector = ServiceManager.getService(project, ConnectorService::class.java)
+    private val config = ServiceManager.getService(project, PluginConfiguration::class.java)
     private val commandSubject: Subject<CommandBean> = PublishSubject.create<CommandBean>()
 
     override fun restartWnc(doFinally: () -> Unit) {

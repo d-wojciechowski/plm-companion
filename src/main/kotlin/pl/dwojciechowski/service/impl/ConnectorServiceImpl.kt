@@ -14,6 +14,7 @@ import reactor.core.Exceptions
 import reactor.util.retry.Retry
 import reactor.util.retry.RetryBackoffSpec
 import java.time.Duration
+import javax.swing.Icon
 
 class ConnectorServiceImpl(private val project: Project) : ConnectorService {
 
@@ -28,17 +29,15 @@ class ConnectorServiceImpl(private val project: Project) : ConnectorService {
     }
 
     private fun establishConnection(): RSocket {
-        //TODO timeout on connection lost
         val resumeStrategy = Resume()
-            .sessionDuration(Duration.ofMillis(config.timeout.toLong()))
-            .retry(retryByConfig().doAfterRetry { retryAction(it) })
+            .sessionDuration(Duration.ofHours(1))
+            .retry(retryByConfig("Connection lost", PluginIcons.WARNING))
         try {
             return RSocketConnector.create()
-                .reconnect(retryByConfig())
+                .reconnect(retryByConfig("Could not connect to server", PluginIcons.WARNING))
                 .resume(resumeStrategy)
                 .fragment(1024)
                 .connect(TcpClientTransport.create(config.hostname, config.addonPort))
-                .timeout(Duration.ofMillis(config.timeout.toLong()))
                 .block() ?: throw Exception()
         } catch (e: Exception) {
             throw Exceptions.retryExhausted("Could not connect to server, ${maxAttempts()} retries made", null)
@@ -46,20 +45,19 @@ class ConnectorServiceImpl(private val project: Project) : ConnectorService {
 
     }
 
-    private fun retryByConfig(): RetryBackoffSpec {
+    private fun retryByConfig(message: String, icon: Icon): RetryBackoffSpec {
         return Retry.fixedDelay(maxAttempts(), Duration.ofMillis(config.refreshRate.toLong()))
-    }
-
-    private fun retryAction(it: Retry.RetrySignal) {
-        if (it.failure() != null && it.totalRetriesInARow() == 1L) {
-            PLMPluginNotification.notify(
-                project, "Addon connection lost, attempt to reconnect", PluginIcons.WARNING
-            )
-        } else if (it.failure() == null) {
-            PLMPluginNotification.notify(project, "Addon connection recovered.", PluginIcons.CONFIRMATION)
-        }
+            .doBeforeRetry {
+                notification(message, it, icon)
+            }
     }
 
     private fun maxAttempts() = config.timeout / config.refreshRate.toLong()
+
+    private fun notification(message: String, it: Retry.RetrySignal, icon: Icon) {
+        PLMPluginNotification.notify(
+            project, "$message, retry number ${it.totalRetriesInARow() + 1}", icon
+        )
+    }
 
 }
