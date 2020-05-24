@@ -11,6 +11,6 @@ interface ConnectorService {
             ServiceManager.getService(project, ConnectorService::class.java)
     }
 
-    fun getConnection(): RSocket?
+    fun getConnection(): RSocket
 
 }

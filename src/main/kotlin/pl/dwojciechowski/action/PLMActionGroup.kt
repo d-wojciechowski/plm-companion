@@ -6,7 +6,6 @@ import com.intellij.openapi.components.ServiceManager
 import pl.dwojciechowski.configuration.PluginConfiguration
 import pl.dwojciechowski.model.ActionPresentationOption
 
-
 class PLMActionGroup : DefaultActionGroup() {
 
     override fun update(event: AnActionEvent) {

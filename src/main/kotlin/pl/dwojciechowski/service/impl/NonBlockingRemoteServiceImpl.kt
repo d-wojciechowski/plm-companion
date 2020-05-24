@@ -8,6 +8,7 @@ import io.reactivex.rxjava3.subjects.PublishSubject
 import io.reactivex.rxjava3.subjects.Subject
 import io.rsocket.RSocket
 import pl.dwojciechowski.model.CommandBean
+import pl.dwojciechowski.model.ExecutionStatus
 import pl.dwojciechowski.proto.commands.Command
 import pl.dwojciechowski.proto.commands.CommandServiceClient
 import pl.dwojciechowski.proto.commands.Status
@@ -40,7 +41,7 @@ class NonBlockingRemoteServiceImpl(private val project: Project) : RemoteService
     override fun executeStreaming(commandBean: CommandBean, doFinally: () -> Unit) {
         try {
             val command = commandBean.getCommand()
-            commandBean.status = CommandBean.ExecutionStatus.RUNNING
+            commandBean.status = ExecutionStatus.RUNNING
             commandBean.response.onNext("Started execution of $commandBean")
 
             val rSocket = connector.getConnection()
@@ -49,7 +50,7 @@ class NonBlockingRemoteServiceImpl(private val project: Project) : RemoteService
         } catch (e: Exception) {
             val message =
                 "There was an error during execution of command : ${commandBean}\n${Exceptions.unwrap(e).message ?: ""}"
-            commandBean.status = CommandBean.ExecutionStatus.STOPPED
+            commandBean.status = ExecutionStatus.STOPPED
             commandBean.response.onNext(e.message)
             doFinally()
             ApplicationManager.getApplication().invokeLater {
@@ -69,14 +70,14 @@ class NonBlockingRemoteServiceImpl(private val project: Project) : RemoteService
             .doOnNext {
                 commandBean.response.onNext(it.message)
                 if (it.status == Status.FAILED) {
-                    commandBean.status = CommandBean.ExecutionStatus.STOPPED
+                    commandBean.status = ExecutionStatus.STOPPED
                 }
             }.doOnError {
                 commandBean.response.onNext(it.message)
-                commandBean.status = CommandBean.ExecutionStatus.STOPPED
+                commandBean.status = ExecutionStatus.STOPPED
             }.doOnComplete {
-                if (commandBean.status != CommandBean.ExecutionStatus.STOPPED) {
-                    commandBean.status = CommandBean.ExecutionStatus.COMPLETED
+                if (commandBean.status != ExecutionStatus.STOPPED) {
+                    commandBean.status = ExecutionStatus.COMPLETED
                 }
             }.doFinally {
                 doFinally()

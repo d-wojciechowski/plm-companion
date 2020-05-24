@@ -24,7 +24,9 @@ class StopWncAction : DumbAwareAction() {
 
     override fun actionPerformed(e: AnActionEvent) {
         GlobalScope.launch {
-            e.project?.let { RemoteService.getInstance(it).stopWnc() }
+            e.project?.let {
+                RemoteService.getInstance(it).stopWnc()
+                }
         }
     }
 

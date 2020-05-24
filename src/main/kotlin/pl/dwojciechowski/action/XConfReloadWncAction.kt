@@ -24,7 +24,9 @@ class XConfReloadWncAction : DumbAwareAction() {
 
     override fun actionPerformed(e: AnActionEvent) {
         GlobalScope.launch {
-            e.project?.let { RemoteService.getInstance(it).xconf() }
+            e.project?.let {
+                RemoteService.getInstance(it).xconf()
+            }
         }
     }
 
