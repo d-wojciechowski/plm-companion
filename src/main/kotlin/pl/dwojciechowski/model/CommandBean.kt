@@ -13,15 +13,13 @@ data class CommandBean(
     var name: String,
     var command: String,
     var executionTime: LocalTime = LocalTime.now(),
-    private var _status: ExecutionStatus = ExecutionStatus.NONE,
     var response: ReplaySubject<String> = ReplaySubject.create(),
     var actualSubscription: Disposable = Disposables.never()
 ) : Cloneable {
 
-    var status: ExecutionStatus
-        get() = _status
+    var status: ExecutionStatus = ExecutionStatus.NONE
         set(value) {
-            _status = value
+            field = value
             subscription.onNext(this)
         }
 
@@ -46,6 +44,6 @@ data class CommandBean(
     }
 
     public override fun clone() =
-        CommandBean(name, command, LocalTime.now(), ExecutionStatus.NONE, ReplaySubject.create(), Disposables.never())
+        CommandBean(name, command, LocalTime.now(), ReplaySubject.create(), Disposables.never())
 
 }

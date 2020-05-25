@@ -14,7 +14,9 @@ import pl.dwojciechowski.proto.commands.CommandServiceClient
 import pl.dwojciechowski.proto.commands.Status
 import pl.dwojciechowski.service.ConnectorService
 import pl.dwojciechowski.service.RemoteService
+import reactor.core.Disposable
 import reactor.core.Exceptions
+import reactor.util.retry.Retry
 
 class RemoteServiceImpl(private val project: Project) : RemoteService {
 
@@ -42,30 +44,41 @@ class RemoteServiceImpl(private val project: Project) : RemoteService {
             val command = commandBean.getCommand()
             commandBean.status = ExecutionStatus.RUNNING
             commandBean.response.onNext("Started execution of $commandBean")
+
             val rSocket = connector.getConnection()
-            rSocket.executeStreamingCall(command, commandBean, doFinally)
-            commandBean.actualSubscription = rSocket
+            commandBean.actualSubscription = rSocket.executeStreamingCall(command, commandBean, doFinally)
             commandSubject.onNext(commandBean)
         } catch (e: Exception) {
+            val message =
+                "There was an error during execution of command : ${commandBean}\n${Exceptions.unwrap(e).message ?: ""}"
             commandBean.status = ExecutionStatus.STOPPED
             commandBean.response.onNext(e.message)
             doFinally()
             ApplicationManager.getApplication().invokeLater {
-                Messages.showErrorDialog(project, Exceptions.unwrap(e).message ?: "", "Connection exception")
+                Messages.showErrorDialog(project, message, "Connection exception")
             }
         }
     }
 
-    private fun RSocket.executeStreamingCall(command: Command, commandBean: CommandBean, doFinally: () -> Unit) {
-        CommandServiceClient(this)
+    private fun RSocket.executeStreamingCall(
+        command: Command,
+        commandBean: CommandBean,
+        doFinally: () -> Unit
+    ): Disposable {
+        return CommandServiceClient(this)
             .executeStreaming(command)
+            .retryWhen(Retry.maxInARow(0))
             .doOnNext {
                 commandBean.response.onNext(it.message)
                 if (it.status == Status.FAILED) {
                     commandBean.status = ExecutionStatus.STOPPED
                 }
             }.doOnError {
-                commandBean.response.onNext(it.message)
+                var message = Exceptions.unwrap(it).message ?: ""
+                if (message.contains("Retries exhausted")) {
+                    message = message.replace("0", connector.maxAttempts().toString())
+                }
+                commandBean.response.onNext(message)
                 commandBean.status = ExecutionStatus.STOPPED
             }.doOnComplete {
                 if (commandBean.status != ExecutionStatus.STOPPED) {

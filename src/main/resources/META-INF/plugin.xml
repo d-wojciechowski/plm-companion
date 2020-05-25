@@ -7,7 +7,7 @@
 
     <extensions defaultExtensionNs="com.intellij">
 
-        <configurationType implementation="pl.dwojciechowski.execution.RemoteCommandConfigType" />
+        <configurationType implementation="pl.dwojciechowski.execution.RemoteCommandConfigType"/>
 
         <toolWindow id="PLM Companion" anchor="right" factoryClass="pl.dwojciechowski.ui.MainSubWindowFactory"
                     icon="/META-INF/pluginIcon.svg"/>
@@ -17,7 +17,7 @@
         />
         <projectService serviceImplementation="pl.dwojciechowski.configuration.PluginConfiguration"/>
         <projectService serviceInterface="pl.dwojciechowski.service.RemoteService"
-                        serviceImplementation="pl.dwojciechowski.service.impl.NonBlockingRemoteServiceImpl"/>
+                        serviceImplementation="pl.dwojciechowski.service.impl.RemoteServiceImpl"/>
         <projectService serviceInterface="pl.dwojciechowski.service.LogViewerService"
                         serviceImplementation="pl.dwojciechowski.service.impl.LogViewerServiceImpl"/>
         <projectService serviceInterface="pl.dwojciechowski.service.FileService"
