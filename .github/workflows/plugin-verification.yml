@@ -29,9 +29,6 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew build
   
-    - name: Print ref
-      run: ${{ github.ref }}
-  
     - name: Verify Plugin on IntelliJ Platforms
       if: github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/master' || github.ref == 'refs/heads/plugin-verification-action'
       id: verify
