@@ -7,6 +7,8 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.ui.SimpleToolWindowPanel
 import com.intellij.ui.content.Content
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import pl.dwojciechowski.service.LogViewerService
 import pl.dwojciechowski.ui.dialog.LogFileLocationDialog
 import reactor.core.Disposable
@@ -39,7 +41,7 @@ class LogViewerPanel(
         this.add(panel)
 
         startRestartButton.icon = AllIcons.RunConfigurations.TestState.Run
-        startRestartButton.addActionListener { startRestart() }
+        startRestartButton.addActionListener { GlobalScope.launch { startRestart() } }
 
         stopButton.addActionListener { stopLogViewer() }
         stopButton.icon = AllIcons.Actions.Suspend

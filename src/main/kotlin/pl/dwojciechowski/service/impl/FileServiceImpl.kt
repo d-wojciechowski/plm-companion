@@ -8,26 +8,27 @@ import pl.dwojciechowski.proto.files.FileServiceClient
 import pl.dwojciechowski.proto.files.Path
 import pl.dwojciechowski.service.ConnectorService
 import pl.dwojciechowski.service.FileService
+import reactor.util.retry.Retry
 
 class FileServiceImpl(project: Project) : FileService {
 
     private val connector = ServiceManager.getService(project, ConnectorService::class.java)
+    private val emptyResponse = FileResponse.newBuilder()
+        .setOs("")
+        .setSeparator("")
+        .addFileTree(FileMeta.getDefaultInstance())
+        .build()
 
     override fun getDirContent(path: String, fullExpand: Boolean): FileResponse {
-        val rSocket = connector.establishConnection()
         val pathObj = Path.newBuilder()
             .setName(path)
             .setFullExpand(fullExpand)
             .build()
-        val response = FileServiceClient(rSocket)
+
+        return FileServiceClient(connector.getConnection())
             .navigate(pathObj)
-            .block()
-        rSocket?.dispose()
-        return response ?: FileResponse.newBuilder()
-            .setOs("")
-            .setSeparator("")
-            .addFileTree(FileMeta.getDefaultInstance())
-            .build()
+            .retryWhen(Retry.maxInARow(0))
+            .block() ?: emptyResponse
     }
 
 }

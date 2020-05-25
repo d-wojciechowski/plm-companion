@@ -7,6 +7,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.SimpleToolWindowPanel
 import io.reactivex.rxjava3.disposables.Disposable
 import pl.dwojciechowski.model.CommandBean
+import pl.dwojciechowski.model.ExecutionStatus
 import pl.dwojciechowski.service.RemoteService
 import pl.dwojciechowski.ui.component.CommandList
 import java.awt.event.KeyEvent
@@ -64,7 +65,7 @@ class CommandLogPanel(project: Project) : SimpleToolWindowPanel(false, true), Ex
             removeSubscription()
         }
         addRMBMenuEntry("Stop") {
-            listModel.selected().status = CommandBean.ExecutionStatus.STOPPED
+            listModel.selected().status = ExecutionStatus.STOPPED
             removeSubscription()
         }
         addKeyPressedListener {

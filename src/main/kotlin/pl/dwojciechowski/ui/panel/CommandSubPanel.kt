@@ -7,6 +7,8 @@ import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.ui.showYesNoDialog
 import com.intellij.ui.RawCommandLineEditor
 import com.intellij.util.ui.UIUtil
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import pl.dwojciechowski.configuration.PluginConfiguration
 import pl.dwojciechowski.model.CommandBean
 import pl.dwojciechowski.service.IdeControlService
@@ -98,7 +100,9 @@ class CommandSubPanel(
 
     private fun CommandList.setUpCommandHistoryRMBMenu() {
         addRMBMenuEntry("Run") {
-            executeSelectedCommand()
+            GlobalScope.launch {
+                executeSelectedCommand()
+            }
         }
         addRMBMenuEntry("Delete") {
             listModel.remove(selectedIndex)
@@ -114,7 +118,9 @@ class CommandSubPanel(
                 project, "Command field is empty", "No command provided", Messages.getErrorIcon()
             )
         } else {
-            windchillService.executeStreaming(CommandBean("", commandField.text))
+            GlobalScope.launch {
+                windchillService.executeStreaming(CommandBean("", commandField.text))
+            }
         }
         if (config.autoOpenCommandPane) {
             ideControlService.switchToCommandTab()
@@ -127,7 +133,9 @@ class CommandSubPanel(
                 project, "No command selected", "Missing selection error", Messages.getErrorIcon()
             )
         } else {
-            windchillService.executeStreaming(commandHistory.selectedValue.clone())
+            GlobalScope.launch {
+                windchillService.executeStreaming(commandHistory.selectedValue.clone())
+            }
         }
         if (config.autoOpenCommandPane) {
             ideControlService.switchToCommandTab()

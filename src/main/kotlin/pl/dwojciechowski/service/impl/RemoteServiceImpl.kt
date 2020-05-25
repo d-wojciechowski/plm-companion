@@ -8,78 +8,81 @@ import io.reactivex.rxjava3.subjects.PublishSubject
 import io.reactivex.rxjava3.subjects.Subject
 import io.rsocket.RSocket
 import pl.dwojciechowski.model.CommandBean
+import pl.dwojciechowski.model.ExecutionStatus
 import pl.dwojciechowski.proto.commands.Command
 import pl.dwojciechowski.proto.commands.CommandServiceClient
 import pl.dwojciechowski.proto.commands.Status
 import pl.dwojciechowski.service.ConnectorService
 import pl.dwojciechowski.service.RemoteService
-import pl.dwojciechowski.ui.PLMPluginNotification
-import pl.dwojciechowski.ui.PluginIcons
+import reactor.core.Disposable
 import reactor.core.Exceptions
+import reactor.util.retry.Retry
 
 class RemoteServiceImpl(private val project: Project) : RemoteService {
 
     private val connector = ServiceManager.getService(project, ConnectorService::class.java)
-    private val commandSubject: Subject<CommandBean> = PublishSubject.create<CommandBean>()
+    private val commandSubject = PublishSubject.create<CommandBean>()
 
-    override fun restartWnc() {
-        executeStreaming(CommandBean("Windchill Restart", "windchill stop && windchill start"))
+    override fun restartWnc(doFinally: () -> Unit) {
+        executeStreaming(CommandBean("Windchill Restart", "windchill stop && windchill start"), doFinally)
     }
 
-    override fun stopWnc() {
-        return executeStreaming(CommandBean("Windchill Stop", "windchill stop"))
+    override fun stopWnc(doFinally: () -> Unit) {
+        return executeStreaming(CommandBean("Windchill Stop", "windchill stop"), doFinally)
     }
 
-    override fun startWnc() {
-        return executeStreaming(CommandBean("Windchill Start", "windchill start"))
+    override fun startWnc(doFinally: () -> Unit) {
+        return executeStreaming(CommandBean("Windchill Start", "windchill start"), doFinally)
     }
 
-    override fun xconf() {
-        return executeStreaming(CommandBean("Xconfmanager Reload", "xconfmanager -p"))
-    }
-
-    override fun executeStreaming(commandBean: CommandBean) {
-        executeStreaming(commandBean) {}
+    override fun xconf(doFinally: () -> Unit) {
+        return executeStreaming(CommandBean("Xconfmanager Reload", "xconfmanager -p"), doFinally)
     }
 
     override fun executeStreaming(commandBean: CommandBean, doFinally: () -> Unit) {
         try {
             val command = commandBean.getCommand()
-            commandBean.status = CommandBean.ExecutionStatus.RUNNING
-            PLMPluginNotification.notify(project, "$commandBean started", PluginIcons.CONFIRMATION)
+            commandBean.status = ExecutionStatus.RUNNING
             commandBean.response.onNext("Started execution of $commandBean")
-            val rSocket = connector.establishConnection()
-            rSocket.executeStreamingCall(command, commandBean, doFinally)
-            commandBean.actualSubscription = rSocket ?: commandBean.actualSubscription
+
+            val rSocket = connector.getConnection()
+            commandBean.actualSubscription = rSocket.executeStreamingCall(command, commandBean, doFinally)
             commandSubject.onNext(commandBean)
         } catch (e: Exception) {
-            commandBean.status = CommandBean.ExecutionStatus.STOPPED
+            val message =
+                "There was an error during execution of command : ${commandBean}\n${Exceptions.unwrap(e).message ?: ""}"
+            commandBean.status = ExecutionStatus.STOPPED
             commandBean.response.onNext(e.message)
             doFinally()
             ApplicationManager.getApplication().invokeLater {
-                Messages.showErrorDialog(project, Exceptions.unwrap(e).message ?: "", "Connection exception")
+                Messages.showErrorDialog(project, message, "Connection exception")
             }
         }
     }
 
-    private fun RSocket?.executeStreamingCall(command: Command, commandBean: CommandBean, doFinally: () -> Unit) {
-        CommandServiceClient(this)
+    private fun RSocket.executeStreamingCall(
+        command: Command,
+        commandBean: CommandBean,
+        doFinally: () -> Unit
+    ): Disposable {
+        return CommandServiceClient(this)
             .executeStreaming(command)
+            .retryWhen(Retry.maxInARow(0))
             .doOnNext {
                 commandBean.response.onNext(it.message)
                 if (it.status == Status.FAILED) {
-                    commandBean.status = CommandBean.ExecutionStatus.STOPPED
+                    commandBean.status = ExecutionStatus.STOPPED
                 }
             }.doOnError {
-                commandBean.response.onNext(it.message)
-                PLMPluginNotification.notify(project, "Error on $commandBean", PluginIcons.ERROR)
-                commandBean.status = CommandBean.ExecutionStatus.STOPPED
+                var message = Exceptions.unwrap(it).message ?: ""
+                if (message.contains("Retries exhausted")) {
+                    message = message.replace("0", connector.maxAttempts().toString())
+                }
+                commandBean.response.onNext(message)
+                commandBean.status = ExecutionStatus.STOPPED
             }.doOnComplete {
-                if (commandBean.status != CommandBean.ExecutionStatus.STOPPED) {
-                    commandBean.status = CommandBean.ExecutionStatus.COMPLETED
-                    PLMPluginNotification.notify(project, "$commandBean completed", PluginIcons.CONFIRMATION)
-                } else {
-                    PLMPluginNotification.notify(project, "Error on $commandBean", PluginIcons.ERROR)
+                if (commandBean.status != ExecutionStatus.STOPPED) {
+                    commandBean.status = ExecutionStatus.COMPLETED
                 }
             }.doFinally {
                 doFinally()
