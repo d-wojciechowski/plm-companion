@@ -13,6 +13,7 @@ import pl.dwojciechowski.ui.PluginIcons
 import reactor.core.Exceptions
 import reactor.util.retry.Retry
 import reactor.util.retry.RetryBackoffSpec
+import java.net.SocketException
 import java.time.Duration
 import javax.swing.Icon
 
@@ -48,11 +49,13 @@ class ConnectorServiceImpl(private val project: Project) : ConnectorService {
     private fun retryByConfig(message: String, icon: Icon): RetryBackoffSpec {
         return Retry.fixedDelay(maxAttempts(), Duration.ofMillis(config.refreshRate.toLong()))
             .doBeforeRetry {
-                notification(message, it, icon)
+                if (Exceptions.unwrap(it.failure()) is SocketException) {
+                    notification(message, it, icon)
+                }
             }
     }
 
-    private fun maxAttempts() = config.timeout / config.refreshRate.toLong()
+    override fun maxAttempts() = config.timeout / config.refreshRate.toLong()
 
     private fun notification(message: String, it: Retry.RetrySignal, icon: Icon) {
         PLMPluginNotification.notify(

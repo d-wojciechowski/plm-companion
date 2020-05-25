@@ -17,6 +17,7 @@ import pl.dwojciechowski.service.ConnectorService
 import pl.dwojciechowski.service.RemoteService
 import reactor.core.Disposable
 import reactor.core.Exceptions
+import reactor.util.retry.Retry
 
 class NonBlockingRemoteServiceImpl(private val project: Project) : RemoteService {
 
@@ -69,13 +70,18 @@ class NonBlockingRemoteServiceImpl(private val project: Project) : RemoteService
     ): Disposable {
         return CommandServiceClient(this)
             .executeStreaming(command)
+            .retryWhen(Retry.maxInARow(0))
             .doOnNext {
                 commandBean.response.onNext(it.message)
                 if (it.status == Status.FAILED) {
                     commandBean.status = ExecutionStatus.STOPPED
                 }
             }.doOnError {
-                commandBean.response.onNext(it.message)
+                var message = Exceptions.unwrap(it).message ?: ""
+                if (message.contains("Retries exhausted")) {
+                    message = message.replace("0", connector.maxAttempts().toString())
+                }
+                commandBean.response.onNext(message)
                 commandBean.status = ExecutionStatus.STOPPED
             }.doOnComplete {
                 if (commandBean.status != ExecutionStatus.STOPPED) {

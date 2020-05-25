@@ -12,5 +12,6 @@ interface ConnectorService {
     }
 
     fun getConnection(): RSocket
+    fun maxAttempts(): Long
 
 }
