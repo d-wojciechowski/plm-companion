@@ -9,6 +9,7 @@ import pl.dwojciechowski.proto.files.LogViewerServiceClient
 import pl.dwojciechowski.service.ConnectorService
 import pl.dwojciechowski.service.LogViewerService
 import reactor.core.Disposable
+import reactor.util.retry.Retry
 
 class LogViewerServiceImpl(project: Project) : LogViewerService {
 
@@ -37,13 +38,13 @@ class LogViewerServiceImpl(project: Project) : LogViewerService {
         logsObserver: (LogLine) -> Unit,
         logsErrorObserver: (Throwable) -> Unit = { println(it) }
     ): Disposable {
-        val rSocket = connector.getConnection()
         val fileLocation = LogFileLocation.newBuilder()
             .setFileLocation(logFileLocation)
             .setLogType(source)
             .build()
-        return LogViewerServiceClient(rSocket)
+        return LogViewerServiceClient(connector.getConnection())
             .getLogs(fileLocation)
+            .retryWhen(Retry.maxInARow(0))
             .doOnNext(logsObserver)
             .doOnError(logsErrorObserver)
             .subscribe()

@@ -19,7 +19,7 @@ import reactor.core.Exceptions
 class RemoteServiceImpl(private val project: Project) : RemoteService {
 
     private val connector = ServiceManager.getService(project, ConnectorService::class.java)
-    private val commandSubject: Subject<CommandBean> = PublishSubject.create<CommandBean>()
+    private val commandSubject = PublishSubject.create<CommandBean>()
 
     override fun restartWnc(doFinally: () -> Unit) {
         executeStreaming(CommandBean("Windchill Restart", "windchill stop && windchill start"), doFinally)

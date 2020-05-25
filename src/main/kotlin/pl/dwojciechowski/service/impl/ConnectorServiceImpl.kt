@@ -29,6 +29,8 @@ class ConnectorServiceImpl(private val project: Project) : ConnectorService {
         return rSocket
     }
 
+    override fun maxAttempts() = config.timeout / config.refreshRate.toLong()
+
     private fun establishConnection(): RSocket {
         val resumeStrategy = Resume()
             .sessionDuration(Duration.ofHours(1))
@@ -55,7 +57,6 @@ class ConnectorServiceImpl(private val project: Project) : ConnectorService {
             }
     }
 
-    override fun maxAttempts() = config.timeout / config.refreshRate.toLong()
 
     private fun notification(message: String, it: Retry.RetrySignal, icon: Icon) {
         PLMPluginNotification.notify(

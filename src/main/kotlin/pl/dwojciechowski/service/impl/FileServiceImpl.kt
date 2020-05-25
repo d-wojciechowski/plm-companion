@@ -8,11 +8,12 @@ import pl.dwojciechowski.proto.files.FileServiceClient
 import pl.dwojciechowski.proto.files.Path
 import pl.dwojciechowski.service.ConnectorService
 import pl.dwojciechowski.service.FileService
+import reactor.util.retry.Retry
 
 class FileServiceImpl(project: Project) : FileService {
 
     private val connector = ServiceManager.getService(project, ConnectorService::class.java)
-    private val ifEmptyResponse = FileResponse.newBuilder()
+    private val emptyResponse = FileResponse.newBuilder()
         .setOs("")
         .setSeparator("")
         .addFileTree(FileMeta.getDefaultInstance())
@@ -26,7 +27,8 @@ class FileServiceImpl(project: Project) : FileService {
 
         return FileServiceClient(connector.getConnection())
             .navigate(pathObj)
-            .block() ?: ifEmptyResponse
+            .retryWhen(Retry.maxInARow(0))
+            .block() ?: emptyResponse
     }
 
 }
