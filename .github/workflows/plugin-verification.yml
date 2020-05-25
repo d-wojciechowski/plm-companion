@@ -33,7 +33,7 @@ jobs:
       run: ${{ github.ref }}
   
     - name: Verify Plugin on IntelliJ Platforms
-      if: github.ref == 'dev' || github.ref == 'master' || github.ref == 'plugin-verification-action'
+      if: github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/master' || github.ref == 'refs/heads/plugin-verification-action'
       id: verify
       uses: ChrisCarini/intellij-platform-plugin-verifier-action@v0.0.2
       with:
@@ -41,7 +41,7 @@ jobs:
           ideaIC:2020.1
 
     - name: Get log file path and print contents
-      if: github.ref == 'dev' || github.ref == 'master' || github.ref == 'plugin-verification-action'
+      if: github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/master' || github.ref == 'refs/heads/plugin-verification-action'
       run: |
         echo "The verifier log file [${{steps.verify.outputs.verification-output-log-filename}}] contents : " ;
         cat ${{steps.verify.outputs.verification-output-log-filename}}
