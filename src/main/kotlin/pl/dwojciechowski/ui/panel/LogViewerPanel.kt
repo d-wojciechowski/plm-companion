@@ -9,12 +9,14 @@ import com.intellij.openapi.ui.SimpleToolWindowPanel
 import com.intellij.ui.content.Content
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import pl.dwojciechowski.configuration.PluginConfiguration
 import pl.dwojciechowski.service.LogViewerService
 import pl.dwojciechowski.ui.dialog.LogFileLocationDialog
 import reactor.core.Disposable
 import javax.swing.JButton
 import javax.swing.JPanel
 import javax.swing.JTextArea
+import javax.swing.JToggleButton
 import pl.dwojciechowski.proto.files.LogFileLocation.Source as SourceEnum
 
 class LogViewerPanel(
@@ -23,6 +25,7 @@ class LogViewerPanel(
     private var customLogFileLocation: String = ""
 ) : SimpleToolWindowPanel(false, true) {
 
+    private val config: PluginConfiguration = ServiceManager.getService(project, PluginConfiguration::class.java)
     private val logService: LogViewerService = ServiceManager.getService(project, LogViewerService::class.java)
 
     lateinit var panel: JPanel
@@ -32,6 +35,7 @@ class LogViewerPanel(
     private lateinit var startRestartButton: JButton
     private lateinit var stopButton: JButton
     private lateinit var clearButton: JButton
+    private lateinit var wrapLines: JToggleButton
     private lateinit var settingsJB: JButton
     var parentContent: Content? = null
 
@@ -39,6 +43,11 @@ class LogViewerPanel(
 
     init {
         this.add(panel)
+        wrapLines.icon = AllIcons.General.LayoutEditorOnly
+        wrapLines.selectedIcon = AllIcons.Actions.ToggleSoftWrap
+        wrapLines.isSelected = config.wrapLogPane
+        setWrap()
+        wrapLines.addActionListener { setWrap() }
 
         startRestartButton.icon = AllIcons.RunConfigurations.TestState.Run
         startRestartButton.addActionListener { GlobalScope.launch { startRestart() } }
@@ -65,6 +74,11 @@ class LogViewerPanel(
         } else {
             settingsJB.isVisible = false
         }
+    }
+
+    private fun setWrap() {
+        config.wrapLogPane = wrapLines.isSelected
+        textArea.lineWrap = wrapLines.isSelected
     }
 
     private fun startRestart() {
