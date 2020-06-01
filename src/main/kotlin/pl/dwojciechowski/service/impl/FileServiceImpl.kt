@@ -27,7 +27,7 @@ class FileServiceImpl(project: Project) : FileService {
 
         return FileServiceClient(connector.getConnection())
             .navigate(pathObj)
-            .retryWhen(Retry.maxInARow(0))
+            .retryWhen(Retry.maxInARow(0)) //TODO CHECK IF NOT ALWAYS EXECUTED
             .block() ?: emptyResponse
     }
 
