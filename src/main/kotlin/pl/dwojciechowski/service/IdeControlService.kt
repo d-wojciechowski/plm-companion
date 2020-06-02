@@ -7,6 +7,7 @@ import com.intellij.ui.content.Content
 import com.intellij.ui.content.ContentManager
 
 interface IdeControlService {
+
     companion object {
         fun getInstance(project: Project): IdeControlService {
             return ServiceManager.getService(project, IdeControlService::class.java)
@@ -14,6 +15,8 @@ interface IdeControlService {
     }
 
     fun switchToCommandTab()
+    fun initCommandTab()
     fun getToolWindow(id: String?): ToolWindow?
     fun withCommandTab(doWith: (ToolWindow, ContentManager, Content) -> Unit)
+
 }
