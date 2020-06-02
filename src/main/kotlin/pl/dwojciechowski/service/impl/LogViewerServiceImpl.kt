@@ -9,7 +9,6 @@ import pl.dwojciechowski.proto.files.LogViewerServiceClient
 import pl.dwojciechowski.service.ConnectorService
 import pl.dwojciechowski.service.LogViewerService
 import reactor.core.Disposable
-import reactor.util.retry.Retry
 
 class LogViewerServiceImpl(project: Project) : LogViewerService {
 
@@ -44,7 +43,7 @@ class LogViewerServiceImpl(project: Project) : LogViewerService {
             .build()
         return LogViewerServiceClient(connector.getConnection())
             .getLogs(fileLocation)
-            .retryWhen(Retry.maxInARow(0))
+            .retry(5)
             .doOnNext(logsObserver)
             .doOnError(logsErrorObserver)
             .subscribe()

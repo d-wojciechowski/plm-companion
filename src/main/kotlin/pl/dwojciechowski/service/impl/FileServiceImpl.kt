@@ -8,7 +8,6 @@ import pl.dwojciechowski.proto.files.FileServiceClient
 import pl.dwojciechowski.proto.files.Path
 import pl.dwojciechowski.service.ConnectorService
 import pl.dwojciechowski.service.FileService
-import reactor.util.retry.Retry
 
 class FileServiceImpl(project: Project) : FileService {
 
@@ -27,7 +26,7 @@ class FileServiceImpl(project: Project) : FileService {
 
         return FileServiceClient(connector.getConnection())
             .navigate(pathObj)
-            .retryWhen(Retry.maxInARow(0))
+            .retry(5)
             .block() ?: emptyResponse
     }
 

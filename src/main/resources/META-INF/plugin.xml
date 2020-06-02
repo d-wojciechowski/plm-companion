@@ -15,6 +15,7 @@
                     factoryClass="pl.dwojciechowski.ui.LogViewerPanelFactory" icon="/META-INF/pluginIcon.svg"
                     canCloseContents="true"
         />
+
         <projectService serviceImplementation="pl.dwojciechowski.configuration.PluginConfiguration"/>
         <projectService serviceInterface="pl.dwojciechowski.service.RemoteService"
                         serviceImplementation="pl.dwojciechowski.service.impl.RemoteServiceImpl"/>
@@ -57,10 +58,5 @@
             <add-to-group group-id="NavBarToolBar" anchor="first"/>
         </group>
     </actions>
-
-    <projectListeners>
-        <listener class="pl.dwojciechowski.listener.ProjectChangedListener"
-                  topic="com.intellij.openapi.project.ProjectManagerListener"/>
-    </projectListeners>
 
 </idea-plugin>

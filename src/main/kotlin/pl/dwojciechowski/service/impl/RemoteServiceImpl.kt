@@ -7,12 +7,14 @@ import com.intellij.openapi.ui.Messages
 import io.reactivex.rxjava3.subjects.PublishSubject
 import io.reactivex.rxjava3.subjects.Subject
 import io.rsocket.RSocket
+import pl.dwojciechowski.configuration.PluginConfiguration
 import pl.dwojciechowski.model.CommandBean
 import pl.dwojciechowski.model.ExecutionStatus
 import pl.dwojciechowski.proto.commands.Command
 import pl.dwojciechowski.proto.commands.CommandServiceClient
 import pl.dwojciechowski.proto.commands.Status
 import pl.dwojciechowski.service.ConnectorService
+import pl.dwojciechowski.service.IdeControlService
 import pl.dwojciechowski.service.RemoteService
 import reactor.core.Disposable
 import reactor.core.Exceptions
@@ -20,7 +22,9 @@ import reactor.util.retry.Retry
 
 class RemoteServiceImpl(private val project: Project) : RemoteService {
 
-    private val connector = ServiceManager.getService(project, ConnectorService::class.java)
+    private val config = ServiceManager.getService(project, PluginConfiguration::class.java)
+    private val connector = ConnectorService.getInstance(project)
+    private val ideService = IdeControlService.getInstance(project)
     private val commandSubject = PublishSubject.create<CommandBean>()
 
     override fun restartWnc(doFinally: () -> Unit) {
@@ -41,6 +45,10 @@ class RemoteServiceImpl(private val project: Project) : RemoteService {
 
     override fun executeStreaming(commandBean: CommandBean, doFinally: () -> Unit) {
         try {
+            if (!config.autoOpenCommandPane) {
+                ideService.initCommandTab()
+            }
+
             val command = commandBean.getCommand()
             commandBean.status = ExecutionStatus.RUNNING
             commandBean.response.onNext("Started execution of $commandBean")
