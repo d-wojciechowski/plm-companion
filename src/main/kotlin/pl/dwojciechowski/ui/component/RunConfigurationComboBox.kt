@@ -61,4 +61,5 @@ class RunConfigurationComboBox(
     fun getSelectedConfiguration(): RunConfigurationRepresentation {
         return cbModel.selectedItem as RunConfigurationRepresentation
     }
+
 }

@@ -4,7 +4,6 @@ import com.intellij.execution.configurations.ConfigurationFactory
 import com.intellij.execution.configurations.ConfigurationType
 import com.intellij.openapi.project.Project
 
-
 class RemoteCommandFactory(configurationType: ConfigurationType) : ConfigurationFactory(configurationType) {
 
     override fun createTemplateConfiguration(project: Project) =
