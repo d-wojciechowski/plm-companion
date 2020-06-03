@@ -2,8 +2,8 @@ import com.google.protobuf.gradle.*
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 group = "pl.dwojciechowski"
-version = "0.7.1"
-val protobufVersion = "3.12.1"
+version = "0.8.0"
+val protobufVersion = "3.12.2"
 val rsocketRpcVersion = "0.2.18"
 val rsocketVersion = "1.0.0-RC7"
 val coroutinesVersion = "1.3.7"
