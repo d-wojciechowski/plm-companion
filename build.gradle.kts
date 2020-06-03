@@ -60,20 +60,22 @@ intellij {
 
 tasks {
 
-    withType<KotlinCompile> {
-        kotlinOptions.jvmTarget = "1.8"
-    }
-
     runIde {
         systemProperty("idea.auto.reload.plugins", false)
     }
 
-    register("myClean", Delete::class) {
-        delete("src/generated")
+    withType<KotlinCompile> {
+        kotlinOptions.jvmTarget = "1.8"
     }
 
     clean {
-        dependsOn("myClean")
+        delete("src/generated")
+    }
+
+    patchPluginXml {
+        changeNotes(htmlFixer("src/main/resources/META-INF/change-notes.html"))
+        pluginDescription(htmlFixer("src/main/resources/META-INF/description.html"))
+        sinceBuild("200")
     }
 
 }
@@ -116,15 +118,7 @@ fun htmlFixer(filename: String): String {
     if (!File(filename).exists()) {
         logger.error("File $filename not found.")
     } else {
-        return File(filename).readText().replace("<html>", "").replace("</html>", "")
+        return File(filename).readText().replace("(</?html>)".toRegex(), "")
     }
     return ""
-}
-
-tasks {
-    named<org.jetbrains.intellij.tasks.PatchPluginXmlTask>("patchPluginXml") {
-        changeNotes(htmlFixer("src/main/resources/META-INF/change-notes.html"))
-        pluginDescription(htmlFixer("src/main/resources/META-INF/description.html"))
-        sinceBuild("200")
-    }
 }
