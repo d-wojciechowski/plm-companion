@@ -2,6 +2,8 @@ package pl.dwojciechowski.ui.panel
 
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import pl.dwojciechowski.configuration.PluginConfiguration
 import pl.dwojciechowski.model.ServerStatus
 import pl.dwojciechowski.service.RemoteService
@@ -32,10 +34,10 @@ class FatButtonPanel(private val project: Project) {
         wncStatusButton.background = null
         wncStatusButton.isOpaque = false
 
-        restartWindchillButton.addActionListener { windchillService.restartWnc() }
-        stopWindchillButton.addActionListener { windchillService.stopWnc() }
-        startWindchillButton.addActionListener { windchillService.startWnc() }
-        xconfManagerButton.addActionListener { windchillService.xconf() }
+        restartWindchillButton.addActionListener { GlobalScope.launch { windchillService.restartWnc() } }
+        stopWindchillButton.addActionListener { GlobalScope.launch { windchillService.stopWnc() } }
+        startWindchillButton.addActionListener { GlobalScope.launch { windchillService.startWnc() } }
+        xconfManagerButton.addActionListener { GlobalScope.launch { windchillService.xconf() } }
         configurationButton.addActionListener { PluginSettingsDialog(project).show() }
         wncStatusButton.addActionListener { config.scanWindchill = !config.scanWindchill }
 

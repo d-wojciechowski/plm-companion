@@ -37,13 +37,13 @@ class LogViewerServiceImpl(project: Project) : LogViewerService {
         logsObserver: (LogLine) -> Unit,
         logsErrorObserver: (Throwable) -> Unit = { println(it) }
     ): Disposable {
-        val rSocket = connector.establishConnection()
         val fileLocation = LogFileLocation.newBuilder()
             .setFileLocation(logFileLocation)
             .setLogType(source)
             .build()
-        return LogViewerServiceClient(rSocket)
+        return LogViewerServiceClient(connector.getConnection())
             .getLogs(fileLocation)
+            .retry(5)
             .doOnNext(logsObserver)
             .doOnError(logsErrorObserver)
             .subscribe()

@@ -2,6 +2,7 @@ package pl.dwojciechowski.ui.component
 
 import com.intellij.icons.AllIcons
 import pl.dwojciechowski.model.CommandBean
+import pl.dwojciechowski.model.ExecutionStatus
 import java.awt.Component
 import java.time.format.DateTimeFormatter
 import javax.swing.DefaultListCellRenderer
@@ -19,13 +20,13 @@ class CommandListCellRenderer : DefaultListCellRenderer() {
         super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus)
         val command = value as CommandBean
 
-        if(command.status != CommandBean.ExecutionStatus.NONE){
+        if(command.status != ExecutionStatus.NONE){
             toolTipText = "Execution time: ${command.executionTime.format(DateTimeFormatter.ofPattern("HH:mm:ss"))}"
         }
         icon = when(command.status){
-            CommandBean.ExecutionStatus.COMPLETED -> AllIcons.RunConfigurations.ToolbarPassed
-            CommandBean.ExecutionStatus.RUNNING ->  AllIcons.RunConfigurations.TestState.Run
-            CommandBean.ExecutionStatus.STOPPED ->  AllIcons.Debugger.KillProcess
+            ExecutionStatus.COMPLETED -> AllIcons.RunConfigurations.ToolbarPassed
+            ExecutionStatus.RUNNING ->  AllIcons.RunConfigurations.TestState.Run
+            ExecutionStatus.STOPPED ->  AllIcons.Debugger.KillProcess
             else -> if (command.name.isNotEmpty()) AllIcons.Nodes.ObjectTypeAttribute else AllIcons.Xml.Css_class
         }
 

@@ -7,10 +7,12 @@ import io.rsocket.RSocket
 interface ConnectorService {
 
     companion object {
-        fun getInstance(project: Project): ConnectorService =
-            ServiceManager.getService(project, ConnectorService::class.java)
+        fun getInstance(project: Project): ConnectorService {
+            return ServiceManager.getService(project, ConnectorService::class.java)
+        }
     }
 
-    fun establishConnection(): RSocket?
+    fun getConnection(): RSocket
+    fun maxAttempts(): Long
 
 }

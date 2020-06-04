@@ -7,6 +7,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.SimpleToolWindowPanel
 import io.reactivex.rxjava3.disposables.Disposable
 import pl.dwojciechowski.model.CommandBean
+import pl.dwojciechowski.model.ExecutionStatus
 import pl.dwojciechowski.service.RemoteService
 import pl.dwojciechowski.ui.component.CommandList
 import java.awt.event.KeyEvent
@@ -24,9 +25,10 @@ class CommandLogPanel(project: Project) : SimpleToolWindowPanel(false, true), Ex
     private lateinit var contentArea: JTextArea
     private lateinit var clearButton: JButton
     private lateinit var autoScrollJButton: JButton
+    private lateinit var rerunButton: JButton
 
     private var autoScroll = true
-    private lateinit var lastSubscribe: Disposable
+    private lateinit var textFieldSubscription: Disposable
     private var subscribes = HashMap<Int, reactor.core.Disposable>()
 
     private lateinit var list: CommandList
@@ -42,6 +44,17 @@ class CommandLogPanel(project: Project) : SimpleToolWindowPanel(false, true), Ex
 
         clearButton.addActionListener { contentArea.text = "" }
         clearButton.icon = AllIcons.Actions.GC
+
+        rerunButton.addActionListener {
+            listModel.selected()?.let {
+                commandService.executeStreaming(it.clone())
+            }
+        }
+        rerunButton.icon = AllIcons.Actions.Restart
+
+        list.addListSelectionListener {
+            rerunButton.isEnabled = listModel.selected() != null
+        }
 
         autoScrollJButton.icon = AllIcons.General.AutoscrollFromSource
         autoScrollJButton.addActionListener {
@@ -64,7 +77,7 @@ class CommandLogPanel(project: Project) : SimpleToolWindowPanel(false, true), Ex
             removeSubscription()
         }
         addRMBMenuEntry("Stop") {
-            listModel.selected().status = CommandBean.ExecutionStatus.STOPPED
+            listModel.selected()?.status = ExecutionStatus.STOPPED
             removeSubscription()
         }
         addKeyPressedListener {
@@ -83,14 +96,18 @@ class CommandLogPanel(project: Project) : SimpleToolWindowPanel(false, true), Ex
     private fun registerNewCommand() {
         contentArea.text = ""
         stopListeningToCurrentCommand()
-        lastSubscribe = listModel.selected().response
-            .subscribe { msg ->
+        textFieldSubscription = getTextFieldSubscription()
+        subscribes[list.selectedIndex] = listModel.selected()?.actualSubscription ?: reactor.core.Disposable {}
+    }
+
+    private fun getTextFieldSubscription(): Disposable {
+        return listModel.selected()?.response
+            ?.subscribe { msg ->
                 contentArea.append(msg + "\n")
                 if (autoScroll) {
                     contentArea.caretPosition = contentArea.document.length
                 }
-            }
-        subscribes[list.selectedIndex] = listModel.selected().actualSubscription
+            } ?: Disposable.empty()
     }
 
     private fun removeSubscription() {
@@ -100,12 +117,17 @@ class CommandLogPanel(project: Project) : SimpleToolWindowPanel(false, true), Ex
     }
 
     private fun stopListeningToCurrentCommand() {
-        if (this::lastSubscribe.isInitialized) {
-            lastSubscribe.dispose()
+        if (this::textFieldSubscription.isInitialized) {
+            textFieldSubscription.dispose()
         }
     }
 
-    private fun DefaultListModel<CommandBean>.selected() = this.get(list.selectedIndex)
+    private fun DefaultListModel<CommandBean>.selected(): CommandBean? {
+        if (list.selectedIndex >= 0) {
+            return this.get(list.selectedIndex)
+        }
+        return null
+    }
 
     override fun getPreferredFocusableComponent() = panel
 

@@ -9,5 +9,7 @@ data class RunConfigurationRepresentation (
     val icon: Icon,
     val value: RunnerAndConfigurationSettings? = null
 ) {
+
     override fun toString() = displayName
+
 }
