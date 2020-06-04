@@ -21,8 +21,7 @@ class ActionSubscription {
             }
             subscription = StatusService.getInstance(project!!).getOutputSubject().subscribe { status ->
                 project.onValid {
-                    val statCtrld = ServiceManager.getService(it, PluginConfiguration::class.java).statusControlled
-                    method(status, statCtrld)
+                    method(status, ServiceManager.getService(it, PluginConfiguration::class.java).statusControlled)
                 }
             }
         }

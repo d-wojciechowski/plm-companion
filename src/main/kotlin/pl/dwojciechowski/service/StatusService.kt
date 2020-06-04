@@ -15,7 +15,6 @@ interface StatusService {
     }
 
     fun getStatus(config: HttpStatusConfig): ServerStatus
-
     fun getOutputSubject(): Subject<ServerStatus>
 
 }

@@ -6,7 +6,9 @@ import com.intellij.openapi.project.Project
 interface NotificationService {
 
     companion object {
-        fun getInstance(project: Project) = ServiceManager.getService(project, NotificationService::class.java)
+        fun getInstance(project: Project): NotificationService {
+            return ServiceManager.getService(project, NotificationService::class.java)
+        }
     }
 
 }

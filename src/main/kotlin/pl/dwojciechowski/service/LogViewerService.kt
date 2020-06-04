@@ -23,7 +23,7 @@ interface LogViewerService {
     fun getCustomLogFile(
         logFileLocation: String,
         logsObserver: (LogLine) -> Unit,
-        logsErrorObserver: (Throwable) -> Unit =  { println(it) }
+        logsErrorObserver: (Throwable) -> Unit = { println(it) }
     ): Disposable
 
 }

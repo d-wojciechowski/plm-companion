@@ -57,7 +57,6 @@ class ConnectorServiceImpl(private val project: Project) : ConnectorService {
             }
     }
 
-
     private fun notification(message: String, it: Retry.RetrySignal, icon: Icon) {
         PLMPluginNotification.notify(
             project, "$message, retry number ${it.totalRetriesInARow() + 1}", icon

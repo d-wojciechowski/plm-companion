@@ -5,7 +5,7 @@ data class RemoteFileRepresentation(
     val isDirectory: Boolean,
     var empty: Boolean = false
 ) {
-    override fun toString(): String {
-        return name
-    }
+
+    override fun toString() = name
+
 }
