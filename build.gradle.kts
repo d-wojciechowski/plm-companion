@@ -1,16 +1,18 @@
 import com.google.protobuf.gradle.*
+import org.jetbrains.changelog.closure
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 group = "pl.dwojciechowski"
-version = "0.8.0"
+version = "0.9.0"
 val protobufVersion = "3.12.2"
 val rsocketRpcVersion = "0.2.18"
 val rsocketVersion = "1.0.0-RC7"
 val coroutinesVersion = "1.3.7"
-val fuelVersion = "2.2.2"
+val fuelVersion = "2.2.3"
 val rxJavaVersion = "3.0.4"
 
 plugins {
+    id("org.jetbrains.changelog") version "0.4.0"
     id("com.github.ben-manes.versions") version "0.28.0"
     id("org.jetbrains.intellij") version "0.4.21"
     id("com.google.protobuf") version "0.8.12"
@@ -73,11 +75,21 @@ tasks {
     }
 
     patchPluginXml {
-        changeNotes(htmlFixer("src/main/resources/META-INF/change-notes.html"))
+        changeNotes(closure { changelog.getLatest().toHTML() })
         pluginDescription(htmlFixer("src/main/resources/META-INF/description.html"))
         sinceBuild("200")
     }
 
+}
+
+changelog {
+    version = "${project.version}"
+    path = "${project.projectDir}/CHANGELOG.md"
+    headerFormat = "[{0}]"
+    headerArguments = listOf("${project.version}")
+    itemPrefix = "-"
+    unreleasedTerm = "[Unreleased]"
+    groups = listOf("Added", "Changed", "Fixed")
 }
 
 idea {
