@@ -3,6 +3,7 @@ package pl.dwojciechowski.ui.dialog
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper
+import com.intellij.openapi.ui.Messages
 import com.intellij.ui.treeStructure.Tree
 import pl.dwojciechowski.proto.files.FileMeta
 import pl.dwojciechowski.proto.files.FileResponse
@@ -21,18 +22,21 @@ import javax.swing.tree.TreePath
 import javax.swing.tree.TreeSelectionModel
 
 class RemoteFilePickerDialog(
-    project: Project,
+    private val project: Project,
     private val startPath: String,
     singleSelect: Boolean = true,
+    private val fileOnlySelection: Boolean = false,
     private val onlyFoldersVisible: Boolean = true
 ) : DialogWrapper(project) {
 
     private val fileService: FileService = ServiceManager.getService(project, FileService::class.java)
-    private val separator: String
-    private val os: String
 
     private lateinit var rootPane: JPanel
     private lateinit var selectionTree: Tree
+
+    private val separator: String
+    private val os: String
+    private var previousSelection = RemoteFileRepresentation("init", true)
 
     val chosenItems = mutableListOf<String>()
 
@@ -109,18 +113,31 @@ class RemoteFilePickerDialog(
     override fun getOKAction(): Action =
         object : AbstractAction("OK") {
             override fun actionPerformed(e: ActionEvent?) {
-                chosenItems.clear()
-                selectionTree.selectionPaths?.forEach {
-                    val subList = it.path.asList().subList(1, it.path.size)
-                    if (this@RemoteFilePickerDialog.os != "windows") {
-                        chosenItems.add("/" + subList.subList(1, subList.size).joinToString(separator))
-                    } else {
-                        chosenItems.add(subList.joinToString(separator))
-                    }
-                }
-                close(0, true)
+                closeAsOK()
             }
         }
+
+    private fun closeAsOK() {
+        if (previousSelection.isDirectory && fileOnlySelection) {
+            Messages.showMessageDialog(
+                project,
+                "This dialog only accepts file as selected object, please select file.",
+                "Invalid object",
+                Messages.getErrorIcon()
+            )
+        } else {
+            chosenItems.clear()
+            selectionTree.selectionPaths?.forEach {
+                val subList = it.path.asList().subList(1, it.path.size)
+                if (this@RemoteFilePickerDialog.os != "windows") {
+                    chosenItems.add("/" + subList.subList(1, subList.size).joinToString(separator))
+                } else {
+                    chosenItems.add(subList.joinToString(separator))
+                }
+            }
+            close(0, true)
+        }
+    }
 
     private fun expandRemoteFolderListener() = object : MouseAdapter() {
         override fun mouseClicked(e: MouseEvent?) {
@@ -134,9 +151,13 @@ class RemoteFilePickerDialog(
                     if (currentContent.isEmpty()) {
                         userObject.empty = true
                     }
+                } else if (!userObject.isDirectory || (userObject.isDirectory && userObject == previousSelection)) {
+                    previousSelection = userObject
+                    closeAsOK()
                 }
                 (selectionTree.model as DefaultTreeModel).reload(node)
                 selectionTree.expandPath(TreePath(node.path))
+                previousSelection = userObject
             }
             super.mouseClicked(e)
         }

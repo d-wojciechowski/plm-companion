@@ -10,7 +10,8 @@ import javax.swing.*
 
 class LogFileLocationDialog(
     private val project: Project,
-    initTFValue: String = ""
+    initTFValue: String = "",
+    private val fileOnlySelection: Boolean = false
 ) : DialogWrapper(project), Disposable {
 
     lateinit var content: JPanel
@@ -27,7 +28,8 @@ class LogFileLocationDialog(
         remotePickerButton.icon = AllIcons.General.OpenDisk
         logFileLocationTF.text = initTFValue
         remotePickerButton.addActionListener {
-            val remoteFilePickerDialog = RemoteFilePickerDialog(project, logFileLocationTF.text, true, false)
+            val remoteFilePickerDialog =
+                RemoteFilePickerDialog(project, logFileLocationTF.text, true, fileOnlySelection, false)
             if (remoteFilePickerDialog.showAndGet()) {
                 logFileLocationTF.text = remoteFilePickerDialog.chosenItems.first()
             }
