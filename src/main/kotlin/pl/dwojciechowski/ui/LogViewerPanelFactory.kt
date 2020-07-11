@@ -57,7 +57,7 @@ class LogViewerPanelFactory : ToolWindowFactory, DumbAware {
         return object :
             DumbAwareAction("New Window", "Create new log window", AllIcons.General.Add) {
             override fun actionPerformed(e: AnActionEvent) {
-                val logFileDialog = LogFileLocationDialog(project)
+                val logFileDialog = LogFileLocationDialog(project, fileOnlySelection = true)
                 if (!logFileDialog.showAndGet()) {
                     return
                 }

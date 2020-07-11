@@ -1,8 +1,16 @@
 # Changelog
 
 ## [0.9.0]
+### Added
+- Wrapping enable/disable option on command pane
+- Auto-scroll option for log panes and command pane
+- In command list under RMB added "Rerun" option.
+- Validation in RemoteFilePicker for situations where expected is fileOnly.
+- Double click selection in RemoteFilePicker.
 ### Changed
 - Introduced better [changelog format](https://github.com/JetBrains/gradle-changelog-plugin)
+- By default, website scanning is turned on (was turned off).
+- Order of icons next to panes ( according to user feedback )
 
 ## [0.8.0]
 ### Added

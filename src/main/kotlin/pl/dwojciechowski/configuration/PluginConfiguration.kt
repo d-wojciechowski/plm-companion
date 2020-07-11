@@ -19,9 +19,12 @@ class PluginConfiguration : PersistentStateComponent<PluginConfiguration> {
     var logFileLocation: String = ""
     var actionPresentation: String = ActionPresentationOption.NAVIGATION_AND_PANE
 
-    var scanWindchill: Boolean = false
+    var scanWindchill: Boolean = true
     var statusControlled: Boolean = true
     var wrapLogPane: Boolean = true
+    var wrapCommandPane: Boolean = false
+    var commandAutoScroll: Boolean = true
+    var logPanelAutoScroll: Boolean = true
     var autoOpenCommandPane: Boolean = false
 
     var port: Int = 80
