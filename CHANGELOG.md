@@ -13,6 +13,7 @@
 - Order of icons next to panes ( according to user feedback )
 - Navigation bar actions, Load from file action and Buttons in right pane may now automatically open command panel (may be switched off in settings)
 - Xconfmanager may now be executed regardless of windchill status.
+- Bottom pane buttons unification.
 ### Fixed
 - [Issue](https://github.com/d-wojciechowski/plm-companion/issues/27) with encoding when, addon is on Windows system, and Intellij is running on MacOS
 

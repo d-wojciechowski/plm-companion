@@ -28,6 +28,7 @@ class CommandLogPanel(project: Project) : SimpleToolWindowPanel(false, true), Ex
 
     private lateinit var contentArea: JTextArea
     private lateinit var clearButton: JButton
+    private lateinit var stopButton: JButton
     private lateinit var autoScrollJButton: AutoScrollButton
     private lateinit var wrapLinesButton: LineWrapButton
     private lateinit var rerunButton: JButton
@@ -49,6 +50,12 @@ class CommandLogPanel(project: Project) : SimpleToolWindowPanel(false, true), Ex
         clearButton.addActionListener { contentArea.text = "" }
         clearButton.icon = AllIcons.Actions.GC
 
+        stopButton.addActionListener {
+            listModel.selected()?.status = ExecutionStatus.STOPPED
+            removeSubscription()
+        }
+        stopButton.icon = AllIcons.Actions.Suspend
+
         rerunButton.addActionListener {
             rerunSelectedCommand()
         }
@@ -56,9 +63,10 @@ class CommandLogPanel(project: Project) : SimpleToolWindowPanel(false, true), Ex
 
         list.addListSelectionListener {
             rerunButton.isEnabled = listModel.selected() != null
+            stopButton.isEnabled = (listModel.selected()?.status == ExecutionStatus.RUNNING)
         }
 
-        wrapLinesButton.link(config.wrapCommandPane,contentArea){
+        wrapLinesButton.link(config.wrapCommandPane, contentArea) {
             config.wrapCommandPane = it
         }
 
@@ -82,7 +90,7 @@ class CommandLogPanel(project: Project) : SimpleToolWindowPanel(false, true), Ex
     }
 
     private fun CommandList.init() {
-        addRMBMenuEntry("Rerun"){
+        addRMBMenuEntry("Rerun") {
             rerunSelectedCommand()
         }
         addRMBMenuEntry("Delete") {
