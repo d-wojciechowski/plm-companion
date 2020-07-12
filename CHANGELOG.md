@@ -11,6 +11,8 @@
 - Introduced better [changelog format](https://github.com/JetBrains/gradle-changelog-plugin)
 - By default, website scanning is turned on (was turned off).
 - Order of icons next to panes ( according to user feedback )
+- Navigation bar actions, Load from file action and Buttons in right pane may now automatically open command panel (may be switched off in settings)
+- Xconfmanager may now be executed regardless of windchill status.
 
 ## [0.8.0]
 ### Added

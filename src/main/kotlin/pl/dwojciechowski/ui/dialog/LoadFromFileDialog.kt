@@ -15,6 +15,7 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.ui.components.JBList
 import pl.dwojciechowski.configuration.PluginConfiguration
 import pl.dwojciechowski.model.CommandBean
+import pl.dwojciechowski.service.IdeControlService
 import pl.dwojciechowski.service.RemoteService
 import pl.dwojciechowski.ui.component.CustomVirtualFileListCellRenderer
 import pl.dwojciechowski.ui.component.RunConfigurationComboBox
@@ -26,8 +27,9 @@ class LoadFromFileDialog(
     private val vFiles: List<VirtualFile>
 ) : DialogWrapper(project), Disposable {
 
-    private val config: PluginConfiguration = ServiceManager.getService(project, PluginConfiguration::class.java)
-    private val commandService: RemoteService = ServiceManager.getService(project, RemoteService::class.java)
+    private val config = ServiceManager.getService(project, PluginConfiguration::class.java)
+    private val commandService = ServiceManager.getService(project, RemoteService::class.java)
+    private val ideControlService = ServiceManager.getService(project, IdeControlService::class.java)
 
     lateinit var content: JPanel
 
@@ -139,7 +141,9 @@ class LoadFromFileDialog(
     private fun runCommand(finalCommand: String) {
         val runConfig = runConfigurationComboBox.getSelectedConfiguration().value
         if (runConfig == null) {
-            commandService.executeStreaming(CommandBean("Load from file", finalCommand))
+            ideControlService.withAutoOpen {
+                commandService.executeStreaming(CommandBean("Load from file", finalCommand))
+            }
         } else {
             val executor = DefaultRunExecutor.getRunExecutorInstance()
             val builder = ExecutionEnvironmentBuilder.create(executor, runConfig)
@@ -157,7 +161,9 @@ class LoadFromFileDialog(
             it.processHandler?.addProcessListener(object : ProcessAdapter() {
                 override fun processTerminated(event: ProcessEvent) {
                     super.processTerminated(event)
-                    commandService.executeStreaming(CommandBean("Load from file", finalCommand))
+                    ideControlService.withAutoOpen {
+                        commandService.executeStreaming(CommandBean("Load from file", finalCommand))
+                    }
                 }
             })
         }
