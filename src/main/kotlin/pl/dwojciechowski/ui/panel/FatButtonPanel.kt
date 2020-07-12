@@ -2,10 +2,9 @@ package pl.dwojciechowski.ui.panel
 
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import pl.dwojciechowski.configuration.PluginConfiguration
 import pl.dwojciechowski.model.ServerStatus
+import pl.dwojciechowski.service.IdeControlService
 import pl.dwojciechowski.service.RemoteService
 import pl.dwojciechowski.service.StatusService
 import pl.dwojciechowski.ui.PluginIcons
@@ -18,6 +17,7 @@ class FatButtonPanel(private val project: Project) {
     private val config = ServiceManager.getService(project, PluginConfiguration::class.java)
     private val windchillService = ServiceManager.getService(project, RemoteService::class.java)
     private val statusService = ServiceManager.getService(project, StatusService::class.java)
+    private val ideControlService = ServiceManager.getService(project, IdeControlService::class.java)
 
     lateinit var content: JPanel
 
@@ -34,10 +34,10 @@ class FatButtonPanel(private val project: Project) {
         wncStatusButton.background = null
         wncStatusButton.isOpaque = false
 
-        restartWindchillButton.addActionListener { GlobalScope.launch { windchillService.restartWnc() } }
-        stopWindchillButton.addActionListener { GlobalScope.launch { windchillService.stopWnc() } }
-        startWindchillButton.addActionListener { GlobalScope.launch { windchillService.startWnc() } }
-        xconfManagerButton.addActionListener { GlobalScope.launch { windchillService.xconf() } }
+        restartWindchillButton.addActionListener { ideControlService.withAutoOpen { windchillService.restartWnc() } }
+        stopWindchillButton.addActionListener { ideControlService.withAutoOpen { windchillService.stopWnc() } }
+        startWindchillButton.addActionListener { ideControlService.withAutoOpen { windchillService.startWnc() } }
+        xconfManagerButton.addActionListener { ideControlService.withAutoOpen { windchillService.xconf() } }
         configurationButton.addActionListener { PluginSettingsDialog(project).show() }
         wncStatusButton.addActionListener { config.scanWindchill = !config.scanWindchill }
 
@@ -59,8 +59,8 @@ class FatButtonPanel(private val project: Project) {
                     listOf(startWindchillButton)
                 )
                 else -> set(
-                    listOf(startWindchillButton),
-                    listOf(stopWindchillButton, restartWindchillButton, xconfManagerButton)
+                    listOf(startWindchillButton, xconfManagerButton),
+                    listOf(stopWindchillButton, restartWindchillButton)
                 )
             }
         } else {

@@ -18,5 +18,6 @@ interface IdeControlService {
     fun initCommandTab()
     fun getToolWindow(id: String?): ToolWindow?
     fun withCommandTab(doWith: (ToolWindow, ContentManager, Content) -> Unit)
+    fun withAutoOpen(action: () -> Unit)
 
 }

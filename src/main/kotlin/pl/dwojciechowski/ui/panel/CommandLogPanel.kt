@@ -6,10 +6,13 @@ import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.SimpleToolWindowPanel
 import io.reactivex.rxjava3.disposables.Disposable
+import pl.dwojciechowski.configuration.PluginConfiguration
 import pl.dwojciechowski.model.CommandBean
 import pl.dwojciechowski.model.ExecutionStatus
 import pl.dwojciechowski.service.RemoteService
 import pl.dwojciechowski.ui.component.CommandList
+import pl.dwojciechowski.ui.component.button.AutoScrollButton
+import pl.dwojciechowski.ui.component.button.LineWrapButton
 import java.awt.event.KeyEvent
 import javax.swing.DefaultListModel
 import javax.swing.JButton
@@ -18,18 +21,20 @@ import javax.swing.JTextArea
 
 class CommandLogPanel(project: Project) : SimpleToolWindowPanel(false, true), ExecutionConsole {
 
+    private val config: PluginConfiguration = ServiceManager.getService(project, PluginConfiguration::class.java)
     private val commandService: RemoteService = ServiceManager.getService(project, RemoteService::class.java)
 
     lateinit var panel: JPanel
 
     private lateinit var contentArea: JTextArea
     private lateinit var clearButton: JButton
-    private lateinit var autoScrollJButton: JButton
+    private lateinit var stopButton: JButton
+    private lateinit var autoScrollJButton: AutoScrollButton
+    private lateinit var wrapLinesButton: LineWrapButton
     private lateinit var rerunButton: JButton
 
-    private var autoScroll = true
     private lateinit var textFieldSubscription: Disposable
-    private var subscribes = HashMap<Int, reactor.core.Disposable>()
+    private var subscriptions = HashMap<Int, reactor.core.Disposable>()
 
     private lateinit var list: CommandList
     private lateinit var listModel: DefaultListModel<CommandBean>
@@ -45,21 +50,28 @@ class CommandLogPanel(project: Project) : SimpleToolWindowPanel(false, true), Ex
         clearButton.addActionListener { contentArea.text = "" }
         clearButton.icon = AllIcons.Actions.GC
 
+        stopButton.addActionListener {
+            listModel.selected()?.status = ExecutionStatus.STOPPED
+            removeSubscription()
+        }
+        stopButton.icon = AllIcons.Actions.Suspend
+
         rerunButton.addActionListener {
-            listModel.selected()?.let {
-                commandService.executeStreaming(it.clone())
-            }
+            rerunSelectedCommand()
         }
         rerunButton.icon = AllIcons.Actions.Restart
 
         list.addListSelectionListener {
             rerunButton.isEnabled = listModel.selected() != null
+            stopButton.isEnabled = (listModel.selected()?.status == ExecutionStatus.RUNNING)
         }
 
-        autoScrollJButton.icon = AllIcons.General.AutoscrollFromSource
-        autoScrollJButton.addActionListener {
-            autoScroll = !autoScroll
-            autoScrollJButton.icon = if (autoScroll) AllIcons.General.AutoscrollFromSource else AllIcons.General.ZoomOut
+        wrapLinesButton.link(config.wrapCommandPane, contentArea) {
+            config.wrapCommandPane = it
+        }
+
+        autoScrollJButton.link(config.commandAutoScroll, contentArea) {
+            config.commandAutoScroll = it
         }
 
         list.init()
@@ -71,7 +83,16 @@ class CommandLogPanel(project: Project) : SimpleToolWindowPanel(false, true), Ex
         }
     }
 
+    private fun rerunSelectedCommand() {
+        listModel.selected()?.let {
+            commandService.executeStreaming(it.clone())
+        }
+    }
+
     private fun CommandList.init() {
+        addRMBMenuEntry("Rerun") {
+            rerunSelectedCommand()
+        }
         addRMBMenuEntry("Delete") {
             listModel.remove(selectedIndex)
             removeSubscription()
@@ -97,22 +118,22 @@ class CommandLogPanel(project: Project) : SimpleToolWindowPanel(false, true), Ex
         contentArea.text = ""
         stopListeningToCurrentCommand()
         textFieldSubscription = getTextFieldSubscription()
-        subscribes[list.selectedIndex] = listModel.selected()?.actualSubscription ?: reactor.core.Disposable {}
+        subscriptions[list.selectedIndex] = listModel.selected()?.actualSubscription ?: reactor.core.Disposable {}
     }
 
     private fun getTextFieldSubscription(): Disposable {
         return listModel.selected()?.response
             ?.subscribe { msg ->
                 contentArea.append(msg + "\n")
-                if (autoScroll) {
+                if (config.commandAutoScroll) {
                     contentArea.caretPosition = contentArea.document.length
                 }
             } ?: Disposable.empty()
     }
 
     private fun removeSubscription() {
-        subscribes[list.selectedIndex]?.dispose()
-        subscribes.remove(list.selectedIndex)
+        subscriptions[list.selectedIndex]?.dispose()
+        subscriptions.remove(list.selectedIndex)
         stopListeningToCurrentCommand()
     }
 

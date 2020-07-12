@@ -8,7 +8,7 @@
     <properties/>
     <border type="none"/>
     <children>
-      <grid id="cb549" layout-manager="GridLayoutManager" row-count="4" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+      <grid id="cb549" layout-manager="GridLayoutManager" row-count="6" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints>
           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="1" anchor="8" fill="2" indent="0" use-parent-layout="false">
@@ -22,7 +22,7 @@
         <children>
           <component id="c6ccb" class="javax.swing.JButton" binding="clearButton">
             <constraints>
-              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="1" anchor="8" fill="0" indent="0" use-parent-layout="false">
+              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="1" anchor="8" fill="0" indent="0" use-parent-layout="false">
                 <minimum-size width="25" height="25"/>
                 <preferred-size width="25" height="25"/>
                 <maximum-size width="25" height="25"/>
@@ -41,12 +41,12 @@
           </component>
           <vspacer id="c42ec">
             <constraints>
-              <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+              <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
             </constraints>
           </vspacer>
-          <component id="6d859" class="javax.swing.JButton" binding="autoScrollJButton">
+          <component id="6d859" class="pl.dwojciechowski.ui.component.button.AutoScrollButton" binding="autoScrollJButton">
             <constraints>
-              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="1" anchor="8" fill="0" indent="0" use-parent-layout="false">
+              <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="1" anchor="8" fill="0" indent="0" use-parent-layout="false">
                 <minimum-size width="25" height="25"/>
                 <preferred-size width="25" height="25"/>
                 <maximum-size width="25" height="25"/>
@@ -65,7 +65,7 @@
           </component>
           <component id="20eb7" class="javax.swing.JButton" binding="rerunButton">
             <constraints>
-              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="1" anchor="8" fill="0" indent="0" use-parent-layout="false">
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="1" anchor="8" fill="0" indent="0" use-parent-layout="false">
                 <minimum-size width="25" height="25"/>
                 <preferred-size width="25" height="25"/>
                 <maximum-size width="25" height="25"/>
@@ -80,6 +80,43 @@
               <minimumSize width="40" height="40"/>
               <text value=""/>
               <toolTipText value="Rerun selected action"/>
+            </properties>
+          </component>
+          <component id="64181" class="pl.dwojciechowski.ui.component.button.LineWrapButton" binding="wrapLinesButton">
+            <constraints>
+              <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="1" anchor="8" fill="0" indent="0" use-parent-layout="false">
+                <minimum-size width="25" height="25"/>
+                <preferred-size width="25" height="25"/>
+                <maximum-size width="25" height="25"/>
+              </grid>
+            </constraints>
+            <properties>
+              <alignmentY value="0.0"/>
+              <borderPainted value="false"/>
+              <contentAreaFilled value="false"/>
+              <enabled value="true"/>
+              <maximumSize width="40" height="40"/>
+              <minimumSize width="40" height="40"/>
+              <text value=""/>
+              <toolTipText value="Wrap Lines"/>
+            </properties>
+          </component>
+          <component id="bb569" class="javax.swing.JButton" binding="stopButton">
+            <constraints>
+              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="1" anchor="8" fill="0" indent="0" use-parent-layout="false">
+                <minimum-size width="25" height="25"/>
+                <preferred-size width="25" height="25"/>
+                <maximum-size width="25" height="25"/>
+              </grid>
+            </constraints>
+            <properties>
+              <alignmentY value="0.0"/>
+              <borderPainted value="false"/>
+              <contentAreaFilled value="false"/>
+              <enabled value="false"/>
+              <maximumSize width="40" height="40"/>
+              <minimumSize width="40" height="40"/>
+              <text value=""/>
             </properties>
           </component>
         </children>

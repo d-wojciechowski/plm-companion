@@ -27,6 +27,13 @@ class RemoteServiceImpl(private val project: Project) : RemoteService {
     private val ideService = IdeControlService.getInstance(project)
     private val commandSubject = PublishSubject.create<CommandBean>()
 
+    private val isMacOs: Boolean
+
+    init {
+        val osName = System.getProperty("os.name") ?: ""
+        isMacOs = osName.contains("mac", true) || osName.contains("darwin", true)
+    }
+
     override fun restartWnc(doFinally: () -> Unit) {
         executeStreaming(CommandBean("Windchill Restart", "windchill stop && windchill start"), doFinally)
     }
@@ -77,7 +84,11 @@ class RemoteServiceImpl(private val project: Project) : RemoteService {
             .executeStreaming(command)
             .retryWhen(Retry.maxInARow(0))
             .doOnNext {
-                commandBean.response.onNext(it.message)
+                if (isMacOs) {
+                    commandBean.response.onNext(it.message.replace("\u0000", ""))
+                } else {
+                    commandBean.response.onNext(it.message)
+                }
                 if (it.status == Status.FAILED) {
                     commandBean.status = ExecutionStatus.STOPPED
                 }

@@ -1,12 +1,12 @@
 package pl.dwojciechowski.action
 
 import com.intellij.openapi.actionSystem.AnActionEvent
+import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.openapi.project.Project
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import pl.dwojciechowski.action.utils.ActionSubscription
 import pl.dwojciechowski.model.ServerStatus
+import pl.dwojciechowski.service.IdeControlService
 
 abstract class RemoteCommandAction : DumbAwareAction() {
 
@@ -24,8 +24,8 @@ abstract class RemoteCommandAction : DumbAwareAction() {
     }
 
     override fun actionPerformed(e: AnActionEvent) {
-        GlobalScope.launch {
-            e.project?.let {
+        e.project?.let {
+            ServiceManager.getService(it, IdeControlService::class.java).withAutoOpen {
                 action(it)
             }
         }
