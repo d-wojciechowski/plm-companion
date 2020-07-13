@@ -10,9 +10,9 @@
         <configurationType implementation="pl.dwojciechowski.execution.RemoteCommandConfigType"/>
 
         <toolWindow id="PLM Companion" anchor="right" factoryClass="pl.dwojciechowski.ui.MainSubWindowFactory"
-                    icon="/META-INF/pluginIcon.svg"/>
+                    icon="/META-INF/plm_companion_icon16.svg"/>
         <toolWindow id="PLM Companion Log" anchor="bottom"
-                    factoryClass="pl.dwojciechowski.ui.LogViewerPanelFactory" icon="/META-INF/pluginIcon.svg"
+                    factoryClass="pl.dwojciechowski.ui.LogViewerPanelFactory" icon="/META-INF/plm_companion_icon16.svg"
                     canCloseContents="true"
         />
 
