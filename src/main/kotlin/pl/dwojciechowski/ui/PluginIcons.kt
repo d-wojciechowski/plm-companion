@@ -8,7 +8,7 @@ import javax.swing.Icon
 
 object PluginIcons {
 
-    val PLUGIN = load("/META-INF/pluginIcon.svg")
+    val PLUGIN = load("/META-INF/plm_companion_icon16")
     val CONFIRMATION = AllIcons.Actions.Commit
     val RUNNING = AllIcons.RunConfigurations.TestState.Run
     val ERROR = AllIcons.General.BalloonError

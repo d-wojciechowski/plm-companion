@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.0.0]
+### Changed
+- Plugin Icon to a new, more suitable one.
+- Updated description to better explain a plugin 
+
 ## [0.9.0]
 ### Added
 - Wrapping enable/disable option on command pane
