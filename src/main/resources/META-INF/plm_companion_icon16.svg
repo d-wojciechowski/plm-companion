@@ -6,161 +6,146 @@
         xmlns="http://www.w3.org/2000/svg"
         xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
         xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-        width="13"
-        height="13"
-        viewBox="0 0 3.4395833 3.4395832"
-        version="1.1"
-        id="svg839"
+        sodipodi:docname="plm_companion_icon_v2.svg"
         inkscape:version="1.0 (4035a4fb49, 2020-05-01)"
-        sodipodi:docname="plm_companion_icon16.svg">
+        id="svg2303"
+        version="1.1"
+        viewBox="0 0 4.2333332 4.2333335"
+        height="16"
+        width="16">
   <title
-     id="title1727">PLM Companion Icon</title>
+          id="title2993">PLM Companion Icon</title>
   <defs
-     id="defs833">
-    <inkscape:path-effect
-       effect="bspline"
-       id="path-effect1651"
-       is_visible="true"
-       lpeversion="1"
-       weight="33.333333"
-       steps="2"
-       helper_size="0"
-       apply_no_weight="true"
-       apply_with_weight="true"
-       only_selected="false" />
-    <inkscape:path-effect
-       effect="bspline"
-       id="path-effect1647"
-       is_visible="true"
-       lpeversion="1"
-       weight="33.333333"
-       steps="2"
-       helper_size="0"
-       apply_no_weight="true"
-       apply_with_weight="true"
-       only_selected="false" />
-    <inkscape:path-effect
-       effect="bspline"
-       id="path-effect1641"
-       is_visible="true"
-       lpeversion="1"
-       weight="33.333333"
-       steps="2"
-       helper_size="0"
-       apply_no_weight="true"
-       apply_with_weight="true"
-       only_selected="false" />
-    <inkscape:path-effect
-       effect="spiro"
-       id="path-effect1637"
-       is_visible="true"
-       lpeversion="1" />
-    <inkscape:path-effect
-       effect="spiro"
-       id="path-effect1633"
-       is_visible="true"
-       lpeversion="1" />
-    <inkscape:path-effect
-       effect="spiro"
-       id="path-effect1622"
-       is_visible="true"
-       lpeversion="1" />
-    <inkscape:path-effect
-       effect="spiro"
-       id="path-effect1618"
-       is_visible="true"
-       lpeversion="1" />
-    <inkscape:path-effect
-       effect="spiro"
-       id="path-effect1612"
-       is_visible="true"
-       lpeversion="1" />
-    <inkscape:path-effect
-       effect="spiro"
-       id="path-effect1608"
-       is_visible="true"
-       lpeversion="1" />
-  </defs>
+          id="defs2297" />
   <sodipodi:namedview
-     id="base"
-     pagecolor="#ffffff"
-     bordercolor="#666666"
-     borderopacity="1.0"
-     inkscape:pageopacity="0.0"
-     inkscape:pageshadow="2"
-     inkscape:zoom="22.4"
-     inkscape:cx="-0.2276422"
-     inkscape:cy="14.684891"
-     inkscape:document-units="px"
-     inkscape:current-layer="layer3"
-     inkscape:document-rotation="0"
-     showgrid="true"
-     units="px"
-     inkscape:pagecheckerboard="false"
-     inkscape:window-width="1920"
-     inkscape:window-height="1027"
-     inkscape:window-x="-8"
-     inkscape:window-y="22"
-     inkscape:window-maximized="1"
-     showguides="false">
+          inkscape:window-maximized="1"
+          inkscape:window-y="22"
+          inkscape:window-x="-8"
+          inkscape:window-height="1027"
+          inkscape:window-width="1920"
+          showguides="false"
+          units="px"
+          showgrid="true"
+          inkscape:document-rotation="0"
+          inkscape:current-layer="layer2"
+          inkscape:document-units="px"
+          inkscape:cy="5.0911362"
+          inkscape:cx="6.4569887"
+          inkscape:zoom="31.678384"
+          inkscape:pageshadow="2"
+          inkscape:pageopacity="0.0"
+          borderopacity="1.0"
+          bordercolor="#666666"
+          pagecolor="#ffffff"
+          id="base">
     <inkscape:grid
-       type="xygrid"
-       id="grid1402"
-       empspacing="1"
-       visible="true"
-       snapvisiblegridlinesonly="false"
-       enabled="true" />
+            id="grid2868"
+            type="xygrid" />
+    <inkscape:grid
+            empopacity="0.25098039"
+            empcolor="#000000"
+            opacity="0.1254902"
+            color="#000000"
+            spacingy="2.1166667"
+            spacingx="2.1166667"
+            originy="2.1166667"
+            originx="2.1166666"
+            id="grid2870"
+            type="xygrid" />
   </sodipodi:namedview>
   <metadata
-     id="metadata836">
+          id="metadata2300">
     <rdf:RDF>
       <cc:Work
-         rdf:about="">
+              rdf:about="">
         <dc:format>image/svg+xml</dc:format>
         <dc:type
-           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+                rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
         <dc:title>PLM Companion Icon</dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
   <g
-     inkscape:groupmode="layer"
-     id="layer3"
-     inkscape:label="img"
-     style="display:inline">
+          style="display:none"
+          id="layer1"
+          inkscape:groupmode="layer"
+          inkscape:label="bcg">
     <path
-       style="fill:none;stroke:#1e1e1e;stroke-width:0.15002;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="m 0.33747644,1.7199194 c 0,0.359569 0.14802122,0.7169238 0.4022749,0.9711775 0.25425369,0.2542537 0.61160856,0.4022749 0.97117756,0.4022749 0.359569,0 0.7169238,-0.1480212 0.9711775,-0.4022749 0.2542537,-0.2542537 0.4022749,-0.6116085 0.4022749,-0.9711775 0,-0.359569 -0.1480212,-0.7169238 -0.4022749,-0.97117753 -0.2542537,-0.25425368 -0.6116085,-0.4022749 -0.9711775,-0.4022749 -0.359569,0 -0.71692387,0.14802122 -0.97117756,0.4022749 C 0.48549766,1.0029956 0.33747644,1.3603504 0.33747644,1.7199194 Z"
-       id="path1606"
-       inkscape:path-effect="#path-effect1608"
-       inkscape:original-d="m 0.33747644,1.7199194 c -0.91572648,-8.15e-5 1.83136146,8.18e-5 2.74690486,0 0.9155438,-8.15e-5 -1.8311784,8.18e-5 -2.74690486,0 z" />
+            id="path2874"
+            d="m 0.26458333,0.26458333 c 1.23498677,2.6458e-4 3.70416667,0 3.70416667,0 V 3.96875 H 0.26458333 Z"
+            style="fill:#0000ff;fill-opacity:0.08094;stroke:none;stroke-width:0.265;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+  </g>
+  <g
+          inkscape:label="img"
+          id="layer2"
+          inkscape:groupmode="layer">
+    <circle
+            r="1.5875"
+            cy="2.1166666"
+            cx="2.1166666"
+            id="path2887"
+            style="fill:none;fill-opacity:1;stroke:#6e6e6e;stroke-width:0.264999;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    <circle
+            r="0.35084391"
+            cy="2.1124907"
+            cx="2.1124907"
+            id="path2889"
+            style="fill:#6e6e6e;fill-opacity:1;stroke:#6e6e6e;stroke-width:0.351396;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     <ellipse
-       style="opacity:1;fill:#ffd42a;fill-opacity:1;stroke:none;stroke-width:0.0437323;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       id="path1629"
-       cx="1.7043589"
-       cy="1.7405857"
-       rx="0.53332978"
-       ry="0.53475219" />
+            ry="0.27226338"
+            rx="0.25973514"
+            style="fill:#6e6e6e;fill-opacity:1;stroke:#6e6e6e;stroke-width:0.266343;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+            id="path2889-2"
+            cx="1.0374529"
+            cy="1.0025542" />
     <ellipse
-       cy="1.7322462"
-       cx="1.7192862"
-       id="circle1695"
-       style="opacity:1;mix-blend-mode:normal;fill:#fff6d5;fill-opacity:1;stroke:none;stroke-width:0.032332;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       rx="0.26171234"
-       ry="0.26472813" />
+            cy="0.99420154"
+            cx="3.2209375"
+            id="path2889-2-3"
+            style="fill:#6e6e6e;fill-opacity:1;stroke:#6e6e6e;stroke-width:0.266388;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+            rx="0.26806551"
+            ry="0.2638894" />
     <ellipse
-       style="opacity:1;fill:none;fill-opacity:1;stroke:#1e1e1e;stroke-width:0.0653441;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
-       id="ellipse1681"
-       cy="1.7340919"
-       cx="1.6746777"
-       rx="1.2039245"
-       ry="0.76510906" />
+            cy="3.2528548"
+            cx="3.2197411"
+            id="path2889-2-5"
+            style="fill:#6e6e6e;fill-opacity:1;stroke:#6e6e6e;stroke-width:0.270574;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+            rx="0.27014863"
+            ry="0.27014861" />
     <ellipse
-       cx="1.7062272"
-       cy="1.7440721"
-       rx="0.88439256"
-       ry="1.0912361"
-       style="opacity:1;fill:none;fill-opacity:1;stroke:#1e1e1e;stroke-width:0.0715309;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
-       id="ellipse1689" />
+            cy="3.260011"
+            cx="1.0165731"
+            id="path2889-2-4"
+            style="fill:#6e6e6e;fill-opacity:1;stroke:#6e6e6e;stroke-width:0.26068;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+            rx="0.25003916"
+            ry="0.27091956" />
+    <ellipse
+            ry="0.16316122"
+            rx="0.18821773"
+            style="fill:#6e6e6e;fill-opacity:1;stroke:#6e6e6e;stroke-width:0.175518;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+            id="path2889-28"
+            cx="3.694031"
+            cy="2.1148832" />
+    <ellipse
+            cy="3.7023833"
+            cx="2.1065309"
+            id="path2889-28-4"
+            style="fill:#6e6e6e;fill-opacity:1;stroke:#6e6e6e;stroke-width:0.175518;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+            rx="0.18821773"
+            ry="0.16316122" />
+    <ellipse
+            cy="2.1148832"
+            cx="0.51903093"
+            id="path2889-28-3"
+            style="fill:#6e6e6e;fill-opacity:1;stroke:#6e6e6e;stroke-width:0.175518;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+            rx="0.18821773"
+            ry="0.16316122" />
+    <ellipse
+            cy="0.52738315"
+            cx="2.1065309"
+            id="path2889-28-8"
+            style="fill:#6e6e6e;fill-opacity:1;stroke:#6e6e6e;stroke-width:0.175518;stroke-linecap:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+            rx="0.18821773"
+            ry="0.16316122" />
   </g>
 </svg>
