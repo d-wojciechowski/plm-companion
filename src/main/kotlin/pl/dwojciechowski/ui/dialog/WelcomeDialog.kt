@@ -1,10 +1,11 @@
 package pl.dwojciechowski.ui.dialog
 
+import com.intellij.CommonBundle
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper
-import java.awt.event.ActionEvent
-import javax.swing.AbstractAction
-import javax.swing.Action
+import com.intellij.ui.components.JBLabel
+import java.io.BufferedReader
+import java.io.InputStreamReader
 import javax.swing.JPanel
 
 class WelcomeDialog(
@@ -12,20 +13,25 @@ class WelcomeDialog(
 ) : DialogWrapper(project) {
 
     private lateinit var rootPane: JPanel
+    private lateinit var editorPane: JBLabel
 
     init {
         init()
-        title = "Remote File Picker Dialog"
+        setCancelButtonText(CommonBundle.getCloseButtonText())
 
+        title = "Remote File Picker Dialog"
+        editorPane.text = loadMessageText()
     }
 
-    override fun getOKAction(): Action =
-        object : AbstractAction("OK") {
-            override fun actionPerformed(e: ActionEvent?) {
-            }
-        }
-
+    override fun createActions() = arrayOf(cancelAction)
 
     override fun createCenterPanel() = rootPane
+
+    private fun loadMessageText(): String {
+        javaClass.classLoader.getResource("META-INF/exa.png")
+        return javaClass.classLoader.getResourceAsStream("html/WelcomeScreen.html")?.use { stream ->
+            return BufferedReader(InputStreamReader(stream)).readText()
+        } ?: ""
+    }
 
 }
