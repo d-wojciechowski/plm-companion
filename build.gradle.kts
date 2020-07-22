@@ -13,7 +13,7 @@ val rxJavaVersion = "3.0.4"
 
 plugins {
     id("org.jetbrains.changelog") version "0.4.0"
-    id("com.github.ben-manes.versions") version "0.28.0"
+    id("com.github.ben-manes.versions") version "0.29.0"
     id("org.jetbrains.intellij") version "0.4.21"
     id("com.google.protobuf") version "0.8.12"
     kotlin("jvm") version "1.3.72"

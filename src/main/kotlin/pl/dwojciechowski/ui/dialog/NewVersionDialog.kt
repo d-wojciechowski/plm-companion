@@ -13,9 +13,7 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 import javax.swing.SwingConstants
 
-class WelcomeDialog(
-    private val project: Project
-) : DialogWrapper(project) {
+class NewVersionDialog(project: Project) : DialogWrapper(project) {
 
     val htmlContent = JBLabel(loadMessageText())
     val icon = JBLabel("PLM Companion", PluginIcons.scaleToSize(PluginIcons.PLUGIN_BIG, 60), SwingConstants.CENTER)
@@ -31,16 +29,16 @@ class WelcomeDialog(
 
     init {
         init()
+        isModal = false
         icon.font = Font(icon.name, Font.BOLD, 30)
-        htmlContent.preferredSize = JBDimension(600, 0)
-
+        htmlContent.preferredSize = JBDimension(550, 0)
         setCancelButtonText(CommonBundle.getCloseButtonText())
     }
 
     override fun createActions() = arrayOf(cancelAction)
 
     private fun loadMessageText(): String {
-        return javaClass.classLoader.getResourceAsStream("html/WelcomeScreen.html")?.use { stream ->
+        return javaClass.classLoader.getResourceAsStream("html/NewVersionDialogContent.html")?.use { stream ->
             return BufferedReader(InputStreamReader(stream)).readText()
         } ?: ""
     }

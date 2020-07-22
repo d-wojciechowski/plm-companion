@@ -7,7 +7,7 @@
 
     <extensions defaultExtensionNs="com.intellij">
 
-        <postStartupActivity implementation="pl.dwojciechowski.activities.AboutStartupActivity"/>
+        <postStartupActivity implementation="pl.dwojciechowski.activities.NewVersionStartupActivity"/>
 
         <configurationType implementation="pl.dwojciechowski.execution.RemoteCommandConfigType"/>
 
