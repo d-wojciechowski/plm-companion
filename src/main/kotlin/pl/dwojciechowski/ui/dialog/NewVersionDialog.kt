@@ -4,34 +4,35 @@ import com.intellij.CommonBundle
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.ui.components.JBLabel
-import com.intellij.ui.layout.CCFlags
-import com.intellij.ui.layout.panel
-import com.intellij.util.ui.JBDimension
 import pl.dwojciechowski.ui.PluginIcons
 import java.awt.Font
 import java.io.BufferedReader
 import java.io.InputStreamReader
+import javax.swing.JPanel
 import javax.swing.SwingConstants
 
 class NewVersionDialog(project: Project) : DialogWrapper(project) {
 
-    val htmlContent = JBLabel(loadMessageText())
-    val icon = JBLabel("PLM Companion", PluginIcons.scaleToSize(PluginIcons.PLUGIN_BIG, 60), SwingConstants.CENTER)
+    lateinit var htmlContent: JBLabel
+    lateinit var icon: JBLabel
+    lateinit var centerPanel: JPanel
 
-    override fun createCenterPanel() = panel {
-        row(separated = true) {
-            icon(CCFlags.grow)
-        }
-        row {
-            htmlContent(CCFlags.growY)
-        }
+    override fun createCenterPanel() = centerPanel
+
+    fun createUIComponents() {
+        htmlContent = JBLabel()
+            .setCopyable(true)
+            .setAllowAutoWrapping(true)
+        icon = JBLabel("PLM Companion", PluginIcons.scaleToSize(PluginIcons.PLUGIN_BIG, 60), SwingConstants.CENTER)
     }
 
     init {
         init()
+        htmlContent.text = loadMessageText()
         isModal = false
+        setResizable(false)
+
         icon.font = Font(icon.name, Font.BOLD, 30)
-        htmlContent.preferredSize = JBDimension(550, 0)
         setCancelButtonText(CommonBundle.getCloseButtonText())
     }
 
