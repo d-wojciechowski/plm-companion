@@ -4,16 +4,17 @@ import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.PlatformDataKeys
 import com.intellij.openapi.vfs.VirtualFile
+import pl.dwojciechowski.i18n.PluginBundle.getMessage
 import pl.dwojciechowski.ui.dialog.LoadFromFileDialog
 
 class LoadFromFileAction : AnAction() {
 
     override fun actionPerformed(e: AnActionEvent) {
-        val project = e.project ?: throw Exception("Project not defined exception")
+        val project = e.project ?: throw Exception(getMessage("lff.exception.project.missing"))
         val flatMap = PlatformDataKeys.VIRTUAL_FILE_ARRAY
             .getData(e.dataContext)
             ?.flatMap(this::collectNested)
-            ?.toList() ?: throw Exception("No files selected exception")
+            ?.toList() ?: throw Exception(getMessage("lff.exception.files.missing"))
         LoadFromFileDialog(project, flatMap).showAndGet()
     }
 
