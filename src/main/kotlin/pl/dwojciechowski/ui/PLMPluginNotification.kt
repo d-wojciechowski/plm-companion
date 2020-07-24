@@ -4,6 +4,7 @@ import com.intellij.notification.NotificationDisplayType
 import com.intellij.notification.NotificationGroup
 import com.intellij.notification.NotificationType
 import com.intellij.openapi.project.Project
+import pl.dwojciechowski.i18n.PluginBundle.getMessage
 import javax.swing.Icon
 
 internal object PLMPluginNotification {
@@ -13,19 +14,19 @@ internal object PLMPluginNotification {
     )
 
     fun serverOK(project: Project) {
-        notify(project, "Windchill is OK!", PluginIcons.RUNNING)
+        notify(project, getMessage("ui.notification.server.ok"), PluginIcons.RUNNING)
     }
 
     fun serverKO(project: Project) {
-        notify(project, "Windchill is DOWN!", PluginIcons.ERROR)
+        notify(project, getMessage("ui.notification.server.ko"), PluginIcons.ERROR)
     }
 
     fun apacheOK(project: Project) {
-        notify(project, "Apache is OK, Windchill is DOWN!", PluginIcons.WARNING)
+        notify(project, getMessage("ui.notification.apache.ok"), PluginIcons.WARNING)
     }
 
     fun settingsSaved(project: Project) {
-        notify(project, "Settings Saved", PluginIcons.CONFIRMATION)
+        notify(project, getMessage("ui.notification.settings.saved"), PluginIcons.CONFIRMATION)
     }
 
     fun notify(project: Project, text: String, icon: Icon) {
