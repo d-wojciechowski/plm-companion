@@ -3,7 +3,7 @@ import org.jetbrains.changelog.closure
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 group = "pl.dwojciechowski"
-version = "0.9.0"
+version = "1.0.0"
 val protobufVersion = "3.12.2"
 val rsocketRpcVersion = "0.2.18"
 val rsocketVersion = "1.0.0-RC7"
@@ -13,7 +13,7 @@ val rxJavaVersion = "3.0.4"
 
 plugins {
     id("org.jetbrains.changelog") version "0.4.0"
-    id("com.github.ben-manes.versions") version "0.28.0"
+    id("com.github.ben-manes.versions") version "0.29.0"
     id("org.jetbrains.intellij") version "0.4.21"
     id("com.google.protobuf") version "0.8.12"
     kotlin("jvm") version "1.3.72"

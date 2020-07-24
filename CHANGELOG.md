@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.0]
+### Added
+- New startup activity which displays plugin info page with links and support section.
+### Changed
+- Plugin Icon to a new, more suitable one.
+- Updated description to better explain a plugin 
+
 ## [0.9.0]
 ### Added
 - Wrapping enable/disable option on command pane

@@ -7,12 +7,14 @@
 
     <extensions defaultExtensionNs="com.intellij">
 
+        <postStartupActivity implementation="pl.dwojciechowski.activities.NewVersionStartupActivity"/>
+
         <configurationType implementation="pl.dwojciechowski.execution.RemoteCommandConfigType"/>
 
         <toolWindow id="PLM Companion" anchor="right" factoryClass="pl.dwojciechowski.ui.MainSubWindowFactory"
-                    icon="/META-INF/pluginIcon.svg"/>
+                    icon="/icons/plm_companion_icon16.svg"/>
         <toolWindow id="PLM Companion Log" anchor="bottom"
-                    factoryClass="pl.dwojciechowski.ui.LogViewerPanelFactory" icon="/META-INF/pluginIcon.svg"
+                    factoryClass="pl.dwojciechowski.ui.LogViewerPanelFactory" icon="/icons/plm_companion_icon16.svg"
                     canCloseContents="true"
         />
 
