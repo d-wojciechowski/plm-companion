@@ -23,16 +23,19 @@ class NewVersionDialog(project: Project) : DialogWrapper(project) {
         htmlContent = JBLabel()
             .setCopyable(true)
             .setAllowAutoWrapping(true)
-        icon = JBLabel("PLM Companion", PluginIcons.scaleToSize(PluginIcons.PLUGIN_BIG, 60), SwingConstants.CENTER)
+
+        val scaledIcon = PluginIcons.scaleToSize(PluginIcons.PLUGIN_BIG, 60)
+        icon = JBLabel("PLM Companion", scaledIcon, SwingConstants.CENTER)
     }
 
     init {
         init()
-        htmlContent.text = loadMessageText()
         isModal = false
         setResizable(false)
 
+        htmlContent.text = loadMessageText()
         icon.font = Font(icon.name, Font.BOLD, 30)
+
         setCancelButtonText(CommonBundle.getCloseButtonText())
     }
 

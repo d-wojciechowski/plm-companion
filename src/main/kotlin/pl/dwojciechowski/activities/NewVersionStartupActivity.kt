@@ -13,6 +13,8 @@ import pl.dwojciechowski.ui.dialog.NewVersionDialog
 
 class NewVersionStartupActivity : StartupActivity, DumbAware {
 
+    val PLUGIN_ID = "pl.dominikw.Windchill-Intellij-Plugin"
+
     /**
      * New version inspired by Key Promoter X, and some code was taken from its implementation.
      * Thanks Patrick Scheibe!
@@ -21,13 +23,13 @@ class NewVersionStartupActivity : StartupActivity, DumbAware {
         val application = ApplicationManager.getApplication()
         val settings = ServiceManager.getService(project, PluginConfiguration::class.java)
 
-        val plugin = PluginManagerCore.getPlugin(PluginId.getId("pl.dominikw.Windchill-Intellij-Plugin"))
+        val plugin = PluginManagerCore.getPlugin(PluginId.getId(PLUGIN_ID))
         if (plugin != null) {
             val compare = VersionComparatorUtil.compare(settings.installedVersion, plugin.version)
-//            if (compare < 0) {
+            if (compare < 0) {
                 application.invokeLater { NewVersionDialog(project).show() }
                 settings.installedVersion = plugin.version
-//            }
+            }
         }
     }
 
