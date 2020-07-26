@@ -1,7 +1,7 @@
 package pl.dwojciechowski.model
 
 import com.intellij.icons.AllIcons
-import jdk.nashorn.internal.runtime.ECMAErrors.getMessage
+import pl.dwojciechowski.i18n.PluginBundle.getMessage
 import pl.dwojciechowski.ui.PluginIcons
 import javax.swing.Icon
 

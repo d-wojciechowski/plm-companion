@@ -26,7 +26,13 @@ class RunConfigurationComboBox(
         renderer = RunConfigurationCBRenderer()
 
         if (withEmptyElement) {
-            cbModel.addElement(RunConfigurationRepresentation("", getMessage("runconfig.donothing.displayname"), AllIcons.Plugins.Disabled))
+            cbModel.addElement(
+                RunConfigurationRepresentation(
+                    "",
+                    getMessage("runconfig.donothing.displayname"),
+                    AllIcons.Debugger.Db_invalid_breakpoint
+                )
+            )
         }
 
         val allSettings = RunManager.getInstance(project).allSettings

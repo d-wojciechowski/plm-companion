@@ -23,7 +23,7 @@ class NewVersionStartupActivity : StartupActivity, DumbAware {
         val application = ApplicationManager.getApplication()
         val settings = ServiceManager.getService(project, PluginConfiguration::class.java)
 
-        val plugin = PluginManagerCore.getPlugin(PluginId.getId(PLUGIN_ID))
+        val plugin = PluginManagerCore.getPlugins().find { it.pluginId == PluginId.getId(PLUGIN_ID) }
         if (plugin != null) {
             val compare = VersionComparatorUtil.compare(settings.installedVersion, plugin.version)
             if (compare < 0) {

@@ -35,11 +35,13 @@ jobs:
       uses: ChrisCarini/intellij-platform-plugin-verifier-action@v0.0.2
       with:
         ide-versions: |
+          ideaIC:2019.2
+          ideaIC:2019.3
           ideaIC:2020.1
           ideaIC:LATEST-EAP-SNAPSHOT
 
     - name: Get log file path and print contents
-      if: github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/master'
+      if: github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/master' || github.ref == 'refs/heads/resource-messages'
       run: |
         echo "The verifier log file [${{steps.verify.outputs.verification-output-log-filename}}] contents : " ;
         cat ${{steps.verify.outputs.verification-output-log-filename}}
