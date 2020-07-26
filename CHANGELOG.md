@@ -3,6 +3,7 @@
 ## [1.0.0]
 ### Added
 - New startup activity which displays plugin info page with links and support section.
+- Plugin UI is now backed by i18n resources. If you want to translate plugin UI to your language, contact me!
 ### Changed
 - Plugin Icon to a new, more suitable one.
 - Updated description to better explain a plugin 

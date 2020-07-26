@@ -10,6 +10,7 @@ import com.intellij.util.ui.UIUtil
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import pl.dwojciechowski.configuration.PluginConfiguration
+import pl.dwojciechowski.i18n.PluginBundle.getMessage
 import pl.dwojciechowski.model.CommandBean
 import pl.dwojciechowski.service.IdeControlService
 import pl.dwojciechowski.service.RemoteService
@@ -78,14 +79,17 @@ class CommandSubPanel(
     private fun handleAddToListModel() {
         if (commandField.text.isEmpty()) {
             Messages.showMessageDialog(
-                project, "Command field is empty", "No command provided", Messages.getErrorIcon()
+                project,
+                getMessage("ui.cp.error.empty_command.message"),
+                getMessage("ui.cp.error.empty_command.title"),
+                Messages.getErrorIcon()
             )
         } else if (Collections.list(listModel.elements()).stream().noneMatch { it.command == commandField.text }) {
             addToModel()
         } else {
             val confirmed = showYesNoDialog(
                 title = "",
-                message = "Given command allready exists. Add anyway?",
+                message = getMessage("ui.cp.error.existing_command.message"),
                 project = project,
                 icon = UIUtil.getQuestionIcon()
             )
@@ -99,17 +103,17 @@ class CommandSubPanel(
     }
 
     private fun CommandList.setUpCommandHistoryRMBMenu() {
-        addRMBMenuEntry("Run") {
+        addRMBMenuEntry(getMessage("ui.cp.rmb.run")) {
             GlobalScope.launch {
                 executeSelectedCommand()
             }
         }
-        addRMBMenuEntry("Delete") {
+        addRMBMenuEntry(getMessage("ui.cp.rmb.delete")) {
             listModel.remove(selectedIndex)
             saveToConfig()
         }
-        addRMBMenuEntry("Edit", action = EditListAction(this) { saveToConfig() })
-        addRMBMenuEntry("Alias", action = EditListAction(this, "name") { saveToConfig() })
+        addRMBMenuEntry(getMessage("ui.cp.rmb.edit"), action = EditListAction(this) { saveToConfig() })
+        addRMBMenuEntry(getMessage("ui.cp.rmb.alias"), action = EditListAction(this, "name") { saveToConfig() })
     }
 
     private fun executeFromInput() {
@@ -130,7 +134,10 @@ class CommandSubPanel(
     private fun executeSelectedCommand() {
         if (commandHistory.selectedIndex == -1) {
             Messages.showMessageDialog(
-                project, "No command selected", "Missing selection error", Messages.getErrorIcon()
+                project,
+                getMessage("ui.cp.error.empty_command.message"),
+                getMessage("ui.cp.error.empty_command.title"),
+                Messages.getErrorIcon()
             )
         } else {
             GlobalScope.launch {
