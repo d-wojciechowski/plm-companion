@@ -1,21 +1,17 @@
 package pl.dwojciechowski.ui.panel
 
 import com.intellij.openapi.project.Project
-import com.intellij.ui.layout.CCFlags
-import com.intellij.ui.layout.panel
+import javax.swing.JPanel
 
-internal class PLMCompanionPanel(project: Project) {
+internal class PLMCompanionPanel(private val project: Project) {
 
-    private val customCommandPanel = CommandSubPanel(project).content
-    private val fatButtonPanel = FatButtonPanel(project).content
+    lateinit var content: JPanel
+    private lateinit var customCommandPanel: JPanel
+    private lateinit var fatButtonPanel: JPanel
 
-    val content = panel {
-        row {
-            fatButtonPanel(CCFlags.growX)
-        }
-        row {
-            customCommandPanel(CCFlags.grow, CCFlags.pushY)
-        }
+    fun createUIComponents() {
+        customCommandPanel = CommandSubPanel(project).content
+        fatButtonPanel = FatButtonPanel(project).content
     }
 
 }
