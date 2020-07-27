@@ -30,7 +30,6 @@ jobs:
       run: ./gradlew build
   
     - name: Verify Plugin on IntelliJ Platforms
-      if: github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/master'
       id: verify
       uses: ChrisCarini/intellij-platform-plugin-verifier-action@v0.0.2
       with:
@@ -41,7 +40,6 @@ jobs:
           ideaIC:LATEST-EAP-SNAPSHOT
 
     - name: Get log file path and print contents
-      if: github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/master' || github.ref == 'refs/heads/resource-messages'
       run: |
         echo "The verifier log file [${{steps.verify.outputs.verification-output-log-filename}}] contents : " ;
         cat ${{steps.verify.outputs.verification-output-log-filename}}
