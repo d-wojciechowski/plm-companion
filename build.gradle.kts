@@ -3,7 +3,7 @@ import org.jetbrains.changelog.closure
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 group = "pl.dwojciechowski"
-version = "0.9.0"
+version = "0.9.1"
 val protobufVersion = "3.12.2"
 val rsocketRpcVersion = "0.2.18"
 val rsocketVersion = "1.0.0-RC7"
@@ -55,7 +55,7 @@ sourceSets {
 }
 
 intellij {
-    version = "2020.1"
+    version = "2020.2"
     updateSinceUntilBuild = true
     pluginName = "PLM Companion"
 }
@@ -77,7 +77,7 @@ tasks {
     patchPluginXml {
         changeNotes(closure { changelog.getLatest().toHTML() })
         pluginDescription(htmlFixer("src/main/resources/META-INF/description.html"))
-        sinceBuild("200")
+        sinceBuild("192")
     }
 
 }
