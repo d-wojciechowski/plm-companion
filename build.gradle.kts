@@ -77,7 +77,7 @@ tasks {
     patchPluginXml {
         changeNotes(closure { changelog.getLatest().toHTML() })
         pluginDescription(htmlFixer("src/main/resources/META-INF/description.html"))
-        sinceBuild("192")
+        sinceBuild("200")
     }
 
 }
