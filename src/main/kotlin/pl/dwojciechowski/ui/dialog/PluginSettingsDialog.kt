@@ -7,6 +7,7 @@ import com.intellij.openapi.ui.ComboBox
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.util.containers.toArray
 import pl.dwojciechowski.configuration.PluginConfiguration
+import pl.dwojciechowski.i18n.PluginBundle.getMessage
 import pl.dwojciechowski.model.ActionPresentationOption
 import pl.dwojciechowski.ui.PLMPluginNotification
 import pl.dwojciechowski.ui.component.RemotePickerButton
@@ -61,7 +62,7 @@ class PluginSettingsDialog(private val project: Project) : DialogWrapper(project
     }
 
     init {
-        title = "PLM Companion Configuration"
+        title = getMessage("ui.config.title")
         //spinner init
         refreshRateSpinner.model = SpinnerNumberModel(1000, 500, Int.MAX_VALUE, 100)
         refreshRateSpinner.editor = JSpinner.NumberEditor(refreshRateSpinner, "# ms")

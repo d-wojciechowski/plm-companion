@@ -14,6 +14,7 @@ import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.ui.components.JBList
 import pl.dwojciechowski.configuration.PluginConfiguration
+import pl.dwojciechowski.i18n.PluginBundle.getMessage
 import pl.dwojciechowski.model.CommandBean
 import pl.dwojciechowski.service.IdeControlService
 import pl.dwojciechowski.service.RemoteService
@@ -69,7 +70,7 @@ class LoadFromFileDialog(
         setUpRadioButtons()
 
         init()
-        title = "Load From File Dialog"
+        title = getMessage("ui.dialog.lff.title")
 
         folderPathTextFile.text = config.lffFolder
         containerTextField.text = config.lffContName
@@ -142,7 +143,7 @@ class LoadFromFileDialog(
         val runConfig = runConfigurationComboBox.getSelectedConfiguration().value
         if (runConfig == null) {
             ideControlService.withAutoOpen {
-                commandService.executeStreaming(CommandBean("Load from file", finalCommand))
+                commandService.executeStreaming(CommandBean(getMessage("ui.dialog.lff.command.name"), finalCommand))
             }
         } else {
             val executor = DefaultRunExecutor.getRunExecutorInstance()
@@ -162,7 +163,7 @@ class LoadFromFileDialog(
                 override fun processTerminated(event: ProcessEvent) {
                     super.processTerminated(event)
                     ideControlService.withAutoOpen {
-                        commandService.executeStreaming(CommandBean("Load from file", finalCommand))
+                        commandService.executeStreaming(CommandBean(getMessage("ui.dialog.lff.command.name"), finalCommand))
                     }
                 }
             })

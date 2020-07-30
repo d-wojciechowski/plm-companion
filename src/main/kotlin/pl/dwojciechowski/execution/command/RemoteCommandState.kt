@@ -7,6 +7,7 @@ import com.intellij.execution.Executor
 import com.intellij.execution.configurations.RunProfileState
 import com.intellij.execution.runners.ExecutionEnvironment
 import com.intellij.execution.runners.ProgramRunner
+import pl.dwojciechowski.i18n.PluginBundle.getMessage
 
 class RemoteCommandState(private val environment: ExecutionEnvironment) : RunProfileState {
 
@@ -14,7 +15,7 @@ class RemoteCommandState(private val environment: ExecutionEnvironment) : RunPro
 
     override fun execute(executor: Executor?, runner: ProgramRunner<*>): ExecutionResult? {
         if (runProfile.settings.command.isEmpty()) {
-            throw ExecutionException("Could not execute command, no command provided")
+            throw ExecutionException(getMessage("runconfig.error.empty"))
         }
         return DefaultExecutionResult(RemoteCommandProcessHandler(environment, executor))
     }

@@ -36,7 +36,7 @@
               <maximumSize width="40" height="40"/>
               <minimumSize width="40" height="40"/>
               <text value=""/>
-              <toolTipText value="Clear Log Pane"/>
+              <toolTipText resource-bundle="i18n/PluginBundle" key="ui.clp.button.clear.tooltip"/>
             </properties>
           </component>
           <vspacer id="c42ec">
@@ -79,7 +79,7 @@
               <maximumSize width="40" height="40"/>
               <minimumSize width="40" height="40"/>
               <text value=""/>
-              <toolTipText value="Rerun selected action"/>
+              <toolTipText resource-bundle="i18n/PluginBundle" key="ui.clp.button.rerun.tooltip"/>
             </properties>
           </component>
           <component id="64181" class="pl.dwojciechowski.ui.component.button.LineWrapButton" binding="wrapLinesButton">
@@ -117,6 +117,7 @@
               <maximumSize width="40" height="40"/>
               <minimumSize width="40" height="40"/>
               <text value=""/>
+              <toolTipText resource-bundle="i18n/PluginBundle" key="ui.clp.button.stop.tooltip"/>
             </properties>
           </component>
         </children>

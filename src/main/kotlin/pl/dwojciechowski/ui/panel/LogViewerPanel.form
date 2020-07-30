@@ -117,7 +117,7 @@
               <maximumSize width="40" height="40"/>
               <minimumSize width="40" height="40"/>
               <text value=""/>
-              <toolTipText value="Clear Log Pane"/>
+              <toolTipText resource-bundle="i18n/PluginBundle" key="ui.clp.button.clear.tooltip"/>
             </properties>
           </component>
           <component id="29d89" class="javax.swing.JButton" binding="clearButton">
@@ -136,7 +136,7 @@
               <maximumSize width="40" height="40"/>
               <minimumSize width="40" height="40"/>
               <text value=""/>
-              <toolTipText value="Clear Log Pane"/>
+              <toolTipText resource-bundle="i18n/PluginBundle" key="ui.clp.button.clear.tooltip"/>
             </properties>
           </component>
         </children>

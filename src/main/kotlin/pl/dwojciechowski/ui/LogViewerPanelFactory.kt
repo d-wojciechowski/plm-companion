@@ -11,6 +11,7 @@ import com.intellij.openapi.wm.ToolWindowFactory
 import com.intellij.openapi.wm.ex.ToolWindowEx
 import com.intellij.ui.content.ContentFactory
 import pl.dwojciechowski.configuration.PluginConfiguration
+import pl.dwojciechowski.i18n.PluginBundle.getMessage
 import pl.dwojciechowski.service.LogViewerService
 import pl.dwojciechowski.ui.dialog.LogFileLocationDialog
 import pl.dwojciechowski.ui.panel.CommandLogPanel
@@ -31,15 +32,16 @@ class LogViewerPanelFactory : ToolWindowFactory, DumbAware {
         val logPane2 = LogViewerPanel(project, SourceEnum.BACKGROUND_METHOD_SERVER)
         val commandPanel = CommandLogPanel(project)
 
-        val content = contentFactory.createContent(logPane1, "Method Server", false)
+        val content = contentFactory.createContent(logPane1, getMessage("ui.tab.log.ms.display"), false)
         content.preferredFocusableComponent = logPane1
         content.isCloseable = false
 
-        val content2 = contentFactory.createContent(logPane2, "Background Method Server", false)
+        val content2 = contentFactory.createContent(logPane2, getMessage("ui.tab.log.bms.display"), false)
         content2.preferredFocusableComponent = logPane2
         content2.isCloseable = false
 
-        val commandContentPanel = contentFactory.createContent(commandPanel, "Commands", false)
+        val commandContentPanel =
+            contentFactory.createContent(commandPanel, getMessage("ui.tab.log.commands.display"), false)
         commandContentPanel.preferredFocusableComponent = commandPanel
         commandContentPanel.isCloseable = false
 
@@ -55,7 +57,11 @@ class LogViewerPanelFactory : ToolWindowFactory, DumbAware {
         toolWindow: ToolWindowEx
     ): DumbAwareAction {
         return object :
-            DumbAwareAction("New Window", "Create new log window", AllIcons.General.Add) {
+            DumbAwareAction(
+                getMessage("ui.tab.log.custom.text"),
+                getMessage("ui.tab.log.custom.description"),
+                AllIcons.General.Add
+            ) {
             override fun actionPerformed(e: AnActionEvent) {
                 val logFileDialog = LogFileLocationDialog(project, fileOnlySelection = true)
                 if (!logFileDialog.showAndGet()) {

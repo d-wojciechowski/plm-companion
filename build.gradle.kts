@@ -55,7 +55,7 @@ sourceSets {
 }
 
 intellij {
-    version = "2020.1"
+    version = "2020.2"
     updateSinceUntilBuild = true
     pluginName = "PLM Companion"
 }

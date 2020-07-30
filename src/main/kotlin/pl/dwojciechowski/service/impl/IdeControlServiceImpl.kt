@@ -19,8 +19,8 @@ class IdeControlServiceImpl(private val project: Project) : IdeControlService {
         getToolWindow(PluginConstants.LOG_TAB_ID)?.let { toolWindow ->
             ApplicationManager.getApplication().invokeLater {
                 if (!toolWindow.isVisible) {
-                    toolWindow.show()
-                    toolWindow.hide()
+                    toolWindow.show{}
+                    toolWindow.hide{}
                 }
             }
         }
@@ -29,7 +29,7 @@ class IdeControlServiceImpl(private val project: Project) : IdeControlService {
     override fun switchToCommandTab() {
         withCommandTab { toolWindow, contentManager, content ->
             ApplicationManager.getApplication().invokeLater {
-                toolWindow.show()
+                toolWindow.show{}
                 contentManager.setSelectedContent(content, true, true)
             }
 
