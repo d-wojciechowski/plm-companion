@@ -22,25 +22,25 @@ jobs:
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
-      
+
     - name: submodules-init
       uses: snickerbockers/submodules-init@v4
-      
+
     - name: Build with Gradle
       run: ./gradlew build
-  
+
     - name: Verify Plugin on IntelliJ Platforms
+      if: github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/master'
       id: verify
       uses: ChrisCarini/intellij-platform-plugin-verifier-action@v0.0.2
       with:
         ide-versions: |
-          ideaIC:2019.2
-          ideaIC:2019.3
           ideaIC:2020.1
           ideaIC:2020.2
           ideaIC:LATEST-EAP-SNAPSHOT
 
     - name: Get log file path and print contents
+      if: github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/master'
       run: |
         echo "The verifier log file [${{steps.verify.outputs.verification-output-log-filename}}] contents : " ;
         cat ${{steps.verify.outputs.verification-output-log-filename}}
