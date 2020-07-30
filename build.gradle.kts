@@ -55,7 +55,7 @@ sourceSets {
 }
 
 intellij {
-    version = "2019.2"
+    version = "2020.2"
     updateSinceUntilBuild = true
     pluginName = "PLM Companion"
 }
@@ -77,7 +77,7 @@ tasks {
     patchPluginXml {
         changeNotes(closure { changelog.getLatest().toHTML() })
         pluginDescription(htmlFixer("src/main/resources/META-INF/description.html"))
-        sinceBuild("192")
+        sinceBuild("200")
     }
 
 }
