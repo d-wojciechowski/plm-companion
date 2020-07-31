@@ -3,6 +3,7 @@ package pl.dwojciechowski.ui.panel
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
 import pl.dwojciechowski.configuration.PluginConfiguration
+import pl.dwojciechowski.i18n.PluginBundle.getMessage
 import pl.dwojciechowski.model.ServerStatus
 import pl.dwojciechowski.service.IdeControlService
 import pl.dwojciechowski.service.RemoteService
@@ -11,6 +12,8 @@ import pl.dwojciechowski.ui.PluginIcons
 import pl.dwojciechowski.ui.dialog.PluginSettingsDialog
 import javax.swing.JButton
 import javax.swing.JPanel
+import javax.swing.border.EtchedBorder
+import javax.swing.border.TitledBorder
 
 class FatButtonPanel(private val project: Project) {
 
@@ -20,6 +23,8 @@ class FatButtonPanel(private val project: Project) {
     private val ideControlService = ServiceManager.getService(project, IdeControlService::class.java)
 
     lateinit var content: JPanel
+    lateinit var statusPanel: JPanel
+    lateinit var actionPanel: JPanel
 
     private lateinit var restartWindchillButton: JButton
     private lateinit var stopWindchillButton: JButton
@@ -45,6 +50,9 @@ class FatButtonPanel(private val project: Project) {
             wncStatusButton.set(it)
             setEnableStateBasedOnStatus(it)
         }
+
+        statusPanel.border = TitledBorder(EtchedBorder(1),getMessage("ui.mp.status"))
+        actionPanel.border = TitledBorder(EtchedBorder(1),getMessage("ui.mp.actions"))
     }
 
     private fun setEnableStateBasedOnStatus(it: ServerStatus?) {
