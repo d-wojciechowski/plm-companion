@@ -22,6 +22,8 @@ import javax.swing.DefaultListModel
 import javax.swing.JButton
 import javax.swing.JPanel
 import javax.swing.ListSelectionModel
+import javax.swing.border.EtchedBorder
+import javax.swing.border.TitledBorder
 
 class CommandSubPanel(
     private val project: Project
@@ -74,6 +76,8 @@ class CommandSubPanel(
 
         addButton.icon = AllIcons.General.Add
         addButton.addActionListener { handleAddToListModel() }
+
+        content.border = TitledBorder(EtchedBorder(1),getMessage("ui.cp.panel.title"))
     }
 
     private fun handleAddToListModel() {
