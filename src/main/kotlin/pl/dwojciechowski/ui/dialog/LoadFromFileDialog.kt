@@ -22,6 +22,8 @@ import pl.dwojciechowski.ui.component.CustomVirtualFileListCellRenderer
 import pl.dwojciechowski.ui.component.RunConfigurationComboBox
 import java.awt.event.ActionEvent
 import javax.swing.*
+import javax.swing.border.EtchedBorder
+import javax.swing.border.TitledBorder
 
 class LoadFromFileDialog(
     private val project: Project,
@@ -33,6 +35,10 @@ class LoadFromFileDialog(
     private val ideControlService = ServiceManager.getService(project, IdeControlService::class.java)
 
     lateinit var content: JPanel
+
+    private lateinit var wtHomePanel: JPanel
+    private lateinit var targetContainerPanel: JPanel
+    private lateinit var preRunConfigPanel: JPanel
 
     private lateinit var fileList: JBList<VirtualFile>
     private lateinit var listModel: DefaultListModel<VirtualFile>
@@ -84,6 +90,9 @@ class LoadFromFileDialog(
                 config.lffFolder = folderPathTextFile.text
             }
         }
+        wtHomePanel.border = TitledBorder(EtchedBorder(1),getMessage("ui.dialog.lff.wthome"))
+        targetContainerPanel.border = TitledBorder(EtchedBorder(1),getMessage("ui.dialog.lff.container"))
+        preRunConfigPanel.border = TitledBorder(EtchedBorder(1),getMessage("ui.dialog.lff.runconf.name"))
 
     }
 

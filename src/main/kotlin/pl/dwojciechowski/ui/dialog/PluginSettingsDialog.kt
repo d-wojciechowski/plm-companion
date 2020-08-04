@@ -15,12 +15,18 @@ import java.awt.event.ActionEvent
 import java.awt.event.KeyAdapter
 import java.awt.event.KeyEvent
 import javax.swing.*
+import javax.swing.border.EtchedBorder
+import javax.swing.border.TitledBorder
 
 class PluginSettingsDialog(private val project: Project) : DialogWrapper(project), Disposable {
 
     private val config: PluginConfiguration = ServiceManager.getService(project, PluginConfiguration::class.java)
 
     lateinit var content: JPanel
+
+    private lateinit var systemUrlPanel: JPanel
+    private lateinit var remoteSystemSettingsPanel: JPanel
+    private lateinit var pluginSettingsPanel: JPanel
 
     // URL Settings
     private lateinit var protocolCB: JComboBox<String>
@@ -84,6 +90,10 @@ class PluginSettingsDialog(private val project: Project) : DialogWrapper(project
 
         initFromConfig()
         init()
+
+        systemUrlPanel.border = TitledBorder(EtchedBorder(1),getMessage("ui.config.url.system"))
+        remoteSystemSettingsPanel.border = TitledBorder(EtchedBorder(1),getMessage("ui.config.rss.title"))
+        pluginSettingsPanel.border = TitledBorder(EtchedBorder(1),getMessage("ui.config.pluginsetting"))
     }
 
     private fun JTextField.addOnKeyEvent(method: () -> Unit) {
