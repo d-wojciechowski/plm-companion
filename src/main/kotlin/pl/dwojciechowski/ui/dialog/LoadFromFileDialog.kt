@@ -19,6 +19,7 @@ import pl.dwojciechowski.model.CommandBean
 import pl.dwojciechowski.service.IdeControlService
 import pl.dwojciechowski.service.RemoteService
 import pl.dwojciechowski.ui.component.CustomVirtualFileListCellRenderer
+import pl.dwojciechowski.ui.component.EtchedTitleBorder
 import pl.dwojciechowski.ui.component.RunConfigurationComboBox
 import java.awt.event.ActionEvent
 import javax.swing.*
@@ -33,6 +34,10 @@ class LoadFromFileDialog(
     private val ideControlService = ServiceManager.getService(project, IdeControlService::class.java)
 
     lateinit var content: JPanel
+
+    private lateinit var wtHomePanel: JPanel
+    private lateinit var targetContainerPanel: JPanel
+    private lateinit var preRunConfigPanel: JPanel
 
     private lateinit var fileList: JBList<VirtualFile>
     private lateinit var listModel: DefaultListModel<VirtualFile>
@@ -84,6 +89,9 @@ class LoadFromFileDialog(
                 config.lffFolder = folderPathTextFile.text
             }
         }
+        wtHomePanel.border = EtchedTitleBorder(getMessage("ui.dialog.lff.wthome"))
+        targetContainerPanel.border = EtchedTitleBorder(getMessage("ui.dialog.lff.container"))
+        preRunConfigPanel.border = EtchedTitleBorder(getMessage("ui.dialog.lff.runconf.name"))
 
     }
 

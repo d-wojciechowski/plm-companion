@@ -15,6 +15,7 @@ import pl.dwojciechowski.model.CommandBean
 import pl.dwojciechowski.service.IdeControlService
 import pl.dwojciechowski.service.RemoteService
 import pl.dwojciechowski.ui.component.CommandList
+import pl.dwojciechowski.ui.component.EtchedTitleBorder
 import pl.dwojciechowski.ui.component.action.EditListAction
 import java.awt.event.KeyEvent
 import java.util.*
@@ -74,6 +75,8 @@ class CommandSubPanel(
 
         addButton.icon = AllIcons.General.Add
         addButton.addActionListener { handleAddToListModel() }
+
+        content.border = EtchedTitleBorder(getMessage("ui.cp.panel.title"))
     }
 
     private fun handleAddToListModel() {
