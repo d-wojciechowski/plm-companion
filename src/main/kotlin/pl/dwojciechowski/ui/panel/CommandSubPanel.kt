@@ -15,6 +15,7 @@ import pl.dwojciechowski.model.CommandBean
 import pl.dwojciechowski.service.IdeControlService
 import pl.dwojciechowski.service.RemoteService
 import pl.dwojciechowski.ui.component.CommandList
+import pl.dwojciechowski.ui.component.EtchedTitleBorder
 import pl.dwojciechowski.ui.component.action.EditListAction
 import java.awt.event.KeyEvent
 import java.util.*
@@ -22,8 +23,6 @@ import javax.swing.DefaultListModel
 import javax.swing.JButton
 import javax.swing.JPanel
 import javax.swing.ListSelectionModel
-import javax.swing.border.EtchedBorder
-import javax.swing.border.TitledBorder
 
 class CommandSubPanel(
     private val project: Project
@@ -77,7 +76,7 @@ class CommandSubPanel(
         addButton.icon = AllIcons.General.Add
         addButton.addActionListener { handleAddToListModel() }
 
-        content.border = TitledBorder(EtchedBorder(1),getMessage("ui.cp.panel.title"))
+        content.border = EtchedTitleBorder(getMessage("ui.cp.panel.title"))
     }
 
     private fun handleAddToListModel() {

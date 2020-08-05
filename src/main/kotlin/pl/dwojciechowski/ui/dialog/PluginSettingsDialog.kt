@@ -10,13 +10,12 @@ import pl.dwojciechowski.configuration.PluginConfiguration
 import pl.dwojciechowski.i18n.PluginBundle.getMessage
 import pl.dwojciechowski.model.ActionPresentationOption
 import pl.dwojciechowski.ui.PLMPluginNotification
+import pl.dwojciechowski.ui.component.EtchedTitleBorder
 import pl.dwojciechowski.ui.component.RemotePickerButton
 import java.awt.event.ActionEvent
 import java.awt.event.KeyAdapter
 import java.awt.event.KeyEvent
 import javax.swing.*
-import javax.swing.border.EtchedBorder
-import javax.swing.border.TitledBorder
 
 class PluginSettingsDialog(private val project: Project) : DialogWrapper(project), Disposable {
 
@@ -91,9 +90,9 @@ class PluginSettingsDialog(private val project: Project) : DialogWrapper(project
         initFromConfig()
         init()
 
-        systemUrlPanel.border = TitledBorder(EtchedBorder(1),getMessage("ui.config.url.system"))
-        remoteSystemSettingsPanel.border = TitledBorder(EtchedBorder(1),getMessage("ui.config.rss.title"))
-        pluginSettingsPanel.border = TitledBorder(EtchedBorder(1),getMessage("ui.config.pluginsetting"))
+        systemUrlPanel.border = EtchedTitleBorder(getMessage("ui.config.url.system"))
+        remoteSystemSettingsPanel.border = EtchedTitleBorder(getMessage("ui.config.rss.title"))
+        pluginSettingsPanel.border = EtchedTitleBorder(getMessage("ui.config.pluginsetting"))
     }
 
     private fun JTextField.addOnKeyEvent(method: () -> Unit) {

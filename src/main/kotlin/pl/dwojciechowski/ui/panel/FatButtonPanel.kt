@@ -9,11 +9,10 @@ import pl.dwojciechowski.service.IdeControlService
 import pl.dwojciechowski.service.RemoteService
 import pl.dwojciechowski.service.StatusService
 import pl.dwojciechowski.ui.PluginIcons
+import pl.dwojciechowski.ui.component.EtchedTitleBorder
 import pl.dwojciechowski.ui.dialog.PluginSettingsDialog
 import javax.swing.JButton
 import javax.swing.JPanel
-import javax.swing.border.EtchedBorder
-import javax.swing.border.TitledBorder
 
 class FatButtonPanel(private val project: Project) {
 
@@ -51,8 +50,8 @@ class FatButtonPanel(private val project: Project) {
             setEnableStateBasedOnStatus(it)
         }
 
-        statusPanel.border = TitledBorder(EtchedBorder(1),getMessage("ui.mp.status"))
-        actionPanel.border = TitledBorder(EtchedBorder(1),getMessage("ui.mp.actions"))
+        statusPanel.border = EtchedTitleBorder(getMessage("ui.mp.status"))
+        actionPanel.border = EtchedTitleBorder(getMessage("ui.mp.actions"))
     }
 
     private fun setEnableStateBasedOnStatus(it: ServerStatus?) {

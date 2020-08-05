@@ -19,11 +19,10 @@ import pl.dwojciechowski.model.CommandBean
 import pl.dwojciechowski.service.IdeControlService
 import pl.dwojciechowski.service.RemoteService
 import pl.dwojciechowski.ui.component.CustomVirtualFileListCellRenderer
+import pl.dwojciechowski.ui.component.EtchedTitleBorder
 import pl.dwojciechowski.ui.component.RunConfigurationComboBox
 import java.awt.event.ActionEvent
 import javax.swing.*
-import javax.swing.border.EtchedBorder
-import javax.swing.border.TitledBorder
 
 class LoadFromFileDialog(
     private val project: Project,
@@ -90,9 +89,9 @@ class LoadFromFileDialog(
                 config.lffFolder = folderPathTextFile.text
             }
         }
-        wtHomePanel.border = TitledBorder(EtchedBorder(1),getMessage("ui.dialog.lff.wthome"))
-        targetContainerPanel.border = TitledBorder(EtchedBorder(1),getMessage("ui.dialog.lff.container"))
-        preRunConfigPanel.border = TitledBorder(EtchedBorder(1),getMessage("ui.dialog.lff.runconf.name"))
+        wtHomePanel.border = EtchedTitleBorder(getMessage("ui.dialog.lff.wthome"))
+        targetContainerPanel.border = EtchedTitleBorder(getMessage("ui.dialog.lff.container"))
+        preRunConfigPanel.border = EtchedTitleBorder(getMessage("ui.dialog.lff.runconf.name"))
 
     }
 
