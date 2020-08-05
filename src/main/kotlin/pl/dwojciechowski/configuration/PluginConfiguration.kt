@@ -35,6 +35,7 @@ class PluginConfiguration : PersistentStateComponent<PluginConfiguration> {
     var timeout: Int = 5000
 
     var commandsHistory = mutableListOf<String>()
+    var propertiesHistory = mutableListOf<String>()
 
     // Load From file
     var lffFolder: String = ""

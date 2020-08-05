@@ -1,14 +1,13 @@
 package pl.dwojciechowski.ui.panel
 
 import com.intellij.icons.AllIcons
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.ui.showYesNoDialog
 import com.intellij.ui.RawCommandLineEditor
 import com.intellij.util.ui.UIUtil
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import pl.dwojciechowski.configuration.PluginConfiguration
 import pl.dwojciechowski.i18n.PluginBundle.getMessage
 import pl.dwojciechowski.model.CommandBean
@@ -107,9 +106,7 @@ class CommandSubPanel(
 
     private fun CommandList.setUpCommandHistoryRMBMenu() {
         addRMBMenuEntry(getMessage("ui.cp.rmb.run")) {
-            GlobalScope.launch {
-                executeSelectedCommand()
-            }
+            executeSelectedCommand()
         }
         addRMBMenuEntry(getMessage("ui.cp.rmb.delete")) {
             listModel.remove(selectedIndex)
@@ -125,7 +122,7 @@ class CommandSubPanel(
                 project, "Command field is empty", "No command provided", Messages.getErrorIcon()
             )
         } else {
-            GlobalScope.launch {
+            ApplicationManager.getApplication().invokeLater {
                 windchillService.executeStreaming(CommandBean("", commandField.text))
             }
         }
@@ -143,7 +140,7 @@ class CommandSubPanel(
                 Messages.getErrorIcon()
             )
         } else {
-            GlobalScope.launch {
+            ApplicationManager.getApplication().invokeLater {
                 windchillService.executeStreaming(commandHistory.selectedValue.clone())
             }
         }
