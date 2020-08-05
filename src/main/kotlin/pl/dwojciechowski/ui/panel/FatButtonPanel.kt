@@ -10,6 +10,7 @@ import pl.dwojciechowski.service.RemoteService
 import pl.dwojciechowski.service.StatusService
 import pl.dwojciechowski.ui.PluginIcons
 import pl.dwojciechowski.ui.component.EtchedTitleBorder
+import pl.dwojciechowski.ui.dialog.DescribePropertyDialog
 import pl.dwojciechowski.ui.dialog.PluginSettingsDialog
 import javax.swing.JButton
 import javax.swing.JPanel
@@ -31,6 +32,7 @@ class FatButtonPanel(private val project: Project) {
     private lateinit var configurationButton: JButton
     private lateinit var wncStatusButton: JButton
     private lateinit var xconfManagerButton: JButton
+    private lateinit var describePropertyButton: JButton
 
     init {
         wncStatusButton.isContentAreaFilled = false
@@ -44,6 +46,7 @@ class FatButtonPanel(private val project: Project) {
         xconfManagerButton.addActionListener { ideControlService.withAutoOpen { windchillService.xconf() } }
         configurationButton.addActionListener { PluginSettingsDialog(project).show() }
         wncStatusButton.addActionListener { config.scanWindchill = !config.scanWindchill }
+        describePropertyButton.addActionListener { DescribePropertyDialog(project).show() }
 
         statusService.getOutputSubject().subscribe {
             wncStatusButton.set(it)
