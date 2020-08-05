@@ -6,7 +6,9 @@
 - Plugin UI is now backed by i18n resources. If you want to translate plugin UI to your language, contact me!
 ### Changed
 - Plugin Icon to a new, more suitable one.
-- Updated description to better explain a plugin 
+- Updated description to better explain a plugin.
+### Fixed
+- Rendering of form based UI. 
 
 ## [0.9.0]
 ### Added
