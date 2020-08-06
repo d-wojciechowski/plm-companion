@@ -106,8 +106,8 @@ class DescribePropertyDialog(private val project: Project) : DialogWrapper(proje
             }
         }
         addMousePressedListener {
-            selectedIndex = locationToIndex(it?.point)
             if (it?.clickCount == 2) {
+                selectedIndex = locationToIndex(it.point)
                 executeSelectedCommand()
             }
         }
@@ -121,12 +121,12 @@ class DescribePropertyDialog(private val project: Project) : DialogWrapper(proje
                 getMessage("ui.dpd.error.nonselected.title")
             )
         } else {
+            if (config.autoOpenCommandPane) {
+                ideControlService.switchToCommandTab()
+            }
             ApplicationManager.getApplication().invokeLater {
                 commandService.executeStreaming(describedPropertiesList.selectedValue.clone())
             }
-        }
-        if (config.autoOpenCommandPane) {
-            ideControlService.switchToCommandTab()
         }
     }
 
