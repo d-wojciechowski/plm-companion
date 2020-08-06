@@ -4,9 +4,11 @@
 ### Added
 - New startup activity which displays plugin info page with links and support section.
 - Plugin UI is now backed by i18n resources. If you want to translate plugin UI to your language, contact me!
+- Describe property dialog, which stores all described properties, as shortcuts.
 ### Changed
 - Plugin Icon to a new, more suitable one.
 - Updated description to better explain a plugin.
+- Presentation of executed commands/properties in bottom panel (see commands execution).
 ### Fixed
 - Rendering of form based UI. 
 
