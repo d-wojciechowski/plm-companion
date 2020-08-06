@@ -7,7 +7,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.ui.Messages
 import pl.dwojciechowski.configuration.PluginConfiguration
-import pl.dwojciechowski.i18n.PluginBundle
+import pl.dwojciechowski.i18n.PluginBundle.getMessage
 import pl.dwojciechowski.model.CommandBean
 import pl.dwojciechowski.service.IdeControlService
 import pl.dwojciechowski.service.RemoteService
@@ -40,23 +40,33 @@ class DescribePropertyDialog(private val project: Project) : DialogWrapper(proje
 
     init {
         init()
-        title = PluginBundle.getMessage("ui.dpd.title")
+        title = getMessage("ui.dpd.title")
 
-        inputPanel.border = EtchedTitleBorder(PluginBundle.getMessage("ui.dpd.props.input.panel"))
+        inputPanel.border = EtchedTitleBorder(getMessage("ui.dpd.props.input.panel"))
         describedPropertiesList.init()
         config.propertiesHistory.forEach {
             listModel.add(0, CommandBean("", it, CommandBean.Type.PROPERTY_NAME))
         }
 
-        describeButton.addActionListener {
-            val command = "xconfmanager -d ${propertyNameTextField.text}"
-            val commandBean = CommandBean("", command, CommandBean.Type.PROPERTY_NAME)
-            listModel.add(0, commandBean.clone())
-            describedPropertiesList.selectedIndex = 0
-            executeSelectedCommand()
-            saveToConfig()
-        }
+        describeButton.addActionListener { describePropertyButtonHandle() }
 
+    }
+
+    private fun describePropertyButtonHandle() {
+        if (propertyNameTextField.text.isNullOrEmpty()) {
+            Messages.showErrorDialog(
+                project,
+                getMessage("ui.dpd.error.empty.message"),
+                getMessage("ui.dpd.error.empty.title")
+            )
+            return
+        }
+        val command = "xconfmanager -d ${propertyNameTextField.text}"
+        val commandBean = CommandBean("", command, CommandBean.Type.PROPERTY_NAME)
+        listModel.add(0, commandBean.clone())
+        describedPropertiesList.selectedIndex = 0
+        executeSelectedCommand()
+        saveToConfig()
     }
 
     override fun createCenterPanel() = content
@@ -65,15 +75,10 @@ class DescribePropertyDialog(private val project: Project) : DialogWrapper(proje
     override fun getOKAction(): Action =
         object : AbstractAction("OK") {
             override fun actionPerformed(e: ActionEvent?) {
+                executeSelectedCommand()
                 if (describedPropertiesList.selectedIndex == -1) {
-                    Messages.showErrorDialog(
-                        project,
-                        PluginBundle.getMessage("ui.dialog.lfl.emptyfile.message"), //TODO
-                        PluginBundle.getMessage("ui.dialog.lfl.emptyfile.title")//TODO
-                    )
                     return
                 }
-                executeSelectedCommand()
                 dispose()
                 close(OK_EXIT_CODE)
             }
@@ -87,9 +92,9 @@ class DescribePropertyDialog(private val project: Project) : DialogWrapper(proje
     }
 
     private fun CommandList.init() {
-        addRMBMenuEntry(PluginBundle.getMessage("ui.cp.rmb.run")) { executeSelectedCommand() }
-        addRMBMenuEntry(PluginBundle.getMessage("ui.cp.rmb.edit"), action = EditListAction(this) { saveToConfig() })
-        addRMBMenuEntry(PluginBundle.getMessage("ui.clp.rmb.delete")) {
+        addRMBMenuEntry(getMessage("ui.cp.rmb.run")) { executeSelectedCommand() }
+        addRMBMenuEntry(getMessage("ui.cp.rmb.edit"), action = EditListAction(this) { saveToConfig() })
+        addRMBMenuEntry(getMessage("ui.clp.rmb.delete")) {
             listModel.remove(selectedIndex)
             saveToConfig()
         }
@@ -110,11 +115,10 @@ class DescribePropertyDialog(private val project: Project) : DialogWrapper(proje
 
     private fun executeSelectedCommand() {
         if (describedPropertiesList.selectedIndex == -1) {
-            Messages.showMessageDialog(
+            Messages.showErrorDialog(
                 project,
-                PluginBundle.getMessage("ui.cp.error.empty_command.message"),//TODO
-                PluginBundle.getMessage("ui.cp.error.empty_command.title"),//TODO
-                Messages.getErrorIcon()
+                getMessage("ui.dpd.error.nonselected.message"),
+                getMessage("ui.dpd.error.nonselected.title")
             )
         } else {
             ApplicationManager.getApplication().invokeLater {
