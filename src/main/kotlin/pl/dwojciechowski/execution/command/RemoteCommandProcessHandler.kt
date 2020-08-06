@@ -18,7 +18,7 @@ class RemoteCommandProcessHandler(
     private val ideControlService = IdeControlService.getInstance(environment.project)
     private val runProfile = environment.runProfile as RemoteCommandRunConfig
 
-    private val command = CommandBean(runProfile.settings.command, runProfile.settings.command, LocalTime.now())
+    private val command = CommandBean(runProfile.settings.command, runProfile.settings.command, executionTime = LocalTime.now())
 
     override fun destroyProcess() {
         super.destroyProcess()

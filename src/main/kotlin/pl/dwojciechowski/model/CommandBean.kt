@@ -1,5 +1,6 @@
 package pl.dwojciechowski.model
 
+import com.intellij.icons.AllIcons
 import com.intellij.openapi.project.ProjectManager
 import io.reactivex.rxjava3.subjects.PublishSubject
 import io.reactivex.rxjava3.subjects.ReplaySubject
@@ -8,10 +9,12 @@ import pl.dwojciechowski.ui.PLMPluginNotification
 import reactor.core.Disposable
 import reactor.core.Disposables
 import java.time.LocalTime
+import javax.swing.Icon
 
 data class CommandBean(
     var name: String,
     var command: String,
+    var type: Type = Type.COMMAND,
     var executionTime: LocalTime = LocalTime.now(),
     var response: ReplaySubject<String> = ReplaySubject.create(),
     var actualSubscription: Disposable = Disposables.never()
@@ -44,6 +47,10 @@ data class CommandBean(
     }
 
     public override fun clone() =
-        CommandBean(name, command, LocalTime.now(), ReplaySubject.create(), Disposables.never())
+        CommandBean(name, command, type, LocalTime.now(), ReplaySubject.create(), Disposables.never())
+
+    enum class Type(val icon: Icon) {
+        COMMAND(AllIcons.Xml.Css_class), PROPERTY_NAME(AllIcons.Nodes.Property)
+    }
 
 }
