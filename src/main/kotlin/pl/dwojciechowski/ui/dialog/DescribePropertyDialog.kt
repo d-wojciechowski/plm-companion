@@ -6,6 +6,7 @@ import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.ui.Messages
+import com.intellij.openapi.ui.showYesNoDialog
 import pl.dwojciechowski.configuration.PluginConfiguration
 import pl.dwojciechowski.i18n.PluginBundle.getMessage
 import pl.dwojciechowski.model.CommandBean
@@ -61,12 +62,20 @@ class DescribePropertyDialog(private val project: Project) : DialogWrapper(proje
             )
             return
         }
-        val command = "xconfmanager -d ${propertyNameTextField.text}"
-        val commandBean = CommandBean("", command, CommandBean.Type.PROPERTY_NAME)
-        listModel.add(0, commandBean.clone())
-        describedPropertiesList.selectedIndex = 0
-        executeSelectedCommand()
-        saveToConfig()
+        val describeProp = showYesNoDialog(
+            getMessage("ui.dpd.error.duplicate.title"),
+            getMessage("ui.dpd.error.duplicate.message"),
+            project,
+            icon = Messages.getQuestionIcon()
+        )
+        if(describeProp){
+            val command = "xconfmanager -d ${propertyNameTextField.text}"
+            val commandBean = CommandBean("", command, CommandBean.Type.PROPERTY_NAME)
+            listModel.add(0, commandBean.clone())
+            describedPropertiesList.selectedIndex = 0
+            executeSelectedCommand()
+            saveToConfig()
+        }
     }
 
     override fun createCenterPanel() = content
