@@ -1,7 +1,14 @@
-<!-- [![pipeline status](https://gitlab.com/wojciechowskid/wncplugin/badges/master/pipeline.svg)](https://gitlab.com/wojciechowskid/wncplugin/commits/master) -->
-# PLM Companion Plugin
+![plugin-version](https://img.shields.io/jetbrains/plugin/v/13154-plm-companion)
+![idea-version](https://img.shields.io/badge/IntelliJ%20Version-2020.*-green)
+![pipeline status](https://github.com/d-wojciechowski/plm-companion/workflows/Plugin%20Verification/badge.svg)
+![issues-open](https://img.shields.io/github/issues/d-wojciechowski/plm-companion)
+![license](https://img.shields.io/github/license/d-wojciechowski/plm-companion)
+<h1 align="center" >
+<img width="50" height="50"  src="https://dwojciechowski.com/explore/plmCompanion/images/pluginIcon.svg"/> 
+    PLM Companion
+</h2>
 
-Plugin for Intellij Idea to interact with PLM System.
+
 
 ## Getting Started
 
