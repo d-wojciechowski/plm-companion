@@ -31,6 +31,7 @@ repositories {
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
 
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
     implementation("com.github.kittinunf.fuel", "fuel", fuelVersion)
     implementation("io.reactivex.rxjava3:rxjava:$rxJavaVersion")
 

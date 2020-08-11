@@ -1,5 +1,6 @@
 package pl.dwojciechowski.ui.dialog
 
+import com.intellij.icons.AllIcons
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.ServiceManager
@@ -28,7 +29,8 @@ class DescribePropertyDialog(private val project: Project) : DialogWrapper(proje
     lateinit var content: JPanel
     private lateinit var inputPanel: JPanel
 
-    private lateinit var describeButton: JButton
+    private lateinit var addButton: JButton
+    private lateinit var executeCommandFromInputButton: JButton
     private lateinit var propertyNameTextField: JTextField
     private lateinit var describedPropertiesList: CommandList
 
@@ -49,33 +51,54 @@ class DescribePropertyDialog(private val project: Project) : DialogWrapper(proje
             listModel.add(0, CommandBean("", it, CommandBean.Type.PROPERTY_NAME))
         }
 
-        describeButton.addActionListener { describePropertyButtonHandle() }
+        addButton.icon = AllIcons.General.Add
+        addButton.addActionListener {
+            if (isInputNotEmpty() && isInputCommandUnique()) {
+                saveInputCommand()
+            }
+        }
+
+        executeCommandFromInputButton.icon = AllIcons.RunConfigurations.TestState.Run
+        executeCommandFromInputButton.addActionListener {
+            if (isInputNotEmpty()) {
+                executeSelectedCommand()
+            }
+        }
 
     }
 
-    private fun describePropertyButtonHandle() {
+    private fun isInputCommandUnique(): Boolean {
+        val inputCommand = getInputCommand()
+        if (listModel.elements().toList().find { it.command == inputCommand } != null) {
+            return showYesNoDialog(
+                getMessage("ui.dpd.error.duplicate.title"),
+                getMessage("ui.dpd.error.duplicate.message"),
+                project,
+                icon = Messages.getQuestionIcon()
+            )
+        }
+        return true
+    }
+
+    private fun getInputCommand() = "xconfmanager -d ${propertyNameTextField.text}"
+
+    private fun isInputNotEmpty(): Boolean {
         if (propertyNameTextField.text.isNullOrEmpty()) {
             Messages.showErrorDialog(
                 project,
                 getMessage("ui.dpd.error.empty.message"),
                 getMessage("ui.dpd.error.empty.title")
             )
-            return
+            return false
         }
-        val describeProp = showYesNoDialog(
-            getMessage("ui.dpd.error.duplicate.title"),
-            getMessage("ui.dpd.error.duplicate.message"),
-            project,
-            icon = Messages.getQuestionIcon()
-        )
-        if(describeProp){
-            val command = "xconfmanager -d ${propertyNameTextField.text}"
-            val commandBean = CommandBean("", command, CommandBean.Type.PROPERTY_NAME)
-            listModel.add(0, commandBean.clone())
-            describedPropertiesList.selectedIndex = 0
-            executeSelectedCommand()
-            saveToConfig()
-        }
+        return true
+    }
+
+    private fun saveInputCommand() {
+        val commandBean = CommandBean("", getInputCommand(), CommandBean.Type.PROPERTY_NAME)
+        listModel.add(0, commandBean.clone())
+        describedPropertiesList.selectedIndex = 0
+        saveToConfig()
     }
 
     override fun createCenterPanel() = content
@@ -130,11 +153,10 @@ class DescribePropertyDialog(private val project: Project) : DialogWrapper(proje
                 getMessage("ui.dpd.error.nonselected.title")
             )
         } else {
-            if (config.autoOpenCommandPane) {
-                ideControlService.switchToCommandTab()
-            }
             ApplicationManager.getApplication().invokeLater {
-                commandService.executeStreaming(describedPropertiesList.selectedValue.clone())
+                ideControlService.withAutoOpen {
+                    commandService.executeStreaming(describedPropertiesList.selectedValue.clone())
+                }
             }
         }
     }
