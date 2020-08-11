@@ -63,7 +63,7 @@ Nice to have:
 Go to plugin section in Intellij Idea and install it from disk (point to artifact which came from build) or from JetBrains plugin marketplace: [Link](https://plugins.jetbrains.com/plugin/13154-plm-companion/versions)
 ## Authors
 
-* **Dominik Wojciechowski** - [wojciechowskid](https://gitlab.com/wojciechowskid)
+* **Dominik Wojciechowski** - [d-wojciechowski](https://github.com/d-wojciechowski)
 * **Michał Celniak** - [Michal1993r](https://gitlab.com/Michal1993r)
 
 ## License
