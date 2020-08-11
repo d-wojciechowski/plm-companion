@@ -4,7 +4,7 @@
 ![issues-open](https://img.shields.io/github/issues/d-wojciechowski/plm-companion)
 ![license](https://img.shields.io/github/license/d-wojciechowski/plm-companion)
 <h1 align="center" >
-<img width="50" height="50"  src="https://dwojciechowski.com/explore/plmCompanion/images/pluginIcon.svg"/> 
+<img width="40" height="40"  src="https://dwojciechowski.com/explore/plmCompanion/images/pluginIcon.svg"/> 
     PLM Companion
 </h2>
 
