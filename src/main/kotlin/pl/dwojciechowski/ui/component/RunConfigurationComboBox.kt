@@ -25,7 +25,7 @@ class RunConfigurationComboBox(
     init {
         renderer = RunConfigurationCBRenderer()
 
-        if (withEmptyElement) 
+        if (withEmptyElement) {
             cbModel.addElement(
                 RunConfigurationRepresentation(
                     "",
