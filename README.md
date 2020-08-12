@@ -33,9 +33,9 @@ platforms:
 * Ko-fi: [wojciechowskid](https://ko-fi.com/wojciechowskid)
 * PayPal: [dominikwoj](https://paypal.me/dominikwoj)
 
-### Installation 
+###Installation 
 
-Go to plugin section in Intellij Idea and install it from disk (point to artifact which came from build) or from JetBrains plugin marketplace: [Link](https://plugins.jetbrains.com/plugin/13154-plm-companion/versions)
+Go to plugin section in Intellij Idea and install it from disk (point to artifact which came from build) or from JetBrains plugin marketplace: [Link](https://plugins.jetbrains.com/plugin/13154-plm-companion/versions), which is also availabie in IDE plugin marketplace.
 
 ## Authors
 
