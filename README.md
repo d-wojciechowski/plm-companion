@@ -30,8 +30,8 @@ star on [GitHub repository](https://github.com/d-wojciechowski/plm-companion").
 And if you want to found me a coffee which will help me with future work, you can do this with the following
 platforms:
 
-* Ko-fi: [wojciechowskid](https://ko-fi.com/wojciechowskid")
-* PayPal: [dominikwoj]("https://paypal.me/dominikwoj")
+* Ko-fi: [wojciechowskid](https://ko-fi.com/wojciechowskid)
+* PayPal: [dominikwoj](https://paypal.me/dominikwoj)
 
 ## Getting Started
 
