@@ -21,7 +21,7 @@
           <grid row="0" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <text value="Provide custom log file location"/>
+          <text resource-bundle="i18n/PluginBundle" key="ui.dialog.lfl.prompt"/>
         </properties>
       </component>
       <component id="fc28d" class="javax.swing.JButton" binding="remotePickerButton">

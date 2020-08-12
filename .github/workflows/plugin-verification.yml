@@ -22,13 +22,13 @@ jobs:
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
-      
+
     - name: submodules-init
       uses: snickerbockers/submodules-init@v4
-      
+
     - name: Build with Gradle
       run: ./gradlew build
-  
+
     - name: Verify Plugin on IntelliJ Platforms
       if: github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/master'
       id: verify

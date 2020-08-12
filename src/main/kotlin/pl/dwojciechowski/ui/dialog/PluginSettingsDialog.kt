@@ -7,8 +7,10 @@ import com.intellij.openapi.ui.ComboBox
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.util.containers.toArray
 import pl.dwojciechowski.configuration.PluginConfiguration
+import pl.dwojciechowski.i18n.PluginBundle.getMessage
 import pl.dwojciechowski.model.ActionPresentationOption
 import pl.dwojciechowski.ui.PLMPluginNotification
+import pl.dwojciechowski.ui.component.EtchedTitleBorder
 import pl.dwojciechowski.ui.component.RemotePickerButton
 import java.awt.event.ActionEvent
 import java.awt.event.KeyAdapter
@@ -20,6 +22,10 @@ class PluginSettingsDialog(private val project: Project) : DialogWrapper(project
     private val config: PluginConfiguration = ServiceManager.getService(project, PluginConfiguration::class.java)
 
     lateinit var content: JPanel
+
+    private lateinit var systemUrlPanel: JPanel
+    private lateinit var remoteSystemSettingsPanel: JPanel
+    private lateinit var pluginSettingsPanel: JPanel
 
     // URL Settings
     private lateinit var protocolCB: JComboBox<String>
@@ -61,7 +67,7 @@ class PluginSettingsDialog(private val project: Project) : DialogWrapper(project
     }
 
     init {
-        title = "PLM Companion Configuration"
+        title = getMessage("ui.config.title")
         //spinner init
         refreshRateSpinner.model = SpinnerNumberModel(1000, 500, Int.MAX_VALUE, 100)
         refreshRateSpinner.editor = JSpinner.NumberEditor(refreshRateSpinner, "# ms")
@@ -83,6 +89,10 @@ class PluginSettingsDialog(private val project: Project) : DialogWrapper(project
 
         initFromConfig()
         init()
+
+        systemUrlPanel.border = EtchedTitleBorder(getMessage("ui.config.url.system"))
+        remoteSystemSettingsPanel.border = EtchedTitleBorder(getMessage("ui.config.rss.title"))
+        pluginSettingsPanel.border = EtchedTitleBorder(getMessage("ui.config.pluginsetting"))
     }
 
     private fun JTextField.addOnKeyEvent(method: () -> Unit) {

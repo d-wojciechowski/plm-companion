@@ -7,6 +7,7 @@ import com.intellij.openapi.options.SettingsEditor
 import com.intellij.openapi.project.Project
 import com.intellij.util.xmlb.XmlSerializer
 import org.jdom.Element
+import pl.dwojciechowski.i18n.PluginBundle.getMessage
 
 class RemoteCommandRunConfig(
     project: Project,
@@ -32,7 +33,7 @@ class RemoteCommandRunConfig(
 
     override fun checkConfiguration() {
         if (settings.command.isEmpty()) {
-            throw RuntimeConfigurationWarning("Command may not be empty, provide non empty command")
+            throw RuntimeConfigurationWarning(getMessage("runconfig.error.empty"))
         }
     }
 

@@ -10,6 +10,8 @@ import pl.dwojciechowski.model.ActionPresentationOption
 @State(name = "PLMCompanionConfiguration", storages = [Storage(value = StoragePathMacros.WORKSPACE_FILE)])
 class PluginConfiguration : PersistentStateComponent<PluginConfiguration> {
 
+    var installedVersion : String = ""
+
     var login: String = ""
     var passwd: String = ""
 
@@ -33,6 +35,7 @@ class PluginConfiguration : PersistentStateComponent<PluginConfiguration> {
     var timeout: Int = 5000
 
     var commandsHistory = mutableListOf<String>()
+    var propertiesHistory = mutableListOf<String>()
 
     // Load From file
     var lffFolder: String = ""

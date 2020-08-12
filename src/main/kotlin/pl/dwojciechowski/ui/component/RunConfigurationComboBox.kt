@@ -7,6 +7,7 @@ import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
 import com.intellij.ui.DeferredIcon
 import pl.dwojciechowski.configuration.PluginConfiguration
+import pl.dwojciechowski.i18n.PluginBundle.getMessage
 import java.awt.Component
 import javax.swing.DefaultComboBoxModel
 import javax.swing.DefaultListCellRenderer
@@ -24,8 +25,14 @@ class RunConfigurationComboBox(
     init {
         renderer = RunConfigurationCBRenderer()
 
-        if (withEmptyElement) {
-            cbModel.addElement(RunConfigurationRepresentation("", "Do Nothing", AllIcons.Debugger.Db_invalid_breakpoint))
+        if (withEmptyElement) 
+            cbModel.addElement(
+                RunConfigurationRepresentation(
+                    "",
+                    getMessage("runconfig.donothing.displayname"),
+                    AllIcons.Debugger.Db_invalid_breakpoint
+                )
+            )
         }
 
         val allSettings = RunManager.getInstance(project).allSettings

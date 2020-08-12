@@ -1,6 +1,7 @@
 package pl.dwojciechowski.action
 
 import com.intellij.openapi.actionSystem.AnActionEvent
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.openapi.project.Project
@@ -25,8 +26,10 @@ abstract class RemoteCommandAction : DumbAwareAction() {
 
     override fun actionPerformed(e: AnActionEvent) {
         e.project?.let {
-            ServiceManager.getService(it, IdeControlService::class.java).withAutoOpen {
-                action(it)
+            ApplicationManager.getApplication().invokeLater {
+                ServiceManager.getService(it, IdeControlService::class.java).withAutoOpen {
+                    action(it)
+                }
             }
         }
     }

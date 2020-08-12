@@ -7,6 +7,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.SimpleToolWindowPanel
 import io.reactivex.rxjava3.disposables.Disposable
 import pl.dwojciechowski.configuration.PluginConfiguration
+import pl.dwojciechowski.i18n.PluginBundle.getMessage
 import pl.dwojciechowski.model.CommandBean
 import pl.dwojciechowski.model.ExecutionStatus
 import pl.dwojciechowski.service.RemoteService
@@ -90,14 +91,14 @@ class CommandLogPanel(project: Project) : SimpleToolWindowPanel(false, true), Ex
     }
 
     private fun CommandList.init() {
-        addRMBMenuEntry("Rerun") {
+        addRMBMenuEntry(getMessage("ui.clp.rmb.rerun")) {
             rerunSelectedCommand()
         }
-        addRMBMenuEntry("Delete") {
+        addRMBMenuEntry(getMessage("ui.clp.rmb.delete")) {
             listModel.remove(selectedIndex)
             removeSubscription()
         }
-        addRMBMenuEntry("Stop") {
+        addRMBMenuEntry(getMessage("ui.clp.rmb.stop")) {
             listModel.selected()?.status = ExecutionStatus.STOPPED
             removeSubscription()
         }
