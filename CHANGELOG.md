@@ -12,6 +12,10 @@
 ### Fixed
 - Rendering of form based UI. 
 
+## [0.9.1]
+### Added
+- Compatibility with 2020.2
+
 ## [0.9.0]
 ### Added
 - Wrapping enable/disable option on command pane
