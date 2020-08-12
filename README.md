@@ -21,7 +21,7 @@ Main features:
 * Custom command execution
 * Custom run configurations
 
-Full functionality overview you may find in our [WIKI section](https://github.com/d-wojciechowski/plm-companion/wiki").If you are interested in changelog you can find it in plugins, on [GitHub repository](https://github.com/d-wojciechowski/plm-companion/releases) or in [Intellij Marketplace](https://plugins.jetbrains.com/plugin/13154-plm-companion).
+Full functionality overview you may find in our [WIKI section](https://github.com/d-wojciechowski/plm-companion/wiki"). If you are interested in changelog you can find it in plugins, on [GitHub repository](https://github.com/d-wojciechowski/plm-companion/releases) or in [Intellij Marketplace](https://plugins.jetbrains.com/plugin/13154-plm-companion).
 
 ## Support
 
