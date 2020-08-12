@@ -1,6 +1,6 @@
 package pl.dwojciechowski.model
 
-import pl.dwojciechowski.configuration.PluginConfiguration
+import pl.dwojciechowski.configuration.ProjectPluginConfiguration
 
 data class HttpStatusConfig(
     val url: String,
@@ -9,7 +9,7 @@ data class HttpStatusConfig(
     val timeout: Int
 ) {
 
-    constructor(config: PluginConfiguration, onlyBase: Boolean = false) : this(
+    constructor(config: ProjectPluginConfiguration, onlyBase: Boolean = false) : this(
         url = "${config.protocol}://${config.hostname}:${config.port}${if (!onlyBase) config.relativePath else ""}",
         login = config.login,
         password = config.passwd,

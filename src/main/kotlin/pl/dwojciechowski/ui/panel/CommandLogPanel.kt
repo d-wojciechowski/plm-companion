@@ -6,7 +6,7 @@ import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.SimpleToolWindowPanel
 import io.reactivex.rxjava3.disposables.Disposable
-import pl.dwojciechowski.configuration.PluginConfiguration
+import pl.dwojciechowski.configuration.ProjectPluginConfiguration
 import pl.dwojciechowski.i18n.PluginBundle.getMessage
 import pl.dwojciechowski.model.CommandBean
 import pl.dwojciechowski.model.ExecutionStatus
@@ -22,7 +22,7 @@ import javax.swing.JTextArea
 
 class CommandLogPanel(project: Project) : SimpleToolWindowPanel(false, true), ExecutionConsole {
 
-    private val config: PluginConfiguration = ServiceManager.getService(project, PluginConfiguration::class.java)
+    private val config = ServiceManager.getService(project, ProjectPluginConfiguration::class.java)
     private val commandService: RemoteService = ServiceManager.getService(project, RemoteService::class.java)
 
     lateinit var panel: JPanel

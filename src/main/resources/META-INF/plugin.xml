@@ -18,7 +18,9 @@
                     canCloseContents="true"
         />
 
-        <projectService serviceImplementation="pl.dwojciechowski.configuration.PluginConfiguration"/>
+        <applicationService serviceImplementation="pl.dwojciechowski.configuration.GlobalPluginConfiguration"/>
+
+        <projectService serviceImplementation="pl.dwojciechowski.configuration.ProjectPluginConfiguration"/>
         <projectService serviceInterface="pl.dwojciechowski.service.RemoteService"
                         serviceImplementation="pl.dwojciechowski.service.impl.RemoteServiceImpl"/>
         <projectService serviceInterface="pl.dwojciechowski.service.LogViewerService"

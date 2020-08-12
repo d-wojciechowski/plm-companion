@@ -6,7 +6,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.ComboBox
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.util.containers.toArray
-import pl.dwojciechowski.configuration.PluginConfiguration
+import pl.dwojciechowski.configuration.ProjectPluginConfiguration
 import pl.dwojciechowski.i18n.PluginBundle.getMessage
 import pl.dwojciechowski.model.ActionPresentationOption
 import pl.dwojciechowski.ui.PLMPluginNotification
@@ -19,7 +19,7 @@ import javax.swing.*
 
 class PluginSettingsDialog(private val project: Project) : DialogWrapper(project), Disposable {
 
-    private val config: PluginConfiguration = ServiceManager.getService(project, PluginConfiguration::class.java)
+    private val config = ServiceManager.getService(project, ProjectPluginConfiguration::class.java)
 
     lateinit var content: JPanel
 
@@ -53,7 +53,7 @@ class PluginSettingsDialog(private val project: Project) : DialogWrapper(project
     fun createUIComponents() {
         actionPresentationCB = ComboBox(ActionPresentationOption.ALL_OPTIONS.toArray(arrayOf()))
 
-        val conf = ServiceManager.getService(project, PluginConfiguration::class.java)
+        val conf = ServiceManager.getService(project, ProjectPluginConfiguration::class.java)
 
         remotePickerButton = RemotePickerButton(project, conf.logFileLocation) {
             logFileLocation.text = it.first()

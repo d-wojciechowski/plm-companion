@@ -8,12 +8,11 @@ import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.startup.StartupActivity
 import com.intellij.util.text.VersionComparatorUtil
-import pl.dwojciechowski.configuration.PluginConfiguration
+import pl.dwojciechowski.configuration.GlobalPluginConfiguration
+import pl.dwojciechowski.model.PluginConstants
 import pl.dwojciechowski.ui.dialog.NewVersionDialog
 
 class NewVersionStartupActivity : StartupActivity, DumbAware {
-
-    val PLUGIN_ID = "pl.dominikw.Windchill-Intellij-Plugin"
 
     /**
      * New version inspired by Key Promoter X, and some code was taken from its implementation.
@@ -21,9 +20,9 @@ class NewVersionStartupActivity : StartupActivity, DumbAware {
      */
     override fun runActivity(project: Project) {
         val application = ApplicationManager.getApplication()
-        val settings = ServiceManager.getService(project, PluginConfiguration::class.java)
+        val settings = ServiceManager.getService(GlobalPluginConfiguration::class.java)
 
-        val plugin = PluginManagerCore.getPlugins().find { it.pluginId == PluginId.getId(PLUGIN_ID) }
+        val plugin = PluginManagerCore.getPlugins().find { it.pluginId == PluginId.getId(PluginConstants.PLUGIN_ID) }
         if (plugin != null) {
             val compare = VersionComparatorUtil.compare(settings.installedVersion, plugin.version)
             if (compare < 0) {

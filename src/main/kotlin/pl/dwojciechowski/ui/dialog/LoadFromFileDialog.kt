@@ -13,7 +13,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.ui.components.JBList
-import pl.dwojciechowski.configuration.PluginConfiguration
+import pl.dwojciechowski.configuration.ProjectPluginConfiguration
 import pl.dwojciechowski.i18n.PluginBundle.getMessage
 import pl.dwojciechowski.model.CommandBean
 import pl.dwojciechowski.service.IdeControlService
@@ -29,7 +29,7 @@ class LoadFromFileDialog(
     private val vFiles: List<VirtualFile>
 ) : DialogWrapper(project), Disposable {
 
-    private val config = ServiceManager.getService(project, PluginConfiguration::class.java)
+    private val config = ServiceManager.getService(project, ProjectPluginConfiguration::class.java)
     private val commandService = ServiceManager.getService(project, RemoteService::class.java)
     private val ideControlService = ServiceManager.getService(project, IdeControlService::class.java)
 
