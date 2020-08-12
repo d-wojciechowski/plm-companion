@@ -33,34 +33,10 @@ platforms:
 * Ko-fi: [wojciechowskid](https://ko-fi.com/wojciechowskid)
 * PayPal: [dominikwoj](https://paypal.me/dominikwoj)
 
-## Getting Started
-
-With cloned repository you can do following steps to interact with code:
-````
-    ./gradlew clean build
-        or if you will be using local installation of Gradle
-    gradle clean build
-````
-
-to run it in test mode directly in IntellijIdea playground:
-````
-    ./gradlew runIde
-        or if you will be using local installation of Gradle
-    gradle runIde
-````
-
-### Prerequisites
-
-To start you need:
-* Java at least with version 8
-
-Nice to have:
-* Intellij Idea
-* SonarLint plugin
-
-### Installing
+### Installation 
 
 Go to plugin section in Intellij Idea and install it from disk (point to artifact which came from build) or from JetBrains plugin marketplace: [Link](https://plugins.jetbrains.com/plugin/13154-plm-companion/versions)
+
 ## Authors
 
 * **Dominik Wojciechowski** - [d-wojciechowski](https://github.com/d-wojciechowski)
