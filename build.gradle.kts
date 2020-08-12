@@ -3,7 +3,6 @@ import org.jetbrains.changelog.closure
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 group = "pl.dwojciechowski"
-
 version = "1.0.0"
 val protobufVersion = "3.12.4"
 val rSocketRpcVersion = "0.2.18"
