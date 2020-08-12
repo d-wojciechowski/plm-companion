@@ -6,7 +6,7 @@ import io.rsocket.RSocket
 import io.rsocket.core.RSocketConnector
 import io.rsocket.core.Resume
 import io.rsocket.transport.netty.client.TcpClientTransport
-import pl.dwojciechowski.configuration.PluginConfiguration
+import pl.dwojciechowski.configuration.ProjectPluginConfiguration
 import pl.dwojciechowski.i18n.PluginBundle.getMessage
 import pl.dwojciechowski.service.ConnectorService
 import pl.dwojciechowski.ui.PLMPluginNotification
@@ -20,7 +20,7 @@ import javax.swing.Icon
 
 class ConnectorServiceImpl(private val project: Project) : ConnectorService {
 
-    private val config = ServiceManager.getService(project, PluginConfiguration::class.java)
+    private val config = ServiceManager.getService(project, ProjectPluginConfiguration::class.java)
     private lateinit var rSocket: RSocket
 
     override fun getConnection(): RSocket {

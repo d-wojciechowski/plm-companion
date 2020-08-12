@@ -2,7 +2,7 @@ package pl.dwojciechowski.ui.panel
 
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
-import pl.dwojciechowski.configuration.PluginConfiguration
+import pl.dwojciechowski.configuration.ProjectPluginConfiguration
 import pl.dwojciechowski.i18n.PluginBundle.getMessage
 import pl.dwojciechowski.model.ServerStatus
 import pl.dwojciechowski.service.IdeControlService
@@ -17,7 +17,7 @@ import javax.swing.JPanel
 
 class FatButtonPanel(private val project: Project) {
 
-    private val config = ServiceManager.getService(project, PluginConfiguration::class.java)
+    private val config = ServiceManager.getService(project, ProjectPluginConfiguration::class.java)
     private val windchillService = ServiceManager.getService(project, RemoteService::class.java)
     private val statusService = ServiceManager.getService(project, StatusService::class.java)
     private val ideControlService = ServiceManager.getService(project, IdeControlService::class.java)

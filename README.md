@@ -4,9 +4,9 @@
 ![issues-open](https://img.shields.io/github/issues/d-wojciechowski/plm-companion)
 ![license](https://img.shields.io/github/license/d-wojciechowski/plm-companion)
 <h1 align="center" >
-<img width="50" height="50"  src="https://dwojciechowski.com/explore/plmCompanion/images/pluginIcon.svg"/> 
+<img alt="plugin logo" width="50" height="50"  src="https://dwojciechowski.com/explore/plmCompanion/images/pluginIcon.svg"/> 
     PLM Companion
-</h2>
+</h1>
 
 PLM Companion is an extension that allows developers to speed up the process of developing customizations to
 large systems remotely. The plugin may be used wherever the execution of custom commands or monitoring site

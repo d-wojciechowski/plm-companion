@@ -7,7 +7,7 @@ import com.intellij.openapi.ui.Messages
 import io.reactivex.rxjava3.subjects.PublishSubject
 import io.reactivex.rxjava3.subjects.Subject
 import io.rsocket.RSocket
-import pl.dwojciechowski.configuration.PluginConfiguration
+import pl.dwojciechowski.configuration.ProjectPluginConfiguration
 import pl.dwojciechowski.i18n.PluginBundle.getMessage
 import pl.dwojciechowski.model.CommandBean
 import pl.dwojciechowski.model.ExecutionStatus
@@ -23,7 +23,7 @@ import reactor.util.retry.Retry
 
 class RemoteServiceImpl(private val project: Project) : RemoteService {
 
-    private val config = ServiceManager.getService(project, PluginConfiguration::class.java)
+    private val config = ServiceManager.getService(project, ProjectPluginConfiguration::class.java)
     private val connector = ConnectorService.getInstance(project)
     private val ideService = IdeControlService.getInstance(project)
     private val commandSubject = PublishSubject.create<CommandBean>()

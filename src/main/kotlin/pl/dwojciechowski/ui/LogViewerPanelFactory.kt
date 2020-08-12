@@ -10,7 +10,7 @@ import com.intellij.openapi.wm.ToolWindow
 import com.intellij.openapi.wm.ToolWindowFactory
 import com.intellij.openapi.wm.ex.ToolWindowEx
 import com.intellij.ui.content.ContentFactory
-import pl.dwojciechowski.configuration.PluginConfiguration
+import pl.dwojciechowski.configuration.ProjectPluginConfiguration
 import pl.dwojciechowski.i18n.PluginBundle.getMessage
 import pl.dwojciechowski.service.LogViewerService
 import pl.dwojciechowski.ui.dialog.LogFileLocationDialog
@@ -21,10 +21,10 @@ import pl.dwojciechowski.proto.files.LogFileLocation.Source as SourceEnum
 class LogViewerPanelFactory : ToolWindowFactory, DumbAware {
 
     private lateinit var logService: LogViewerService
-    private lateinit var config: PluginConfiguration
+    private lateinit var config: ProjectPluginConfiguration
 
     override fun createToolWindowContent(project: Project, toolWindow: ToolWindow) {
-        config = ServiceManager.getService(project, PluginConfiguration::class.java)
+        config = ServiceManager.getService(project, ProjectPluginConfiguration::class.java)
         logService = ServiceManager.getService(project, LogViewerService::class.java)
 
         val contentFactory = ContentFactory.SERVICE.getInstance()

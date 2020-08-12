@@ -7,7 +7,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.ui.SimpleToolWindowPanel
 import com.intellij.ui.content.Content
-import pl.dwojciechowski.configuration.PluginConfiguration
+import pl.dwojciechowski.configuration.ProjectPluginConfiguration
 import pl.dwojciechowski.proto.files.LogLine
 import pl.dwojciechowski.service.LogViewerService
 import pl.dwojciechowski.ui.component.button.AutoScrollButton
@@ -25,7 +25,7 @@ class LogViewerPanel(
     private var customLogFileLocation: String = ""
 ) : SimpleToolWindowPanel(false, true) {
 
-    private val config: PluginConfiguration = ServiceManager.getService(project, PluginConfiguration::class.java)
+    private val config = ServiceManager.getService(project, ProjectPluginConfiguration::class.java)
     private val logService: LogViewerService = ServiceManager.getService(project, LogViewerService::class.java)
 
     var parentContent: Content? = null

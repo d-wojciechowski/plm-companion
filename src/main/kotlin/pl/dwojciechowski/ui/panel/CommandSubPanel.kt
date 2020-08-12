@@ -8,7 +8,7 @@ import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.ui.showYesNoDialog
 import com.intellij.ui.RawCommandLineEditor
 import com.intellij.util.ui.UIUtil
-import pl.dwojciechowski.configuration.PluginConfiguration
+import pl.dwojciechowski.configuration.ProjectPluginConfiguration
 import pl.dwojciechowski.i18n.PluginBundle.getMessage
 import pl.dwojciechowski.model.CommandBean
 import pl.dwojciechowski.service.IdeControlService
@@ -17,7 +17,7 @@ import pl.dwojciechowski.ui.component.CommandList
 import pl.dwojciechowski.ui.component.EtchedTitleBorder
 import pl.dwojciechowski.ui.component.action.EditListAction
 import java.awt.event.KeyEvent
-import java.util.*
+import java.util.Collections
 import javax.swing.DefaultListModel
 import javax.swing.JButton
 import javax.swing.JPanel
@@ -27,7 +27,7 @@ class CommandSubPanel(
     private val project: Project
 ) {
 
-    private val config: PluginConfiguration = ServiceManager.getService(project, PluginConfiguration::class.java)
+    private val config = ServiceManager.getService(project, ProjectPluginConfiguration::class.java)
     private val windchillService = ServiceManager.getService(project, RemoteService::class.java)
     private val ideControlService = ServiceManager.getService(project, IdeControlService::class.java)
 

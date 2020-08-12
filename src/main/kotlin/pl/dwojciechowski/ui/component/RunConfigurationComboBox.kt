@@ -6,7 +6,7 @@ import com.intellij.icons.AllIcons
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
 import com.intellij.ui.DeferredIcon
-import pl.dwojciechowski.configuration.PluginConfiguration
+import pl.dwojciechowski.configuration.ProjectPluginConfiguration
 import pl.dwojciechowski.i18n.PluginBundle.getMessage
 import java.awt.Component
 import javax.swing.DefaultComboBoxModel
@@ -19,7 +19,7 @@ class RunConfigurationComboBox(
     withEmptyElement: Boolean = true
 ) : JComboBox<RunConfigurationRepresentation>() {
 
-    private val config = ServiceManager.getService(project, PluginConfiguration::class.java)
+    private val config = ServiceManager.getService(project, ProjectPluginConfiguration::class.java)
     private val cbModel = model as DefaultComboBoxModel<RunConfigurationRepresentation>
 
     init {
