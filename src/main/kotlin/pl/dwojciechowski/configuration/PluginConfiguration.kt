@@ -10,7 +10,7 @@ import pl.dwojciechowski.model.ActionPresentationOption
 @State(name = "PLMCompanionConfiguration", storages = [Storage(value = StoragePathMacros.WORKSPACE_FILE)])
 class PluginConfiguration : PersistentStateComponent<PluginConfiguration> {
 
-    var installedVersion : String = ""
+    var installedVersion: String = "" //TODO make it global
 
     var login: String = ""
     var passwd: String = ""
