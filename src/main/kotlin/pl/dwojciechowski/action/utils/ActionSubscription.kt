@@ -4,7 +4,7 @@ import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
 import io.reactivex.rxjava3.disposables.Disposable
-import pl.dwojciechowski.configuration.PluginConfiguration
+import pl.dwojciechowski.configuration.ProjectPluginConfiguration
 import pl.dwojciechowski.model.ServerStatus
 import pl.dwojciechowski.service.StatusService
 
@@ -21,7 +21,10 @@ class ActionSubscription {
             }
             subscription = StatusService.getInstance(project!!).getOutputSubject().subscribe { status ->
                 project.onValid {
-                    method(status, ServiceManager.getService(it, PluginConfiguration::class.java).statusControlled)
+                    method(
+                        status,
+                        ServiceManager.getService(it, ProjectPluginConfiguration::class.java).statusControlled
+                    )
                 }
             }
         }

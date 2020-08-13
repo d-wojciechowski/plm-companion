@@ -1,22 +1,23 @@
 package pl.dwojciechowski.ui.panel
 
 import com.intellij.icons.AllIcons
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.ui.showYesNoDialog
 import com.intellij.ui.RawCommandLineEditor
 import com.intellij.util.ui.UIUtil
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import pl.dwojciechowski.configuration.PluginConfiguration
+import pl.dwojciechowski.configuration.ProjectPluginConfiguration
+import pl.dwojciechowski.i18n.PluginBundle.getMessage
 import pl.dwojciechowski.model.CommandBean
 import pl.dwojciechowski.service.IdeControlService
 import pl.dwojciechowski.service.RemoteService
 import pl.dwojciechowski.ui.component.CommandList
+import pl.dwojciechowski.ui.component.EtchedTitleBorder
 import pl.dwojciechowski.ui.component.action.EditListAction
 import java.awt.event.KeyEvent
-import java.util.*
+import java.util.Collections
 import javax.swing.DefaultListModel
 import javax.swing.JButton
 import javax.swing.JPanel
@@ -26,7 +27,7 @@ class CommandSubPanel(
     private val project: Project
 ) {
 
-    private val config: PluginConfiguration = ServiceManager.getService(project, PluginConfiguration::class.java)
+    private val config = ServiceManager.getService(project, ProjectPluginConfiguration::class.java)
     private val windchillService = ServiceManager.getService(project, RemoteService::class.java)
     private val ideControlService = ServiceManager.getService(project, IdeControlService::class.java)
 
@@ -73,19 +74,24 @@ class CommandSubPanel(
 
         addButton.icon = AllIcons.General.Add
         addButton.addActionListener { handleAddToListModel() }
+
+        content.border = EtchedTitleBorder(getMessage("ui.cp.panel.title"))
     }
 
     private fun handleAddToListModel() {
         if (commandField.text.isEmpty()) {
             Messages.showMessageDialog(
-                project, "Command field is empty", "No command provided", Messages.getErrorIcon()
+                project,
+                getMessage("ui.cp.error.empty_command.message"),
+                getMessage("ui.cp.error.empty_command.title"),
+                Messages.getErrorIcon()
             )
         } else if (Collections.list(listModel.elements()).stream().noneMatch { it.command == commandField.text }) {
             addToModel()
         } else {
             val confirmed = showYesNoDialog(
                 title = "",
-                message = "Given command allready exists. Add anyway?",
+                message = getMessage("ui.cp.error.existing_command.message"),
                 project = project,
                 icon = UIUtil.getQuestionIcon()
             )
@@ -99,17 +105,15 @@ class CommandSubPanel(
     }
 
     private fun CommandList.setUpCommandHistoryRMBMenu() {
-        addRMBMenuEntry("Run") {
-            GlobalScope.launch {
-                executeSelectedCommand()
-            }
+        addRMBMenuEntry(getMessage("ui.cp.rmb.run")) {
+            executeSelectedCommand()
         }
-        addRMBMenuEntry("Delete") {
+        addRMBMenuEntry(getMessage("ui.cp.rmb.delete")) {
             listModel.remove(selectedIndex)
             saveToConfig()
         }
-        addRMBMenuEntry("Edit", action = EditListAction(this) { saveToConfig() })
-        addRMBMenuEntry("Alias", action = EditListAction(this, "name") { saveToConfig() })
+        addRMBMenuEntry(getMessage("ui.cp.rmb.edit"), action = EditListAction(this) { saveToConfig() })
+        addRMBMenuEntry(getMessage("ui.cp.rmb.alias"), action = EditListAction(this, "name") { saveToConfig() })
     }
 
     private fun executeFromInput() {
@@ -118,7 +122,7 @@ class CommandSubPanel(
                 project, "Command field is empty", "No command provided", Messages.getErrorIcon()
             )
         } else {
-            GlobalScope.launch {
+            ApplicationManager.getApplication().invokeLater {
                 windchillService.executeStreaming(CommandBean("", commandField.text))
             }
         }
@@ -130,10 +134,13 @@ class CommandSubPanel(
     private fun executeSelectedCommand() {
         if (commandHistory.selectedIndex == -1) {
             Messages.showMessageDialog(
-                project, "No command selected", "Missing selection error", Messages.getErrorIcon()
+                project,
+                getMessage("ui.cp.error.empty_command.message"),
+                getMessage("ui.cp.error.empty_command.title"),
+                Messages.getErrorIcon()
             )
         } else {
-            GlobalScope.launch {
+            ApplicationManager.getApplication().invokeLater {
                 windchillService.executeStreaming(commandHistory.selectedValue.clone())
             }
         }

@@ -5,6 +5,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.ui.Messages
 import com.intellij.ui.treeStructure.Tree
+import pl.dwojciechowski.i18n.PluginBundle.getMessage
 import pl.dwojciechowski.proto.files.FileMeta
 import pl.dwojciechowski.proto.files.FileResponse
 import pl.dwojciechowski.service.FileService
@@ -43,7 +44,7 @@ class RemoteFilePickerDialog(
     init {
         init()
         setSelectionModel(singleSelect)
-        title = "Remote File Picker Dialog"
+        title = getMessage("ui.rfp.title")
 
         val dirContent = fileService.getDirContent(startPath, true)
         separator = dirContent.separator
@@ -121,8 +122,8 @@ class RemoteFilePickerDialog(
         if (previousSelection.isDirectory && fileOnlySelection) {
             Messages.showMessageDialog(
                 project,
-                "This dialog only accepts file as selected object, please select file.",
-                "Invalid object",
+                getMessage("ui.rfp.error.fileonly.message"),
+                getMessage("ui.rfp.error.fileonly.title"),
                 Messages.getErrorIcon()
             )
         } else {

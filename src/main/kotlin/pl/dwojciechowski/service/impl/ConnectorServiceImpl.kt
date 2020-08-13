@@ -6,7 +6,8 @@ import io.rsocket.RSocket
 import io.rsocket.core.RSocketConnector
 import io.rsocket.core.Resume
 import io.rsocket.transport.netty.client.TcpClientTransport
-import pl.dwojciechowski.configuration.PluginConfiguration
+import pl.dwojciechowski.configuration.ProjectPluginConfiguration
+import pl.dwojciechowski.i18n.PluginBundle.getMessage
 import pl.dwojciechowski.service.ConnectorService
 import pl.dwojciechowski.ui.PLMPluginNotification
 import pl.dwojciechowski.ui.PluginIcons
@@ -19,7 +20,7 @@ import javax.swing.Icon
 
 class ConnectorServiceImpl(private val project: Project) : ConnectorService {
 
-    private val config = ServiceManager.getService(project, PluginConfiguration::class.java)
+    private val config = ServiceManager.getService(project, ProjectPluginConfiguration::class.java)
     private lateinit var rSocket: RSocket
 
     override fun getConnection(): RSocket {
@@ -34,16 +35,16 @@ class ConnectorServiceImpl(private val project: Project) : ConnectorService {
     private fun establishConnection(): RSocket {
         val resumeStrategy = Resume()
             .sessionDuration(Duration.ofHours(1))
-            .retry(retryByConfig("Connection lost", PluginIcons.WARNING))
+            .retry(retryByConfig(getMessage("execution.connection.lost"), PluginIcons.WARNING))
         try {
             return RSocketConnector.create()
-                .reconnect(retryByConfig("Could not connect to server", PluginIcons.WARNING))
+                .reconnect(retryByConfig(getMessage("execution.connection.failed"), PluginIcons.WARNING))
                 .resume(resumeStrategy)
                 .fragment(1024)
                 .connect(TcpClientTransport.create(config.hostname, config.addonPort))
                 .block() ?: throw Exception()
         } catch (e: Exception) {
-            throw Exceptions.retryExhausted("Could not connect to server, ${maxAttempts()} retries made", null)
+            throw Exceptions.retryExhausted(getMessage("execution.connection.retries.exhousted", maxAttempts()), null)
         }
 
     }
@@ -59,7 +60,7 @@ class ConnectorServiceImpl(private val project: Project) : ConnectorService {
 
     private fun notification(message: String, it: Retry.RetrySignal, icon: Icon) {
         PLMPluginNotification.notify(
-            project, "$message, retry number ${it.totalRetriesInARow() + 1}", icon
+            project, getMessage("execution.connection.notification", message, it.totalRetriesInARow() + 1), icon
         )
     }
 

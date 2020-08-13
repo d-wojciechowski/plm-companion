@@ -7,20 +7,20 @@ import com.intellij.openapi.wm.ToolWindow
 import com.intellij.openapi.wm.ToolWindowManager
 import com.intellij.ui.content.Content
 import com.intellij.ui.content.ContentManager
-import pl.dwojciechowski.configuration.PluginConfiguration
+import pl.dwojciechowski.configuration.ProjectPluginConfiguration
 import pl.dwojciechowski.model.PluginConstants
 import pl.dwojciechowski.service.IdeControlService
 
 class IdeControlServiceImpl(private val project: Project) : IdeControlService {
 
-    private val config = ServiceManager.getService(project, PluginConfiguration::class.java)
+    private val config = ServiceManager.getService(project, ProjectPluginConfiguration::class.java)
 
     override fun initCommandTab() {
         getToolWindow(PluginConstants.LOG_TAB_ID)?.let { toolWindow ->
             ApplicationManager.getApplication().invokeLater {
                 if (!toolWindow.isVisible) {
-                    toolWindow.show {}
-                    toolWindow.hide {}
+                    toolWindow.show{}
+                    toolWindow.hide{}
                 }
             }
         }
@@ -29,7 +29,7 @@ class IdeControlServiceImpl(private val project: Project) : IdeControlService {
     override fun switchToCommandTab() {
         withCommandTab { toolWindow, contentManager, content ->
             ApplicationManager.getApplication().invokeLater {
-                toolWindow.show {}
+                toolWindow.show{}
                 contentManager.setSelectedContent(content, true, true)
             }
 

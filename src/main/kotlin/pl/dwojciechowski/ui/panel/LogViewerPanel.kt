@@ -7,9 +7,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.ui.SimpleToolWindowPanel
 import com.intellij.ui.content.Content
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import pl.dwojciechowski.configuration.PluginConfiguration
+import pl.dwojciechowski.configuration.ProjectPluginConfiguration
 import pl.dwojciechowski.proto.files.LogLine
 import pl.dwojciechowski.service.LogViewerService
 import pl.dwojciechowski.ui.component.button.AutoScrollButton
@@ -27,7 +25,7 @@ class LogViewerPanel(
     private var customLogFileLocation: String = ""
 ) : SimpleToolWindowPanel(false, true) {
 
-    private val config: PluginConfiguration = ServiceManager.getService(project, PluginConfiguration::class.java)
+    private val config = ServiceManager.getService(project, ProjectPluginConfiguration::class.java)
     private val logService: LogViewerService = ServiceManager.getService(project, LogViewerService::class.java)
 
     var parentContent: Content? = null
@@ -58,7 +56,7 @@ class LogViewerPanel(
         }
 
         startRestartButton.icon = AllIcons.RunConfigurations.TestState.Run
-        startRestartButton.addActionListener { GlobalScope.launch { startRestart() } }
+        startRestartButton.addActionListener { ApplicationManager.getApplication().invokeLater { startRestart() } }
 
         stopButton.addActionListener { stopLogViewer() }
         stopButton.icon = AllIcons.Actions.Suspend

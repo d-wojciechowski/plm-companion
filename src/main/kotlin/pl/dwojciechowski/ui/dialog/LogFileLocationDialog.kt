@@ -5,6 +5,7 @@ import com.intellij.openapi.Disposable
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.ui.Messages
+import pl.dwojciechowski.i18n.PluginBundle.getMessage
 import java.awt.event.ActionEvent
 import javax.swing.*
 
@@ -23,7 +24,7 @@ class LogFileLocationDialog(
 
     init {
         init()
-        title = "Log File Location"
+        title = getMessage("ui.dialog.lfl.title")
 
         remotePickerButton.icon = AllIcons.General.OpenDisk
         logFileLocationTF.text = initTFValue
@@ -45,8 +46,8 @@ class LogFileLocationDialog(
                 if (logFileLocationTF.text.isEmpty()) {
                     Messages.showErrorDialog(
                         project,
-                        "Please type file name or select cancel",
-                        "Value must not be empty!"
+                        getMessage("ui.dialog.lfl.emptyfile.message"),
+                        getMessage("ui.dialog.lfl.emptyfile.title")
                     )
                     return
                 }

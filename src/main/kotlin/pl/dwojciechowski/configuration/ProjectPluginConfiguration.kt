@@ -8,7 +8,7 @@ import com.intellij.util.xmlb.XmlSerializerUtil
 import pl.dwojciechowski.model.ActionPresentationOption
 
 @State(name = "PLMCompanionConfiguration", storages = [Storage(value = StoragePathMacros.WORKSPACE_FILE)])
-class PluginConfiguration : PersistentStateComponent<PluginConfiguration> {
+class ProjectPluginConfiguration : PersistentStateComponent<ProjectPluginConfiguration> {
 
     var login: String = ""
     var passwd: String = ""
@@ -33,6 +33,7 @@ class PluginConfiguration : PersistentStateComponent<PluginConfiguration> {
     var timeout: Int = 5000
 
     var commandsHistory = mutableListOf<String>()
+    var propertiesHistory = mutableListOf<String>()
 
     // Load From file
     var lffFolder: String = ""
@@ -43,7 +44,7 @@ class PluginConfiguration : PersistentStateComponent<PluginConfiguration> {
 
     override fun getState() = this
 
-    override fun loadState(config: PluginConfiguration) {
+    override fun loadState(config: ProjectPluginConfiguration) {
         XmlSerializerUtil.copyBean(config, this)
     }
 

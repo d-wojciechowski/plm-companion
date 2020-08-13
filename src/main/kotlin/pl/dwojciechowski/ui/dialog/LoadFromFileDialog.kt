@@ -13,11 +13,13 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.ui.components.JBList
-import pl.dwojciechowski.configuration.PluginConfiguration
+import pl.dwojciechowski.configuration.ProjectPluginConfiguration
+import pl.dwojciechowski.i18n.PluginBundle.getMessage
 import pl.dwojciechowski.model.CommandBean
 import pl.dwojciechowski.service.IdeControlService
 import pl.dwojciechowski.service.RemoteService
 import pl.dwojciechowski.ui.component.CustomVirtualFileListCellRenderer
+import pl.dwojciechowski.ui.component.EtchedTitleBorder
 import pl.dwojciechowski.ui.component.RunConfigurationComboBox
 import java.awt.event.ActionEvent
 import javax.swing.*
@@ -27,11 +29,15 @@ class LoadFromFileDialog(
     private val vFiles: List<VirtualFile>
 ) : DialogWrapper(project), Disposable {
 
-    private val config = ServiceManager.getService(project, PluginConfiguration::class.java)
+    private val config = ServiceManager.getService(project, ProjectPluginConfiguration::class.java)
     private val commandService = ServiceManager.getService(project, RemoteService::class.java)
     private val ideControlService = ServiceManager.getService(project, IdeControlService::class.java)
 
     lateinit var content: JPanel
+
+    private lateinit var wtHomePanel: JPanel
+    private lateinit var targetContainerPanel: JPanel
+    private lateinit var preRunConfigPanel: JPanel
 
     private lateinit var fileList: JBList<VirtualFile>
     private lateinit var listModel: DefaultListModel<VirtualFile>
@@ -69,7 +75,7 @@ class LoadFromFileDialog(
         setUpRadioButtons()
 
         init()
-        title = "Load From File Dialog"
+        title = getMessage("ui.dialog.lff.title")
 
         folderPathTextFile.text = config.lffFolder
         containerTextField.text = config.lffContName
@@ -83,6 +89,9 @@ class LoadFromFileDialog(
                 config.lffFolder = folderPathTextFile.text
             }
         }
+        wtHomePanel.border = EtchedTitleBorder(getMessage("ui.dialog.lff.wthome"))
+        targetContainerPanel.border = EtchedTitleBorder(getMessage("ui.dialog.lff.container"))
+        preRunConfigPanel.border = EtchedTitleBorder(getMessage("ui.dialog.lff.runconf.name"))
 
     }
 
@@ -142,7 +151,7 @@ class LoadFromFileDialog(
         val runConfig = runConfigurationComboBox.getSelectedConfiguration().value
         if (runConfig == null) {
             ideControlService.withAutoOpen {
-                commandService.executeStreaming(CommandBean("Load from file", finalCommand))
+                commandService.executeStreaming(CommandBean(getMessage("ui.dialog.lff.command.name"), finalCommand))
             }
         } else {
             val executor = DefaultRunExecutor.getRunExecutorInstance()
@@ -162,7 +171,7 @@ class LoadFromFileDialog(
                 override fun processTerminated(event: ProcessEvent) {
                     super.processTerminated(event)
                     ideControlService.withAutoOpen {
-                        commandService.executeStreaming(CommandBean("Load from file", finalCommand))
+                        commandService.executeStreaming(CommandBean(getMessage("ui.dialog.lff.command.name"), finalCommand))
                     }
                 }
             })

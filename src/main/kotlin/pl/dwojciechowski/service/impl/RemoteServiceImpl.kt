@@ -7,7 +7,8 @@ import com.intellij.openapi.ui.Messages
 import io.reactivex.rxjava3.subjects.PublishSubject
 import io.reactivex.rxjava3.subjects.Subject
 import io.rsocket.RSocket
-import pl.dwojciechowski.configuration.PluginConfiguration
+import pl.dwojciechowski.configuration.ProjectPluginConfiguration
+import pl.dwojciechowski.i18n.PluginBundle.getMessage
 import pl.dwojciechowski.model.CommandBean
 import pl.dwojciechowski.model.ExecutionStatus
 import pl.dwojciechowski.proto.commands.Command
@@ -22,7 +23,7 @@ import reactor.util.retry.Retry
 
 class RemoteServiceImpl(private val project: Project) : RemoteService {
 
-    private val config = ServiceManager.getService(project, PluginConfiguration::class.java)
+    private val config = ServiceManager.getService(project, ProjectPluginConfiguration::class.java)
     private val connector = ConnectorService.getInstance(project)
     private val ideService = IdeControlService.getInstance(project)
     private val commandSubject = PublishSubject.create<CommandBean>()
@@ -35,19 +36,22 @@ class RemoteServiceImpl(private val project: Project) : RemoteService {
     }
 
     override fun restartWnc(doFinally: () -> Unit) {
-        executeStreaming(CommandBean("Windchill Restart", "windchill stop && windchill start"), doFinally)
+        executeStreaming(
+            CommandBean(getMessage("commands.windchill.restart"), "windchill stop && windchill start"),
+            doFinally
+        )
     }
 
     override fun stopWnc(doFinally: () -> Unit) {
-        return executeStreaming(CommandBean("Windchill Stop", "windchill stop"), doFinally)
+        return executeStreaming(CommandBean(getMessage("commands.windchill.stop"), "windchill stop"), doFinally)
     }
 
     override fun startWnc(doFinally: () -> Unit) {
-        return executeStreaming(CommandBean("Windchill Start", "windchill start"), doFinally)
+        return executeStreaming(CommandBean(getMessage("commands.windchill.start"), "windchill start"), doFinally)
     }
 
     override fun xconf(doFinally: () -> Unit) {
-        return executeStreaming(CommandBean("Xconfmanager Reload", "xconfmanager -p"), doFinally)
+        return executeStreaming(CommandBean(getMessage("commands.windchill.xconfReload"), "xconfmanager -p"), doFinally)
     }
 
     override fun executeStreaming(commandBean: CommandBean, doFinally: () -> Unit) {
@@ -58,19 +62,19 @@ class RemoteServiceImpl(private val project: Project) : RemoteService {
 
             val command = commandBean.getCommand()
             commandBean.status = ExecutionStatus.RUNNING
-            commandBean.response.onNext("Started execution of $commandBean")
+            commandBean.response.onNext(getMessage("execution.process.start", commandBean))
 
             val rSocket = connector.getConnection()
             commandBean.actualSubscription = rSocket.executeStreamingCall(command, commandBean, doFinally)
             commandSubject.onNext(commandBean)
         } catch (e: Exception) {
             val message =
-                "There was an error during execution of command : ${commandBean}\n${Exceptions.unwrap(e).message ?: ""}"
+                getMessage("execution.process.exception", "${commandBean}\n${Exceptions.unwrap(e).message ?: ""}")
             commandBean.status = ExecutionStatus.STOPPED
             commandBean.response.onNext(e.message)
             doFinally()
             ApplicationManager.getApplication().invokeLater {
-                Messages.showErrorDialog(project, message, "Connection exception")
+                Messages.showErrorDialog(project, message, getMessage("ui.dialog.error.connection"))
             }
         }
     }

@@ -3,17 +3,17 @@ import org.jetbrains.changelog.closure
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 group = "pl.dwojciechowski"
-version = "0.9.1"
-val protobufVersion = "3.12.2"
-val rsocketRpcVersion = "0.2.18"
-val rsocketVersion = "1.0.0-RC7"
+version = "1.0.0"
+val protobufVersion = "3.12.4"
+val rSocketRpcVersion = "0.2.18"
+val rSocketVersion = "1.0.0-RC7"
 val coroutinesVersion = "1.3.7"
 val fuelVersion = "2.2.3"
-val rxJavaVersion = "3.0.4"
+val rxJavaVersion = "3.0.5"
 
 plugins {
     id("org.jetbrains.changelog") version "0.4.0"
-    id("com.github.ben-manes.versions") version "0.28.0"
+    id("com.github.ben-manes.versions") version "0.29.0"
     id("org.jetbrains.intellij") version "0.4.21"
     id("com.google.protobuf") version "0.8.12"
     kotlin("jvm") version "1.3.72"
@@ -24,7 +24,6 @@ plugins {
 apply(plugin = "org.jetbrains.intellij")
 
 repositories {
-    mavenCentral()
     jcenter()
     maven("https://dl.bintray.com/kittinunf/maven")
 }
@@ -36,10 +35,10 @@ dependencies {
     implementation("com.github.kittinunf.fuel", "fuel", fuelVersion)
     implementation("io.reactivex.rxjava3:rxjava:$rxJavaVersion")
 
-    implementation("io.rsocket:rsocket-core:$rsocketVersion")
-    implementation("io.rsocket:rsocket-transport-local:$rsocketVersion")
-    implementation("io.rsocket:rsocket-transport-netty:$rsocketVersion")
-    implementation("io.rsocket.rpc:rsocket-rpc-core:$rsocketRpcVersion")
+    implementation("io.rsocket:rsocket-core:$rSocketVersion")
+    implementation("io.rsocket:rsocket-transport-local:$rSocketVersion")
+    implementation("io.rsocket:rsocket-transport-netty:$rSocketVersion")
+    implementation("io.rsocket.rpc:rsocket-rpc-core:$rSocketRpcVersion")
     //Do not use implementation here, compile is needed :
     // https://github.com/JetBrains/gradle-intellij-plugin/issues/239
     // https://github.com/JetBrains/gradle-intellij-plugin/issues/456
@@ -110,7 +109,7 @@ protobuf {
 
     plugins {
         id("rsocketRpc") {
-            artifact = "io.rsocket.rpc:rsocket-rpc-protobuf:$rsocketRpcVersion"
+            artifact = "io.rsocket.rpc:rsocket-rpc-protobuf:$rSocketRpcVersion"
         }
 
         generateProtoTasks {
