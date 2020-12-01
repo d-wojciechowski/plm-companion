@@ -3,20 +3,20 @@ import org.jetbrains.changelog.closure
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 group = "pl.dwojciechowski"
-version = "1.0.0"
+version = "1.0.1"
 val protobufVersion = "3.12.4"
 val rSocketRpcVersion = "0.2.18"
 val rSocketVersion = "1.0.0-RC7"
-val coroutinesVersion = "1.3.7"
-val fuelVersion = "2.2.3"
-val rxJavaVersion = "3.0.5"
+val coroutinesVersion = "1.4.2"
+val fuelVersion = "2.3.0"
+val rxJavaVersion = "3.0.7"
 
 plugins {
-    id("org.jetbrains.changelog") version "0.4.0"
-    id("com.github.ben-manes.versions") version "0.29.0"
-    id("org.jetbrains.intellij") version "0.4.21"
-    id("com.google.protobuf") version "0.8.12"
-    kotlin("jvm") version "1.3.72"
+    id("org.jetbrains.changelog") version "0.6.2"
+    id("com.github.ben-manes.versions") version "0.36.0"
+    id("org.jetbrains.intellij") version "0.6.5"
+    id("com.google.protobuf") version "0.8.14"
+    kotlin("jvm") version "1.4.10"
     java
     idea
 }
@@ -42,7 +42,7 @@ dependencies {
     //Do not use implementation here, compile is needed :
     // https://github.com/JetBrains/gradle-intellij-plugin/issues/239
     // https://github.com/JetBrains/gradle-intellij-plugin/issues/456
-    compile("com.google.protobuf:protobuf-java:$protobufVersion")
+    implementation("com.google.protobuf:protobuf-java:$protobufVersion")
 }
 
 sourceSets {
@@ -54,7 +54,7 @@ sourceSets {
 }
 
 intellij {
-    version = "2020.2"
+    version = "2020.3"
     updateSinceUntilBuild = true
     pluginName = "PLM Companion"
 }
@@ -84,8 +84,8 @@ tasks {
 changelog {
     version = "${project.version}"
     path = "${project.projectDir}/CHANGELOG.md"
-    headerFormat = "[{0}]"
-    headerArguments = listOf("${project.version}")
+    header = closure{"[{0}]"}
+    headerParserRegex = """\d+\.\d+.\d+""".toRegex()
     itemPrefix = "-"
     unreleasedTerm = "[Unreleased]"
     groups = listOf("Added", "Changed", "Fixed")
