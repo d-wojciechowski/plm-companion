@@ -1,6 +1,7 @@
 package pl.dwojciechowski.ui
 
-import com.intellij.notification.NotificationGroupManager
+import com.intellij.notification.NotificationDisplayType
+import com.intellij.notification.NotificationGroup
 import com.intellij.notification.NotificationType
 import com.intellij.openapi.project.Project
 import pl.dwojciechowski.i18n.PluginBundle.getMessage
@@ -8,7 +9,9 @@ import javax.swing.Icon
 
 internal object PLMPluginNotification {
 
-    private val GROUP = NotificationGroupManager.getInstance().getNotificationGroup("PLMCompanionNotifGroup")
+    private val GROUP = NotificationGroup(
+        "Windchill", NotificationDisplayType.BALLOON, true, null, null
+    )
 
     fun serverOK(project: Project) {
         notify(project, getMessage("ui.notification.server.ok"), PluginIcons.RUNNING)
