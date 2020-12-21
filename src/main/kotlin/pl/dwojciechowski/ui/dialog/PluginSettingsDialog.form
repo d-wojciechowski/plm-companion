@@ -298,6 +298,13 @@
                   <text resource-bundle="i18n/PluginBundle" key="ui.config.ps.other.autoopen"/>
                 </properties>
               </component>
+              <component id="46f8d" class="javax.swing.JCheckBox" binding="persistCustomTabs">
+                <constraints/>
+                <properties>
+                  <text resource-bundle="i18n/PluginBundle" key="ui.config.tabs.persist"/>
+                  <toolTipText resource-bundle="i18n/PluginBundle" key="ui.config.tabs.persist.tooltip"/>
+                </properties>
+              </component>
             </children>
           </grid>
         </children>
