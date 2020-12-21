@@ -26,6 +26,7 @@ class ProjectPluginConfiguration : PersistentStateComponent<ProjectPluginConfigu
     var commandAutoScroll: Boolean = true
     var logPanelAutoScroll: Boolean = true
     var autoOpenCommandPane: Boolean = false
+    var persistCustomTabs: Boolean = false
 
     var port: Int = 80
     var addonPort: Int = 4040
@@ -34,6 +35,7 @@ class ProjectPluginConfiguration : PersistentStateComponent<ProjectPluginConfigu
 
     var commandsHistory = mutableListOf<String>()
     var propertiesHistory = mutableListOf<String>()
+    var customTabs = mutableListOf<String>()
 
     // Load From file
     var lffFolder: String = ""

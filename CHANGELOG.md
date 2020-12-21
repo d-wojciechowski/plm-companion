@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.0.2]
+### Added
+- Persistable custom tabs [loosing custom opened logs after IDE restart #51](https://github.com/d-wojciechowski/plm-companion/issues/51)
+
 ## [1.0.1]
 ### Fixed
 - Compatibility with Intellij 2020.3

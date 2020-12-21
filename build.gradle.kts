@@ -3,20 +3,20 @@ import org.jetbrains.changelog.closure
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 group = "pl.dwojciechowski"
-version = "1.0.1"
+version = "1.0.2"
 val protobufVersion = "3.12.4"
 val rSocketRpcVersion = "0.2.18"
 val rSocketVersion = "1.0.0-RC7"
 val coroutinesVersion = "1.4.2"
-val fuelVersion = "2.3.0"
-val rxJavaVersion = "3.0.7"
+val fuelVersion = "2.3.1"
+val rxJavaVersion = "3.0.8"
 
 plugins {
     id("org.jetbrains.changelog") version "0.6.2"
     id("com.github.ben-manes.versions") version "0.36.0"
     id("org.jetbrains.intellij") version "0.6.5"
     id("com.google.protobuf") version "0.8.14"
-    kotlin("jvm") version "1.4.10"
+    kotlin("jvm") version "1.4.21"
     java
     idea
 }
@@ -39,9 +39,6 @@ dependencies {
     implementation("io.rsocket:rsocket-transport-local:$rSocketVersion")
     implementation("io.rsocket:rsocket-transport-netty:$rSocketVersion")
     implementation("io.rsocket.rpc:rsocket-rpc-core:$rSocketRpcVersion")
-    //Do not use implementation here, compile is needed :
-    // https://github.com/JetBrains/gradle-intellij-plugin/issues/239
-    // https://github.com/JetBrains/gradle-intellij-plugin/issues/456
     implementation("com.google.protobuf:protobuf-java:$protobufVersion")
 }
 
