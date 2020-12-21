@@ -32,11 +32,12 @@ jobs:
     - name: Verify Plugin on IntelliJ Platforms
       if: github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/master'
       id: verify
-      uses: ChrisCarini/intellij-platform-plugin-verifier-action@v0.0.2
+      uses: ChrisCarini/intellij-platform-plugin-verifier-action@latest
       with:
         ide-versions: |
           ideaIC:2020.1
           ideaIC:2020.2
+          ideaIC:2020.3
           ideaIC:LATEST-EAP-SNAPSHOT
 
     - name: Get log file path and print contents

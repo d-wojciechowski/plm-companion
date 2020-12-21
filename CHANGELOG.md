@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.0.1]
+### Fixed
+- Compatibility with Intellij 2020.3
+
 ## [1.0.0]
 ### Added
 - New startup activity which displays plugin info page with links and support section.

@@ -7,6 +7,8 @@
 
     <extensions defaultExtensionNs="com.intellij">
 
+        <notificationGroup id="PLMCompanionNotifGroup" displayType="BALLOON" isLogByDefault="true"/>
+
         <postStartupActivity implementation="pl.dwojciechowski.activities.NewVersionStartupActivity"/>
 
         <configurationType implementation="pl.dwojciechowski.execution.RemoteCommandConfigType"/>
