@@ -1,21 +1,19 @@
 # Changelog
 
-## [1.0.2]
-
+## [1.0.3]
 ### Changed
-
 - Moved out of RC version of RSocket
 
+## [1.0.2]
+### Added
+- Persistable custom tabs [loosing custom opened logs after IDE restart #51](https://github.com/d-wojciechowski/plm-companion/issues/51)
+
 ## [1.0.1]
-
 ### Fixed
-
 - Compatibility with Intellij 2020.3
 
 ## [1.0.0]
-
 ### Added
-
 - New startup activity which displays plugin info page with links and support section.
 - Plugin UI is now backed by i18n resources. If you want to translate plugin UI to your language, contact me!
 - Describe property dialog, which stores all described properties, as shortcuts.

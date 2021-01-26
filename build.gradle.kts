@@ -16,7 +16,7 @@ plugins {
     id("com.github.ben-manes.versions") version "0.36.0"
     id("org.jetbrains.intellij") version "0.6.5"
     id("com.google.protobuf") version "0.8.14"
-    kotlin("jvm") version "1.4.21-2"
+    kotlin("jvm") version "1.4.10"
     java
     idea
 }
@@ -39,9 +39,6 @@ dependencies {
     implementation("io.rsocket:rsocket-transport-local:$rSocketVersion")
     implementation("io.rsocket:rsocket-transport-netty:$rSocketVersion")
     implementation("io.rsocket.rpc:rsocket-rpc-core:$rSocketRpcVersion")
-    //Do not use implementation here, compile is needed :
-    // https://github.com/JetBrains/gradle-intellij-plugin/issues/239
-    // https://github.com/JetBrains/gradle-intellij-plugin/issues/456
     implementation("com.google.protobuf:protobuf-java:$protobufVersion")
 }
 

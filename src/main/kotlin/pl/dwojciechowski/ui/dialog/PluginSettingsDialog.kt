@@ -49,6 +49,7 @@ class PluginSettingsDialog(private val project: Project) : DialogWrapper(project
     private lateinit var actionPresentationCB: JComboBox<String>
     private lateinit var statusControlled: JCheckBox
     private lateinit var autoOpenCommandPane: JCheckBox
+    private lateinit var persistCustomTabs: JCheckBox
 
     fun createUIComponents() {
         actionPresentationCB = ComboBox(ActionPresentationOption.ALL_OPTIONS.toArray(arrayOf()))
@@ -123,6 +124,7 @@ class PluginSettingsDialog(private val project: Project) : DialogWrapper(project
         folderPathTextFile.text = config.lffFolder
         statusControlled.isSelected = config.statusControlled
         autoOpenCommandPane.isSelected = config.autoOpenCommandPane
+        persistCustomTabs.isSelected = config.persistCustomTabs
 
         resultingTextField.composeURL()
     }
@@ -143,6 +145,7 @@ class PluginSettingsDialog(private val project: Project) : DialogWrapper(project
         config.lffFolder = folderPathTextFile.text
         config.statusControlled = statusControlled.isSelected
         config.autoOpenCommandPane = autoOpenCommandPane.isSelected
+        config.persistCustomTabs = persistCustomTabs.isSelected
     }
 
     private fun JTextField.composeURL() {

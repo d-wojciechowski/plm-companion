@@ -9,6 +9,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.wm.ToolWindow
 import com.intellij.openapi.wm.ToolWindowFactory
 import com.intellij.openapi.wm.ex.ToolWindowEx
+import com.intellij.ui.content.Content
 import com.intellij.ui.content.ContentFactory
 import pl.dwojciechowski.configuration.ProjectPluginConfiguration
 import pl.dwojciechowski.i18n.PluginBundle.getMessage
@@ -48,6 +49,11 @@ class LogViewerPanelFactory : ToolWindowFactory, DumbAware {
         toolWindow.contentManager.addContent(content)
         toolWindow.contentManager.addContent(content2)
         toolWindow.contentManager.addContent(commandContentPanel)
+        if (config.persistCustomTabs) {
+            config.customTabs.toList().forEach { customTab ->
+                toolWindow.contentManager.addContent(createCustomTabContent(project, contentFactory, customTab))
+            }
+        }
         (toolWindow as ToolWindowEx).setTabActions(createNewTabAction(project, contentFactory, toolWindow))
     }
 
@@ -67,14 +73,25 @@ class LogViewerPanelFactory : ToolWindowFactory, DumbAware {
                 if (!logFileDialog.showAndGet()) {
                     return
                 }
-                val newPanel = LogViewerPanel(project, SourceEnum.CUSTOM, logFileDialog.result)
-                val newContent = contentFactory.createContent(newPanel, logFileDialog.result, false)
-                newPanel.parentContent = newContent
-                newContent.preferredFocusableComponent = newPanel
+                val newContent = createCustomTabContent(project, contentFactory, logFileDialog.result)
                 toolWindow.contentManager.addContent(newContent)
+                if (config.persistCustomTabs) {
+                    config.customTabs.add(logFileDialog.result)
+                }
                 toolWindow.contentManager.setSelectedContent(newContent)
             }
         }
+    }
+
+    private fun createCustomTabContent(project: Project, contentFactory: ContentFactory, tabName: String): Content {
+        val newPanel = LogViewerPanel(project, SourceEnum.CUSTOM, tabName)
+        val newContent = contentFactory.createContent(newPanel, tabName, false)
+        newPanel.parentContent = newContent
+        newContent.preferredFocusableComponent = newPanel
+        newContent.setDisposer {
+            config.customTabs = config.customTabs.filter { it != tabName }.toMutableList()
+        }
+        return newContent
     }
 
 }
