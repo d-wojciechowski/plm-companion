@@ -35,11 +35,19 @@ dependencies {
     implementation("com.github.kittinunf.fuel", "fuel", fuelVersion)
     implementation("io.reactivex.rxjava3:rxjava:$rxJavaVersion")
 
-    implementation("io.rsocket:rsocket-core:$rSocketVersion")
-    implementation("io.rsocket:rsocket-transport-local:$rSocketVersion")
-    implementation("io.rsocket:rsocket-transport-netty:$rSocketVersion")
-    implementation("io.rsocket.rpc:rsocket-rpc-core:$rSocketRpcVersion")
-    implementation("com.google.protobuf:protobuf-java:$protobufVersion")
+    implementation("io.rsocket:rsocket-core:$rSocketVersion") {
+        exclude(group = "org.slf4j", module = "slf4j-api")
+    }
+    implementation("io.rsocket:rsocket-transport-local:$rSocketVersion") {
+        exclude(group = "org.slf4j", module = "slf4j-api")
+    }
+    implementation("io.rsocket:rsocket-transport-netty:$rSocketVersion") {
+        exclude(group = "org.slf4j", module = "slf4j-api")
+    }
+    implementation("io.rsocket.rpc:rsocket-rpc-core:$rSocketRpcVersion") {
+        exclude(group = "org.slf4j", module = "slf4j-api")
+    }
+    compile("com.google.protobuf:protobuf-java:$protobufVersion")
 }
 
 sourceSets {
