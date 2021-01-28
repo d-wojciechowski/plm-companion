@@ -47,7 +47,7 @@ dependencies {
     implementation("io.rsocket.rpc:rsocket-rpc-core:$rSocketRpcVersion") {
         exclude(group = "org.slf4j", module = "slf4j-api")
     }
-    compile("com.google.protobuf:protobuf-java:$protobufVersion")
+    implementation("com.google.protobuf:protobuf-java:$protobufVersion")
 }
 
 sourceSets {
