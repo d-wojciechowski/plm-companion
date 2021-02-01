@@ -51,8 +51,7 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         passphrase : ${{secrets.PASSPHRASE}}
         script: |
-            pwd
-            addNewRelease.sh
+            /home/working/addNewRelease.sh
       
 
       
