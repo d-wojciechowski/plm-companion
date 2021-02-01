@@ -51,9 +51,11 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         passphrase : ${{secrets.PASSPHRASE}}
         script: |
-          variable=`printf -- '%s\n' * | awk -F'${{secrets.REMOTE_TARGET}}PLM Companion-|.zip' '{print $2}'`
+          currentPath = pwd
+          echo $currentPath
+          variable=`printf -- '%s\n' * | awk -F'$currentPath/${{secrets.REMOTE_TARGET}}/PLM Companion-|.zip' '{print $2}'`
           echo $variable
-          ${{secrets.REMOTE_TARGET}}/addNewRelease $variable
+          $currentPath/addNewRelease $variable
       
 
       
