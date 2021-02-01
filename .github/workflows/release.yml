@@ -51,7 +51,7 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         passphrase : ${{secrets.PASSPHRASE}}
         script: |
-          variable=`grep version build.gradle.kts |  awk '{gsub("\"","",$3);print $3;exit}'`
+          variable=`printf -- '%s\n' * | awk -F'${{secrets.REMOTE_TARGET}}PLM Companion-|.zip' '{print $2}'`
           ./addNewRelease $variable
       
 
