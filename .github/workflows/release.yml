@@ -1,12 +1,11 @@
 # This is a basic workflow to help you get started with Actions
 
-name: Plugin Verification
+name: Release
 
-# on:
-#   pull_request:
-#     branches: [ master, dev ]
-
-on: push
+on:
+  push:
+    branches:
+      - master
 
 jobs:
   build:
@@ -27,21 +26,27 @@ jobs:
       uses: snickerbockers/submodules-init@v4
 
     - name: Build with Gradle
-      run: ./gradlew build
-
-    - name: Verify Plugin on IntelliJ Platforms
-      if: github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/master'
-      id: verify
-      uses: ChrisCarini/intellij-platform-plugin-verifier-action@latest
+      run: ./gradlew build    
+    
+    - name: Deploy to Server
+      uses: easingthemes/ssh-deploy@v2.1.5
+      env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_KEY }}
+          SOURCE: "build/distributions"
+          REMOTE_HOST: ${{ secrets.HOST }}
+          REMOTE_USER: ${{ secrets.USERNAME }}
+          TARGET: ${{ secrets.REMOTE_TARGET }}
+          REMOTE_PORT: ${{ secrets.PORT }}
+      
+    - name: executing remote ssh commands using password
+      uses: appleboy/ssh-action@master
       with:
-        ide-versions: |
-          ideaIC:2020.1
-          ideaIC:2020.2
-          ideaIC:2020.3
-          ideaIC:LATEST-EAP-SNAPSHOT
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        port: ${{ secrets.PORT }}
+        key: ${{ secrets.SSH_KEY }}
+        passphrase : ${{secrets.PASSPHRASE}}
+        script: whoami
+      
+    
 
-    - name: Get log file path and print contents
-      if: github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/master'
-      run: |
-        echo "The verifier log file [${{steps.verify.outputs.verification-output-log-filename}}] contents : " ;
-        cat ${{steps.verify.outputs.verification-output-log-filename}}
