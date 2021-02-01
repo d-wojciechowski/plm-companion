@@ -39,17 +39,18 @@ jobs:
         port: ${{ secrets.PORT }}
         key: ${{ secrets.SSH_KEY }}
         passphrase : ${{secrets.PASSPHRASE}}
-        script: whoami
-    
-    - name: Deploy to Server
-      uses: easingthemes/ssh-deploy@v2.1.5
-      env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_KEY }}
-          SOURCE: "build/distributions"
-          REMOTE_HOST: ${{ secrets.HOST }}
-          REMOTE_USER: ${{ secrets.USERNAME }}
-          TARGET: ${{ secrets.REMOTE_TARGET }}
-          REMOTE_PORT: ${{ secrets.PORT }}
+        script: ls
+
+    - name: copy file via ssh key
+      uses: appleboy/scp-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        port: ${{ secrets.PORT }}
+        key: ${{ secrets.SSH_KEY }}
+        passphrase : ${{secrets.PASSPHRASE}}
+        source: "build/distributions/*"
+        target: ${{secrets.REMOTE_TARGET}}
       
 
       
