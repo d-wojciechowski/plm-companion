@@ -9,14 +9,14 @@ val rSocketRpcVersion = "0.3.0"
 val rSocketVersion = "1.1.0"
 val coroutinesVersion = "1.4.2"
 val fuelVersion = "2.3.1"
-val rxJavaVersion = "3.0.9"
+val rxJavaVersion = "3.0.10"
 
 plugins {
-    id("org.jetbrains.changelog") version "1.0.1"
+    id("org.jetbrains.changelog") version "1.1.2"
     id("com.github.ben-manes.versions") version "0.36.0"
     id("org.jetbrains.intellij") version "0.6.5"
-    id("com.google.protobuf") version "0.8.14"
-    kotlin("jvm") version "1.4.21-2"
+    id("com.google.protobuf") version "0.8.15"
+    kotlin("jvm") version "1.4.30"
     java
     idea
 }
