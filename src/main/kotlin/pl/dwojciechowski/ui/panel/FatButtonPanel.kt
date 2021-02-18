@@ -27,6 +27,7 @@ class FatButtonPanel(private val project: Project) {
     lateinit var actionPanel: JPanel
 
     private lateinit var restartWindchillButton: JButton
+    private lateinit var testButton: JButton
     private lateinit var stopWindchillButton: JButton
     private lateinit var startWindchillButton: JButton
     private lateinit var configurationButton: JButton
@@ -47,6 +48,7 @@ class FatButtonPanel(private val project: Project) {
         configurationButton.addActionListener { PluginSettingsDialog(project).show() }
         wncStatusButton.addActionListener { config.scanWindchill = !config.scanWindchill }
         describePropertyButton.addActionListener { DescribePropertyDialog(project).show() }
+        testButton.addActionListener { windchillService.transferFile() }
 
         statusService.getOutputSubject().subscribe {
             wncStatusButton.set(it)

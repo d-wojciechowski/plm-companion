@@ -27,7 +27,7 @@
           </component>
         </children>
       </grid>
-      <grid id="83d2" binding="actionPanel" layout-manager="GridLayoutManager" row-count="4" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="0" vgap="0">
+      <grid id="83d2" binding="actionPanel" layout-manager="GridLayoutManager" row-count="4" column-count="4" same-size-horizontally="false" same-size-vertically="false" hgap="0" vgap="0">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints>
           <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="3" anchor="1" fill="1" indent="0" use-parent-layout="false"/>
@@ -46,7 +46,7 @@
           </component>
           <component id="3c42e" class="javax.swing.JButton" binding="startWindchillButton">
             <constraints>
-              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <grid row="0" column="1" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
               <name value="Start"/>
@@ -65,7 +65,7 @@
           </component>
           <component id="affe" class="javax.swing.JButton" binding="xconfManagerButton">
             <constraints>
-              <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <grid row="1" column="1" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
               <name value="reload properties"/>
@@ -74,7 +74,7 @@
           </component>
           <component id="82201" class="javax.swing.JButton" binding="configurationButton">
             <constraints>
-              <grid row="3" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <grid row="3" column="0" row-span="1" col-span="4" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
               <text resource-bundle="i18n/PluginBundle" key="ui.mp.configure"/>
@@ -82,10 +82,19 @@
           </component>
           <component id="9477" class="javax.swing.JButton" binding="describePropertyButton">
             <constraints>
-              <grid row="2" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
+              <horizontalAlignment value="0"/>
               <text resource-bundle="i18n/PluginBundle" key="ui.mp.describeprops"/>
+            </properties>
+          </component>
+          <component id="d13cc" class="javax.swing.JButton" binding="testButton">
+            <constraints>
+              <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="Tes"/>
             </properties>
           </component>
         </children>

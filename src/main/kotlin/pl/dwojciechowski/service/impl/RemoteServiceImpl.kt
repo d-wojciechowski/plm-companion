@@ -1,5 +1,6 @@
 package pl.dwojciechowski.service.impl
 
+import com.google.protobuf.ByteString
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
@@ -14,12 +15,18 @@ import pl.dwojciechowski.model.ExecutionStatus
 import pl.dwojciechowski.proto.commands.Command
 import pl.dwojciechowski.proto.commands.CommandServiceClient
 import pl.dwojciechowski.proto.commands.Status
+import pl.dwojciechowski.proto.files.Chunk
+import pl.dwojciechowski.proto.files.FileServiceClient
 import pl.dwojciechowski.service.ConnectorService
 import pl.dwojciechowski.service.IdeControlService
 import pl.dwojciechowski.service.RemoteService
 import reactor.core.Disposable
 import reactor.core.Exceptions
+import reactor.netty.ByteBufFlux
 import reactor.util.retry.Retry
+import java.io.File
+import java.time.Duration
+
 
 class RemoteServiceImpl(private val project: Project) : RemoteService {
 
@@ -113,5 +120,23 @@ class RemoteServiceImpl(private val project: Project) : RemoteService {
     }
 
     override fun getOutputSubject(): Subject<CommandBean> = commandSubject
+    override fun transferFile() {
+        val rSocket = connector.getConnection()
+        val file = File("D:\\eTrapez\\Całki oznaczone\\Lekcja 3 - Obliczanie obszarów - chomik reflex.mp4")
+
+//                0
+        println("OK")
+        val block = FileServiceClient(rSocket)
+            .send(
+                ByteBufFlux.fromPath(file.toPath(), 1024).map {
+                    Chunk.newBuilder().setContent(ByteString.copyFrom(it.nioBuffer())).build()
+                }
+            ).doOnComplete {
+                println("COMPLETED")
+            }.doOnError {
+                println("ERROR")
+            }.blockLast(Duration.ofSeconds(60))
+        println("DONE")
+    }
 
 }

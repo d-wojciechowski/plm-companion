@@ -24,7 +24,7 @@ plugins {
 apply(plugin = "org.jetbrains.intellij")
 
 repositories {
-    jcenter()
+    mavenCentral()
     maven("https://dl.bintray.com/kittinunf/maven")
 }
 
