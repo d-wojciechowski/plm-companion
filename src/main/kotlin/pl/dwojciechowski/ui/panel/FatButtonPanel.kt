@@ -1,6 +1,5 @@
 package pl.dwojciechowski.ui.panel
 
-import com.intellij.ide.util.TreeFileChooserFactory
 import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
 import pl.dwojciechowski.configuration.ProjectPluginConfiguration
@@ -49,11 +48,7 @@ class FatButtonPanel(private val project: Project) {
         configurationButton.addActionListener { PluginSettingsDialog(project).show() }
         wncStatusButton.addActionListener { config.scanWindchill = !config.scanWindchill }
         describePropertyButton.addActionListener { DescribePropertyDialog(project).show() }
-        testButton.addActionListener {
-//            windchillService.transferFiles(mapOf())
-            TreeFileChooserFactory.getInstance(project).createFileChooser("TEST", null, null, null).showDialog()
-        }
-
+        testButton.addActionListener { windchillService.transferFile() }
 
         statusService.getOutputSubject().subscribe {
             wncStatusButton.set(it)

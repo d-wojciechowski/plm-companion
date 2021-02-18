@@ -21,6 +21,7 @@ interface RemoteService {
     fun executeStreaming(commandBean: CommandBean, doFinally: () -> Unit = {})
 
     fun getOutputSubject(): Subject<CommandBean>
+    fun transferFile()
 
     fun transferFiles(
         fileMap: Map<File, String>,
