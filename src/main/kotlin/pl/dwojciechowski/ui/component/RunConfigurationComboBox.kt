@@ -29,7 +29,7 @@ class RunConfigurationComboBox(
             cbModel.addElement(
                 RunConfigurationRepresentation(
                     "",
-                    getMessage("runconfig.donothing.displayname"),
+                    getMessage("runconfig.remotecommand.donothing.displayname"),
                     AllIcons.Debugger.Db_invalid_breakpoint
                 )
             )

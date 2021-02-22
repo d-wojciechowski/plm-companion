@@ -12,6 +12,7 @@
         <postStartupActivity implementation="pl.dwojciechowski.activities.NewVersionStartupActivity"/>
 
         <configurationType implementation="pl.dwojciechowski.execution.RemoteCommandConfigType"/>
+        <configurationType implementation="pl.dwojciechowski.execution.CopyFilesConfigType"/>
 
         <toolWindow id="PLM Companion" anchor="right" factoryClass="pl.dwojciechowski.ui.MainSubWindowFactory"
                     icon="/icons/plm_companion_icon16.svg"/>

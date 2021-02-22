@@ -26,6 +26,7 @@ class PluginSettingsDialog(private val project: Project) : DialogWrapper(project
     private lateinit var systemUrlPanel: JPanel
     private lateinit var remoteSystemSettingsPanel: JPanel
     private lateinit var pluginSettingsPanel: JPanel
+    private lateinit var fileCopySettingsPanel: JPanel
 
     // URL Settings
     private lateinit var protocolCB: JComboBox<String>
@@ -50,6 +51,10 @@ class PluginSettingsDialog(private val project: Project) : DialogWrapper(project
     private lateinit var statusControlled: JCheckBox
     private lateinit var autoOpenCommandPane: JCheckBox
     private lateinit var persistCustomTabs: JCheckBox
+
+    // File copy settings
+    private lateinit var setupCopyFolders: JButton
+
 
     fun createUIComponents() {
         actionPresentationCB = ComboBox(ActionPresentationOption.ALL_OPTIONS.toArray(arrayOf()))
@@ -88,12 +93,15 @@ class PluginSettingsDialog(private val project: Project) : DialogWrapper(project
             config.actionPresentation = actionPresentationCB.selectedItem as String
         }
 
+        setupCopyFolders.addActionListener { FileCopyConfigurationDialog(project).show() }
+
         initFromConfig()
         init()
 
         systemUrlPanel.border = EtchedTitleBorder(getMessage("ui.config.url.system"))
         remoteSystemSettingsPanel.border = EtchedTitleBorder(getMessage("ui.config.rss.title"))
         pluginSettingsPanel.border = EtchedTitleBorder(getMessage("ui.config.pluginsetting"))
+        fileCopySettingsPanel.border = EtchedTitleBorder(getMessage("ui.config.filecopy.title"))
     }
 
     private fun JTextField.addOnKeyEvent(method: () -> Unit) {

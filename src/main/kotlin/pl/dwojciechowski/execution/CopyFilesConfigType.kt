@@ -3,14 +3,14 @@ package pl.dwojciechowski.execution
 import com.intellij.execution.configurations.ConfigurationFactory
 import com.intellij.execution.configurations.ConfigurationTypeBase
 import pl.dwojciechowski.execution.command.RemoteCommandFactory
-import pl.dwojciechowski.i18n.PluginBundle.getMessage
+import pl.dwojciechowski.i18n.PluginBundle
 import pl.dwojciechowski.ui.PluginIcons
 
-class RemoteCommandConfigType : ConfigurationTypeBase(
-    id = "PLMCompanion.RemoteCommand",
-    displayName = getMessage("runconfig.remotecommand.displayname"),
-    description = getMessage("runconfig.remotecommand.description"),
-    icon = PluginIcons.PLUGIN
+class CopyFilesConfigType : ConfigurationTypeBase(
+    id = "PLMCompanion.CopyFiles",
+    displayName = PluginBundle.getMessage("runconfig.copyfiles.displayname"),
+    description = PluginBundle.getMessage("runconfig.copyfiles.description"),
+    icon = PluginIcons.PLUGIN_SAVE
 ) {
 
     override fun getConfigurationFactories(): Array<ConfigurationFactory> {

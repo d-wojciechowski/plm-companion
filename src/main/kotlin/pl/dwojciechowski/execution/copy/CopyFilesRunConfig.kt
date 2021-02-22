@@ -1,4 +1,4 @@
-package pl.dwojciechowski.execution.command
+package pl.dwojciechowski.execution.copy
 
 import com.intellij.execution.Executor
 import com.intellij.execution.configurations.*
@@ -9,26 +9,26 @@ import com.intellij.util.xmlb.XmlSerializer
 import org.jdom.Element
 import pl.dwojciechowski.i18n.PluginBundle.getMessage
 
-class RemoteCommandRunConfig(
+class CopyFilesRunConfig(
     project: Project,
     factory: ConfigurationFactory,
     name: String
-) : RunConfigurationBase<RemoteCommandRunConfig>(project, factory, name) {
+) : RunConfigurationBase<CopyFilesRunConfig>(project, factory, name) {
 
-    var settings = RemoteCommandSettings()
+    var settings = CopyFilesSettings()
 
     override fun clone(): RunConfiguration {
         val runConfiguration = super.clone()
-        (runConfiguration as RemoteCommandRunConfig).settings = RemoteCommandSettings()
+        (runConfiguration as CopyFilesRunConfig).settings = CopyFilesSettings()
         return runConfiguration
     }
 
     override fun getConfigurationEditor(): SettingsEditor<out RunConfiguration> {
-        return RemoteCommandSettingsEditor(project)
+        return CopyFilesSettingsEditor(project)
     }
 
     override fun getState(executor: Executor, environment: ExecutionEnvironment): RunProfileState {
-        return RemoteCommandState(environment)
+        return CopyFilesState(environment)
     }
 
     override fun checkConfiguration() {
@@ -40,8 +40,8 @@ class RemoteCommandRunConfig(
     override fun readExternal(element: Element) {
         super.readExternal(element)
 
-        element.getChild(RemoteCommandSettings.TAG)?.let {
-            settings = XmlSerializer.deserialize(it, RemoteCommandSettings::class.java)
+        element.getChild(CopyFilesSettings.TAG)?.let {
+            settings = XmlSerializer.deserialize(it, CopyFilesSettings::class.java)
         }
     }
 

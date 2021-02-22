@@ -66,9 +66,9 @@ intellij {
 
 tasks {
 
-    runIde {
-        systemProperty("idea.auto.reload.plugins", false)
-    }
+//    runIde {
+//        systemProperty("idea.auto.reload.plugins", false)
+//    }
 
     withType<KotlinCompile> {
         kotlinOptions.jvmTarget = "1.8"

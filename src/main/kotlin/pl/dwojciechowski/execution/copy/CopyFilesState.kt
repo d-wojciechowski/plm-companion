@@ -1,4 +1,4 @@
-package pl.dwojciechowski.execution.command
+package pl.dwojciechowski.execution.copy
 
 import com.intellij.execution.DefaultExecutionResult
 import com.intellij.execution.ExecutionException
@@ -9,15 +9,15 @@ import com.intellij.execution.runners.ExecutionEnvironment
 import com.intellij.execution.runners.ProgramRunner
 import pl.dwojciechowski.i18n.PluginBundle.getMessage
 
-class RemoteCommandState(private val environment: ExecutionEnvironment) : RunProfileState {
+class CopyFilesState(private val environment: ExecutionEnvironment) : RunProfileState {
 
-    private val runProfile = environment.runProfile as RemoteCommandRunConfig
+    private val runProfile = environment.runProfile as CopyFilesRunConfig
 
     override fun execute(executor: Executor?, runner: ProgramRunner<*>): ExecutionResult? {
         if (runProfile.settings.command.isEmpty()) {
             throw ExecutionException(getMessage("runconfig.remotecommand.error.empty"))
         }
-        return DefaultExecutionResult(RemoteCommandProcessHandler(environment, executor))
+        return DefaultExecutionResult(CopyFilesProcessHandler(environment, executor))
     }
 
 }

@@ -126,16 +126,40 @@ class RemoteServiceImpl(private val project: Project) : RemoteService {
 
 //                0
         println("OK")
-        val block = FileServiceClient(rSocket)
-            .send(
-                ByteBufFlux.fromPath(file.toPath(), 1024).map {
-                    Chunk.newBuilder().setContent(ByteString.copyFrom(it.nioBuffer())).build()
-                }
-            ).doOnComplete {
-                println("COMPLETED")
-            }.doOnError {
-                println("ERROR")
-            }.blockLast(Duration.ofSeconds(60))
+        ApplicationManager.getApplication().invokeLater {
+            val block = FileServiceClient(rSocket)
+                .send(
+                    ByteBufFlux.fromPath(file.toPath(), 1024).map {
+                        Chunk.newBuilder()
+                            .setContent(ByteString.copyFrom(it.nioBuffer()))
+                            .setFilePath("D:\\OutTest.mp4")
+                            .build()
+                    }
+                ).doOnComplete {
+                    println("COMPLETED")
+                }.doOnError {
+                    println("ERROR")
+                }.blockLast(Duration.ofSeconds(60))
+        }
+
+        val file2 = File("D:\\eTrapez\\Matematyka dyskretna\\Lekcja 6 – Funkcje odwrotne.avi")
+
+        ApplicationManager.getApplication().invokeLater {
+            val block = FileServiceClient(rSocket)
+                .send(
+                    ByteBufFlux.fromPath(file2.toPath(), 1024).map {
+                        Chunk.newBuilder()
+                            .setContent(ByteString.copyFrom(it.nioBuffer()))
+                            .setFilePath("D:\\OutTest2.AVI")
+                            .build()
+                    }
+                ).doOnComplete {
+                    println("COMPLETED")
+                }.doOnError {
+                    println("ERROR")
+                }.blockLast(Duration.ofSeconds(60))
+        }
+
         println("DONE")
     }
 
