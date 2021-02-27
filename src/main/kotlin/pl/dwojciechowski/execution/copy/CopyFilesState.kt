@@ -14,8 +14,8 @@ class CopyFilesState(private val environment: ExecutionEnvironment) : RunProfile
     private val runProfile = environment.runProfile as CopyFilesRunConfig
 
     override fun execute(executor: Executor?, runner: ProgramRunner<*>): ExecutionResult? {
-        if (runProfile.settings.command.isEmpty()) {
-            throw ExecutionException(getMessage("runconfig.remotecommand.error.empty"))
+        if (runProfile.settings.folderConfigs.isEmpty()) {
+            throw ExecutionException(getMessage("runconfig.copyfiles.error.empty"))
         }
         return DefaultExecutionResult(CopyFilesProcessHandler(environment, executor))
     }

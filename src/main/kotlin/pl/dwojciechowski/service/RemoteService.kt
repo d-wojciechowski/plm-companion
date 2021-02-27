@@ -4,6 +4,7 @@ import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
 import io.reactivex.rxjava3.subjects.Subject
 import pl.dwojciechowski.model.CommandBean
+import java.io.File
 
 interface RemoteService {
 
@@ -20,6 +21,9 @@ interface RemoteService {
     fun executeStreaming(commandBean: CommandBean, doFinally: () -> Unit = {})
 
     fun getOutputSubject(): Subject<CommandBean>
-    fun transferFile()
 
+    fun transferFiles(
+        fileMap: Map<File, String>,
+        commandBean: CommandBean = CommandBean("File Copy", "", CommandBean.Type.COPY)
+    )
 }

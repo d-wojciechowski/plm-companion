@@ -17,15 +17,17 @@ import pl.dwojciechowski.proto.commands.CommandServiceClient
 import pl.dwojciechowski.proto.commands.Status
 import pl.dwojciechowski.proto.files.Chunk
 import pl.dwojciechowski.proto.files.FileServiceClient
+import pl.dwojciechowski.proto.files.UploadStatusCode
 import pl.dwojciechowski.service.ConnectorService
 import pl.dwojciechowski.service.IdeControlService
 import pl.dwojciechowski.service.RemoteService
 import reactor.core.Disposable
+import reactor.core.Disposables
 import reactor.core.Exceptions
 import reactor.netty.ByteBufFlux
 import reactor.util.retry.Retry
 import java.io.File
-import java.time.Duration
+import java.util.stream.Collectors
 
 
 class RemoteServiceImpl(private val project: Project) : RemoteService {
@@ -120,47 +122,67 @@ class RemoteServiceImpl(private val project: Project) : RemoteService {
     }
 
     override fun getOutputSubject(): Subject<CommandBean> = commandSubject
-    override fun transferFile() {
-        val rSocket = connector.getConnection()
-        val file = File("D:\\eTrapez\\Całki oznaczone\\Lekcja 3 - Obliczanie obszarów - chomik reflex.mp4")
 
-//                0
-        println("OK")
-        ApplicationManager.getApplication().invokeLater {
-            val block = FileServiceClient(rSocket)
-                .send(
-                    ByteBufFlux.fromPath(file.toPath(), 1024).map {
-                        Chunk.newBuilder()
-                            .setContent(ByteString.copyFrom(it.nioBuffer()))
-                            .setFilePath("D:\\OutTest.mp4")
-                            .build()
-                    }
-                ).doOnComplete {
-                    println("COMPLETED")
-                }.doOnError {
-                    println("ERROR")
-                }.blockLast(Duration.ofSeconds(60))
-        }
+    override fun transferFiles(
+        fileMap: Map<File, String>,
+        commandBean: CommandBean
+    ) {
+        try {
+            if (!config.autoOpenCommandPane) {
+                ideService.initCommandTab()
+            }
 
-        val file2 = File("D:\\eTrapez\\Matematyka dyskretna\\Lekcja 6 – Funkcje odwrotne.avi")
+            commandBean.status = ExecutionStatus.RUNNING
+            commandBean.response.onNext(getMessage("execution.process.start", commandBean))
 
-        ApplicationManager.getApplication().invokeLater {
-            val block = FileServiceClient(rSocket)
-                .send(
-                    ByteBufFlux.fromPath(file2.toPath(), 1024).map {
-                        Chunk.newBuilder()
-                            .setContent(ByteString.copyFrom(it.nioBuffer()))
-                            .setFilePath("D:\\OutTest2.AVI")
-                            .build()
-                    }
-                ).doOnComplete {
-                    println("COMPLETED")
-                }.doOnError {
-                    println("ERROR")
-                }.blockLast(Duration.ofSeconds(60))
+            val rSocket = connector.getConnection()
+            commandBean.actualSubscription = rSocket.transferFiles(fileMap, commandBean)
+            commandSubject.onNext(commandBean)
+        } catch (e: Exception) {
+            val message =
+                getMessage("execution.process.exception", "${commandBean}\n${Exceptions.unwrap(e).message ?: ""}")
+            commandBean.status = ExecutionStatus.STOPPED
+            commandBean.response.onNext(e.message)
+//            doFinally()
+            ApplicationManager.getApplication().invokeLater {
+                Messages.showErrorDialog(project, message, getMessage("ui.dialog.error.connection"))
+            }
         }
 
         println("DONE")
+    }
+
+    private fun RSocket.transferFiles(
+        fileMap: Map<File, String>,
+        commandBean: CommandBean
+    ): Disposable {
+        return Disposables.composite(
+            fileMap.entries.parallelStream().map { entry ->
+                return@map FileServiceClient(this)
+                    .send(
+                        ByteBufFlux.fromPath(entry.key.toPath(), 1024).map {
+                            Chunk.newBuilder()
+                                .setContent(ByteString.copyFrom(it.nioBuffer()))
+                                .setFilePath(entry.value)
+                                .build()
+                        }
+                    ).doOnNext {
+                        if (it.code == UploadStatusCode.Failed) {
+                            commandBean.status = ExecutionStatus.STOPPED
+                        }
+                    }.doOnComplete {
+                        commandBean.status = ExecutionStatus.COMPLETED
+                    }.doOnError {
+                        var message = Exceptions.unwrap(it).message ?: ""
+                        if (message.contains("Retries exhausted")) {
+                            message = message.replace("0", connector.maxAttempts().toString())
+                        }
+                        commandBean.response.onNext(message)
+                        commandBean.status = ExecutionStatus.STOPPED
+                    }.subscribe() ?: Disposables.single()
+            }.collect(Collectors.toList())
+        )
+
     }
 
 }

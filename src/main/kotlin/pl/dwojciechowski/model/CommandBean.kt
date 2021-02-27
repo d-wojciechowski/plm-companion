@@ -50,7 +50,9 @@ data class CommandBean(
         CommandBean(name, command, type, LocalTime.now(), ReplaySubject.create(), Disposables.never())
 
     enum class Type(val icon: Icon) {
-        COMMAND(AllIcons.Xml.Css_class), PROPERTY_NAME(AllIcons.Nodes.Property)
+        COMMAND(AllIcons.Xml.Css_class),
+        PROPERTY_NAME(AllIcons.Nodes.Property),
+        COPY(AllIcons.Nodes.UpLevel)
     }
 
 }

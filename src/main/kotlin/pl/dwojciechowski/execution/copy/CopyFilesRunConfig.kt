@@ -32,8 +32,8 @@ class CopyFilesRunConfig(
     }
 
     override fun checkConfiguration() {
-        if (settings.command.isEmpty()) {
-            throw RuntimeConfigurationWarning(getMessage("runconfig.remotecommand.error.empty"))
+        if (settings.folderConfigs.isEmpty()) {
+            throw RuntimeConfigurationWarning(getMessage("runconfig.copyfiles.error.empty"))
         }
     }
 

@@ -14,7 +14,7 @@ val rxJavaVersion = "3.0.10"
 plugins {
     id("org.jetbrains.changelog") version "1.1.2"
     id("com.github.ben-manes.versions") version "0.36.0"
-    id("org.jetbrains.intellij") version "0.6.5"
+    id("org.jetbrains.intellij") version "0.7.2"
     id("com.google.protobuf") version "0.8.15"
     kotlin("jvm") version "1.4.30"
     java
@@ -32,8 +32,9 @@ dependencies {
     implementation(kotlin("stdlib-jdk8"))
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
-    implementation("com.github.kittinunf.fuel", "fuel", fuelVersion)
+    implementation("com.github.kittinunf.fuel:fuel:$fuelVersion")
     implementation("io.reactivex.rxjava3:rxjava:$rxJavaVersion")
+    implementation("com.google.protobuf:protobuf-java:$protobufVersion")
 
     implementation("io.rsocket:rsocket-core:$rSocketVersion") {
         exclude(group = "org.slf4j", module = "slf4j-api")
@@ -47,7 +48,6 @@ dependencies {
     implementation("io.rsocket.rpc:rsocket-rpc-core:$rSocketRpcVersion") {
         exclude(group = "org.slf4j", module = "slf4j-api")
     }
-    implementation("com.google.protobuf:protobuf-java:$protobufVersion")
 }
 
 sourceSets {
@@ -65,10 +65,6 @@ intellij {
 }
 
 tasks {
-
-//    runIde {
-//        systemProperty("idea.auto.reload.plugins", false)
-//    }
 
     withType<KotlinCompile> {
         kotlinOptions.jvmTarget = "1.8"
