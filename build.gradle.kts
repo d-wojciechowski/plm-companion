@@ -3,20 +3,20 @@ import org.jetbrains.changelog.closure
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 group = "pl.dwojciechowski"
-version = "1.0.2"
-val protobufVersion = "3.12.4"
-val rSocketRpcVersion = "0.2.18"
-val rSocketVersion = "1.0.0-RC7"
-val coroutinesVersion = "1.4.2"
+version = "1.0.3"
+val protobufVersion = "3.15.7"
+val rSocketRpcVersion = "0.3.0"
+val rSocketVersion = "1.1.0"
+val coroutinesVersion = "1.4.3"
 val fuelVersion = "2.3.1"
-val rxJavaVersion = "3.0.8"
+val rxJavaVersion = "3.0.10"
 
 plugins {
-    id("org.jetbrains.changelog") version "0.6.2"
-    id("com.github.ben-manes.versions") version "0.36.0"
-    id("org.jetbrains.intellij") version "0.6.5"
-    id("com.google.protobuf") version "0.8.14"
-    kotlin("jvm") version "1.4.21"
+    id("org.jetbrains.changelog") version "1.1.2"
+    id("com.github.ben-manes.versions") version "0.38.0"
+    id("org.jetbrains.intellij") version "0.7.2"
+    id("com.google.protobuf") version "0.8.15"
+    kotlin("jvm") version "1.4.32"
     java
     idea
 }
@@ -51,7 +51,7 @@ sourceSets {
 }
 
 intellij {
-    version = "2020.3"
+    version = "2021.1"
     updateSinceUntilBuild = true
     pluginName = "PLM Companion"
 }
@@ -72,7 +72,7 @@ tasks {
 
     patchPluginXml {
         changeNotes(closure { changelog.getLatest().toHTML() })
-        pluginDescription(htmlFixer("src/main/resources/META-INF/description.html"))
+        pluginDescription(htmlFixer("${project.projectDir}/src/main/resources/META-INF/description.html"))
         sinceBuild("200")
     }
 
