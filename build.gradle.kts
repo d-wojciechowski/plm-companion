@@ -76,6 +76,7 @@ tasks {
 
     clean {
         delete("src/generated")
+        delete("out")
     }
 
     patchPluginXml {
