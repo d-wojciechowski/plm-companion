@@ -40,7 +40,6 @@ class ConnectorServiceImpl(private val project: Project) : ConnectorService {
             return RSocketConnector.create()
                 .reconnect(retryByConfig(getMessage("execution.connection.failed"), PluginIcons.WARNING))
                 .resume(resumeStrategy)
-                .fragment(1024)
                 .connect(TcpClientTransport.create(config.hostname, config.addonPort))
                 .block() ?: throw Exception()
         } catch (e: Exception) {

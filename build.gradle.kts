@@ -4,18 +4,18 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 group = "pl.dwojciechowski"
 version = "1.0.3"
-val protobufVersion = "3.15.7"
+val protobufVersion = "3.15.8"
 val rSocketRpcVersion = "0.3.0"
 val rSocketVersion = "1.1.0"
 val coroutinesVersion = "1.4.3"
 val fuelVersion = "2.3.1"
-val rxJavaVersion = "3.0.10"
+val rxJavaVersion = "3.0.12"
 
 plugins {
     id("org.jetbrains.changelog") version "1.1.2"
     id("com.github.ben-manes.versions") version "0.38.0"
-    id("org.jetbrains.intellij") version "0.7.2"
-    id("com.google.protobuf") version "0.8.15"
+    id("org.jetbrains.intellij") version "0.7.3"
+    id("com.google.protobuf") version "0.8.16"
     kotlin("jvm") version "1.4.32"
     java
     idea
@@ -24,7 +24,7 @@ plugins {
 apply(plugin = "org.jetbrains.intellij")
 
 repositories {
-    jcenter()
+    mavenCentral()
     maven("https://dl.bintray.com/kittinunf/maven")
 }
 
@@ -32,14 +32,22 @@ dependencies {
     implementation(kotlin("stdlib-jdk8"))
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
-    implementation("com.github.kittinunf.fuel", "fuel", fuelVersion)
+    implementation("com.github.kittinunf.fuel:fuel:$fuelVersion")
     implementation("io.reactivex.rxjava3:rxjava:$rxJavaVersion")
-
-    implementation("io.rsocket:rsocket-core:$rSocketVersion")
-    implementation("io.rsocket:rsocket-transport-local:$rSocketVersion")
-    implementation("io.rsocket:rsocket-transport-netty:$rSocketVersion")
-    implementation("io.rsocket.rpc:rsocket-rpc-core:$rSocketRpcVersion")
     implementation("com.google.protobuf:protobuf-java:$protobufVersion")
+
+    implementation("io.rsocket:rsocket-core:$rSocketVersion") {
+        exclude(group = "org.slf4j", module = "slf4j-api")
+    }
+    implementation("io.rsocket:rsocket-transport-local:$rSocketVersion") {
+        exclude(group = "org.slf4j", module = "slf4j-api")
+    }
+    implementation("io.rsocket:rsocket-transport-netty:$rSocketVersion") {
+        exclude(group = "org.slf4j", module = "slf4j-api")
+    }
+    implementation("io.rsocket.rpc:rsocket-rpc-core:$rSocketRpcVersion") {
+        exclude(group = "org.slf4j", module = "slf4j-api")
+    }
 }
 
 sourceSets {
@@ -68,6 +76,7 @@ tasks {
 
     clean {
         delete("src/generated")
+        delete("out")
     }
 
     patchPluginXml {
