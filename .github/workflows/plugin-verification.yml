@@ -38,6 +38,7 @@ jobs:
           ideaIC:2020.1
           ideaIC:2020.2
           ideaIC:2020.3
+          ideaIC:2021.1
           ideaIC:LATEST-EAP-SNAPSHOT
 
     - name: Get log file path and print contents
