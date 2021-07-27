@@ -1,6 +1,5 @@
 package pl.dwojciechowski.service.impl
 
-import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
 import pl.dwojciechowski.proto.files.FileMeta
 import pl.dwojciechowski.proto.files.FileResponse
@@ -11,7 +10,7 @@ import pl.dwojciechowski.service.FileService
 
 class FileServiceImpl(project: Project) : FileService {
 
-    private val connector = ServiceManager.getService(project, ConnectorService::class.java)
+    private val connector = project.getService(ConnectorService::class.java)
     private val emptyResponse = FileResponse.newBuilder()
         .setOs("")
         .setSeparator("")

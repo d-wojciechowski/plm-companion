@@ -1,7 +1,6 @@
 package pl.dwojciechowski.service.impl
 
 import com.intellij.openapi.application.ApplicationManager
-import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.wm.ToolWindow
 import com.intellij.openapi.wm.ToolWindowManager
@@ -13,7 +12,7 @@ import pl.dwojciechowski.service.IdeControlService
 
 class IdeControlServiceImpl(private val project: Project) : IdeControlService {
 
-    private val config = ServiceManager.getService(project, ProjectPluginConfiguration::class.java)
+    private val config = project.getService(ProjectPluginConfiguration::class.java)
 
     override fun initCommandTab() {
         getToolWindow(PluginConstants.LOG_TAB_ID)?.let { toolWindow ->

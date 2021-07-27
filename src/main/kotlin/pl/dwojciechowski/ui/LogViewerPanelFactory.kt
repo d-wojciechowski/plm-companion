@@ -2,7 +2,6 @@ package pl.dwojciechowski.ui
 
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.actionSystem.AnActionEvent
-import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.DumbAwareAction
 import com.intellij.openapi.project.Project
@@ -25,8 +24,8 @@ class LogViewerPanelFactory : ToolWindowFactory, DumbAware {
     private lateinit var config: ProjectPluginConfiguration
 
     override fun createToolWindowContent(project: Project, toolWindow: ToolWindow) {
-        config = ServiceManager.getService(project, ProjectPluginConfiguration::class.java)
-        logService = ServiceManager.getService(project, LogViewerService::class.java)
+        config = project.getService(ProjectPluginConfiguration::class.java)
+        logService = project.getService(LogViewerService::class.java)
 
         val contentFactory = ContentFactory.SERVICE.getInstance()
         val logPane1 = LogViewerPanel(project, SourceEnum.METHOD_SERVER)

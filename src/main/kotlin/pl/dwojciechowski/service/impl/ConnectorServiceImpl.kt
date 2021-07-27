@@ -1,6 +1,5 @@
 package pl.dwojciechowski.service.impl
 
-import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
 import io.rsocket.RSocket
 import io.rsocket.core.RSocketConnector
@@ -20,7 +19,7 @@ import javax.swing.Icon
 
 class ConnectorServiceImpl(private val project: Project) : ConnectorService {
 
-    private val config = ServiceManager.getService(project, ProjectPluginConfiguration::class.java)
+    private val config = project.getService(ProjectPluginConfiguration::class.java)
     private lateinit var rSocket: RSocket
 
     override fun getConnection(): RSocket {

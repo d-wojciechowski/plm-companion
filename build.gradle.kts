@@ -3,13 +3,13 @@ import org.jetbrains.changelog.closure
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 group = "pl.dwojciechowski"
-version = "1.0.3"
-val protobufVersion = "3.15.8"
+version = "1.0.4"
+val protobufVersion = "3.17.3"
 val rSocketRpcVersion = "0.3.0"
-val rSocketVersion = "1.1.0"
-val coroutinesVersion = "1.4.3"
+val rSocketVersion = "1.1.1"
+val coroutinesVersion = "1.5.1-native-mt"
 val fuelVersion = "2.3.1"
-val rxJavaVersion = "3.0.12"
+val rxJavaVersion = "3.0.13"
 
 plugins {
     id("org.jetbrains.changelog") version "1.1.2"
@@ -29,7 +29,7 @@ repositories {
 }
 
 dependencies {
-    implementation(kotlin("stdlib-jdk8"))
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.21")
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
     implementation("com.github.kittinunf.fuel:fuel:$fuelVersion")
@@ -59,7 +59,7 @@ sourceSets {
 }
 
 intellij {
-    version = "2021.1"
+    version = "2021.2"
     updateSinceUntilBuild = true
     pluginName = "PLM Companion"
 }
@@ -82,7 +82,7 @@ tasks {
     patchPluginXml {
         changeNotes(closure { changelog.getLatest().toHTML() })
         pluginDescription(htmlFixer("${project.projectDir}/src/main/resources/META-INF/description.html"))
-        sinceBuild("200")
+        sinceBuild("210")
     }
 
 }

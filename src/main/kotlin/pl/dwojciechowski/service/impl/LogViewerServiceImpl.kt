@@ -1,6 +1,5 @@
 package pl.dwojciechowski.service.impl
 
-import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
 import pl.dwojciechowski.configuration.ProjectPluginConfiguration
 import pl.dwojciechowski.proto.files.LogFileLocation
@@ -12,8 +11,8 @@ import reactor.core.Disposable
 
 class LogViewerServiceImpl(project: Project) : LogViewerService {
 
-    private val config = ServiceManager.getService(project, ProjectPluginConfiguration::class.java)
-    private val connector = ServiceManager.getService(project, ConnectorService::class.java)
+    private val config = project.getService(ProjectPluginConfiguration::class.java)
+    private val connector = project.getService(ConnectorService::class.java)
 
     override fun getLogFile(
         source: LogFileLocation.Source,

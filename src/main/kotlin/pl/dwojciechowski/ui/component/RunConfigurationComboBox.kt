@@ -3,7 +3,6 @@ package pl.dwojciechowski.ui.component
 import com.intellij.execution.RunManager
 import com.intellij.execution.RunManagerEx
 import com.intellij.icons.AllIcons
-import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
 import com.intellij.ui.DeferredIcon
 import pl.dwojciechowski.configuration.ProjectPluginConfiguration
@@ -19,7 +18,7 @@ class RunConfigurationComboBox(
     withEmptyElement: Boolean = true
 ) : JComboBox<RunConfigurationRepresentation>() {
 
-    private val config = ServiceManager.getService(project, ProjectPluginConfiguration::class.java)
+    private val config = project.getService(ProjectPluginConfiguration::class.java)
     private val cbModel = model as DefaultComboBoxModel<RunConfigurationRepresentation>
 
     init {

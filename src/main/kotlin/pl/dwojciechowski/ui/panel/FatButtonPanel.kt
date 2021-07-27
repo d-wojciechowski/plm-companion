@@ -1,6 +1,5 @@
 package pl.dwojciechowski.ui.panel
 
-import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
 import pl.dwojciechowski.configuration.ProjectPluginConfiguration
 import pl.dwojciechowski.i18n.PluginBundle.getMessage
@@ -17,10 +16,10 @@ import javax.swing.JPanel
 
 class FatButtonPanel(private val project: Project) {
 
-    private val config = ServiceManager.getService(project, ProjectPluginConfiguration::class.java)
-    private val windchillService = ServiceManager.getService(project, RemoteService::class.java)
-    private val statusService = ServiceManager.getService(project, StatusService::class.java)
-    private val ideControlService = ServiceManager.getService(project, IdeControlService::class.java)
+    private val config = project.getService(ProjectPluginConfiguration::class.java)
+    private val windchillService = project.getService(RemoteService::class.java)
+    private val statusService = project.getService(StatusService::class.java)
+    private val ideControlService = project.getService(IdeControlService::class.java)
 
     lateinit var content: JPanel
     lateinit var statusPanel: JPanel

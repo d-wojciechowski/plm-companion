@@ -2,7 +2,6 @@ package pl.dwojciechowski.ui.panel
 
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.application.ApplicationManager
-import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.ui.showYesNoDialog
@@ -17,7 +16,7 @@ import pl.dwojciechowski.ui.component.CommandList
 import pl.dwojciechowski.ui.component.EtchedTitleBorder
 import pl.dwojciechowski.ui.component.action.EditListAction
 import java.awt.event.KeyEvent
-import java.util.Collections
+import java.util.*
 import javax.swing.DefaultListModel
 import javax.swing.JButton
 import javax.swing.JPanel
@@ -27,9 +26,9 @@ class CommandSubPanel(
     private val project: Project
 ) {
 
-    private val config = ServiceManager.getService(project, ProjectPluginConfiguration::class.java)
-    private val windchillService = ServiceManager.getService(project, RemoteService::class.java)
-    private val ideControlService = ServiceManager.getService(project, IdeControlService::class.java)
+    private val config = project.getService(ProjectPluginConfiguration::class.java)
+    private val windchillService = project.getService(RemoteService::class.java)
+    private val ideControlService = project.getService(IdeControlService::class.java)
 
     private val splitPattern = "|#*#$"
 

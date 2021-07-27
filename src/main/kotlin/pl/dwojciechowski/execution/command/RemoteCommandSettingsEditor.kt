@@ -1,6 +1,5 @@
 package pl.dwojciechowski.execution.command
 
-import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.options.SettingsEditor
 import com.intellij.openapi.project.Project
 import pl.dwojciechowski.configuration.ProjectPluginConfiguration
@@ -10,7 +9,7 @@ import javax.swing.*
 
 class RemoteCommandSettingsEditor(project: Project) : SettingsEditor<RemoteCommandRunConfig>() {
 
-    private val config = ServiceManager.getService(project, ProjectPluginConfiguration::class.java)
+    private val config = project.getService(ProjectPluginConfiguration::class.java)
 
     private lateinit var myPanel: JPanel
 

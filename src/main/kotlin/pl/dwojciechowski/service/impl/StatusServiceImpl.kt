@@ -2,7 +2,6 @@ package pl.dwojciechowski.service.impl
 
 import com.github.kittinunf.fuel.core.extensions.authentication
 import com.github.kittinunf.fuel.httpGet
-import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
 import io.reactivex.rxjava3.subjects.PublishSubject
 import io.reactivex.rxjava3.subjects.Subject
@@ -16,7 +15,7 @@ import pl.dwojciechowski.service.StatusService
 
 class StatusServiceImpl(project: Project) : StatusService {
 
-    private val config = ServiceManager.getService(project, ProjectPluginConfiguration::class.java)
+    private val config = project.getService(ProjectPluginConfiguration::class.java)
     private val commandSubject = PublishSubject.create<ServerStatus>()
 
     init {

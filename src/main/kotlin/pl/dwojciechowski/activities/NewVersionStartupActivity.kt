@@ -2,7 +2,6 @@ package pl.dwojciechowski.activities
 
 import com.intellij.ide.plugins.PluginManagerCore
 import com.intellij.openapi.application.ApplicationManager
-import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.extensions.PluginId
 import com.intellij.openapi.project.DumbAware
 import com.intellij.openapi.project.Project
@@ -20,7 +19,7 @@ class NewVersionStartupActivity : StartupActivity, DumbAware {
      */
     override fun runActivity(project: Project) {
         val application = ApplicationManager.getApplication()
-        val settings = ServiceManager.getService(GlobalPluginConfiguration::class.java)
+        val settings = application.getService(GlobalPluginConfiguration::class.java)
 
         val plugin = PluginManagerCore.getPlugins().find { it.pluginId == PluginId.getId(PluginConstants.PLUGIN_ID) }
         if (plugin != null) {

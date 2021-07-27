@@ -2,7 +2,6 @@ package pl.dwojciechowski.ui.panel
 
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.application.ApplicationManager
-import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.ui.SimpleToolWindowPanel
@@ -25,8 +24,8 @@ class LogViewerPanel(
     private var customLogFileLocation: String = ""
 ) : SimpleToolWindowPanel(false, true) {
 
-    private val config = ServiceManager.getService(project, ProjectPluginConfiguration::class.java)
-    private val logService: LogViewerService = ServiceManager.getService(project, LogViewerService::class.java)
+    private val config = project.getService(ProjectPluginConfiguration::class.java)
+    private val logService: LogViewerService = project.getService(LogViewerService::class.java)
 
     var parentContent: Content? = null
 
