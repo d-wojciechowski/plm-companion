@@ -1,8 +1,15 @@
 # Changelog
 
+## [1.0.4]
+
+### Fixed
+
+- Compatibility with Intellij 2021.2
+
 ## [1.0.3]
 
 ### Fixed
+
 - Fix for issue with large payload
 - Compatibility with Intellij 2021.1
 
