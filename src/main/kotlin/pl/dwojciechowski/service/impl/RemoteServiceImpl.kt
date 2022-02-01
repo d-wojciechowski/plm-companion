@@ -70,7 +70,7 @@ class RemoteServiceImpl(private val project: Project) : RemoteService {
             val message =
                 getMessage("execution.process.exception", "${commandBean}\n${Exceptions.unwrap(e).message ?: ""}")
             commandBean.status = ExecutionStatus.STOPPED
-            commandBean.response.onNext(e.message)
+            commandBean.response.onNext(e.message ?: "")
             doFinally()
             ApplicationManager.getApplication().invokeLater {
                 Messages.showErrorDialog(project, message, getMessage("ui.dialog.error.connection"))

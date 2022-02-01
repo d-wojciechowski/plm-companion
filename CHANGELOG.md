@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.0.5]
+
+### Fixed
+
+- Compatibility with Intellij 2021.3
+
 ## [1.0.4]
 
 ### Fixed
