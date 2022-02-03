@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.0.6]
+
+### Fixed
+
+- Changed welcome screen to... well... end screen.
 ## [1.0.5]
 
 ### Fixed

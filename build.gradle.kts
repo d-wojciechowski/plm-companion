@@ -2,20 +2,20 @@ import com.google.protobuf.gradle.*
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 group = "pl.dwojciechowski"
-version = "1.0.5"
+version = "1.0.6"
 val protobufVersion = "3.17.3"
 val rSocketRpcVersion = "0.3.0"
 val rSocketVersion = "1.1.1"
-val coroutinesVersion = "1.6.0"
+val coroutinesVersion = "1.5.1-native-mt"
 val fuelVersion = "2.3.1"
-val rxJavaVersion = "3.1.3"
+val rxJavaVersion = "3.0.13"
 
 plugins {
     id("org.jetbrains.changelog") version "1.3.1"
     id("com.github.ben-manes.versions") version "0.41.0"
     id("org.jetbrains.intellij") version "1.3.1"
     id("com.google.protobuf") version "0.8.16"
-    kotlin("jvm") version "1.6.0"
+    kotlin("jvm") version "1.4.32"
     java
     idea
 }
@@ -27,7 +27,7 @@ repositories {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.6.0")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.21")
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
     implementation("com.github.kittinunf.fuel:fuel:$fuelVersion")
