@@ -8,7 +8,6 @@ import com.intellij.execution.runners.ExecutionEnvironment
 import com.intellij.execution.runners.ExecutionEnvironmentBuilder
 import com.intellij.icons.AllIcons
 import com.intellij.openapi.Disposable
-import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.vfs.VirtualFile
@@ -29,9 +28,9 @@ class LoadFromFileDialog(
     private val vFiles: List<VirtualFile>
 ) : DialogWrapper(project), Disposable {
 
-    private val config = ServiceManager.getService(project, ProjectPluginConfiguration::class.java)
-    private val commandService = ServiceManager.getService(project, RemoteService::class.java)
-    private val ideControlService = ServiceManager.getService(project, IdeControlService::class.java)
+    private val config = project.getService(ProjectPluginConfiguration::class.java)
+    private val commandService = project.getService(RemoteService::class.java)
+    private val ideControlService = project.getService(IdeControlService::class.java)
 
     lateinit var content: JPanel
 

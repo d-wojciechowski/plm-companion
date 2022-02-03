@@ -1,5 +1,5 @@
 ![plugin-version](https://img.shields.io/jetbrains/plugin/v/13154-plm-companion)
-![idea-version](https://img.shields.io/badge/IntelliJ%20Version-2020.*-green)
+![idea-version](https://img.shields.io/badge/IntelliJ%20Version-2021.*-green)
 ![pipeline status](https://github.com/d-wojciechowski/plm-companion/workflows/Plugin%20Verification/badge.svg)
 ![issues-open](https://img.shields.io/github/issues/d-wojciechowski/plm-companion)
 ![license](https://img.shields.io/github/license/d-wojciechowski/plm-companion)
@@ -7,6 +7,14 @@
 <img alt="plugin logo" width="50" height="50"  src="https://dwojciechowski.com/explore/plmCompanion/images/pluginIcon.svg"/> 
     PLM Companion
 </h1>
+<h1 align="center" style="color: red">Plugin is no longer active / maintained</h1>
+<h4>This project was a great excuse to learn new things, but this awesome part of my life needs to be closed.</h4>
+I am no longer an active developer of PLM solutions, and I do not have any use of this plugin. What is more important
+this project did not gain any major interest from PLM community. That's why I think there is no point in further
+investment of time here, maybe there will be something better/new which will be interesting to me.
+
+<h4 align="center">Thank you</h4>
+<hr>
 
 PLM Companion is an extension that allows developers to speed up the process of developing customizations to
 large systems remotely. The plugin may be used wherever the execution of custom commands or monitoring site

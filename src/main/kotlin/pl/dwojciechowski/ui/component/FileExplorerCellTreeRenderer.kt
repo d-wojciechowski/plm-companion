@@ -16,7 +16,7 @@ class FileExplorerCellTreeRenderer : DefaultTreeCellRenderer() {
 
         val node = value as DefaultMutableTreeNode
         val nodeVal = node.userObject as RemoteFileRepresentation
-        this.openIcon = AllIcons.Actions.Menu_open
+        this.openIcon = AllIcons.Actions.MenuOpen
         this.closedIcon = AllIcons.Nodes.Folder
         this.leafIcon = AllIcons.Nodes.UnknownJdk
 

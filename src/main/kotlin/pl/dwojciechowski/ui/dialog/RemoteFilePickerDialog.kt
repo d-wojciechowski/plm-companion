@@ -1,6 +1,5 @@
 package pl.dwojciechowski.ui.dialog
 
-import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.DialogWrapper
 import com.intellij.openapi.ui.Messages
@@ -30,7 +29,7 @@ class RemoteFilePickerDialog(
     private val onlyFoldersVisible: Boolean = true
 ) : DialogWrapper(project) {
 
-    private val fileService: FileService = ServiceManager.getService(project, FileService::class.java)
+    private val fileService: FileService = project.getService(FileService::class.java)
 
     private lateinit var rootPane: JPanel
     private lateinit var selectionTree: Tree

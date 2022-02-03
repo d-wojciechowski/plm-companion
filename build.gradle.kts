@@ -1,20 +1,19 @@
 import com.google.protobuf.gradle.*
-import org.jetbrains.changelog.closure
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 group = "pl.dwojciechowski"
-version = "1.0.3"
-val protobufVersion = "3.15.8"
+version = "1.0.6"
+val protobufVersion = "3.17.3"
 val rSocketRpcVersion = "0.3.0"
-val rSocketVersion = "1.1.0"
-val coroutinesVersion = "1.4.3"
+val rSocketVersion = "1.1.1"
+val coroutinesVersion = "1.5.1-native-mt"
 val fuelVersion = "2.3.1"
-val rxJavaVersion = "3.0.12"
+val rxJavaVersion = "3.0.13"
 
 plugins {
-    id("org.jetbrains.changelog") version "1.1.2"
-    id("com.github.ben-manes.versions") version "0.38.0"
-    id("org.jetbrains.intellij") version "0.7.3"
+    id("org.jetbrains.changelog") version "1.3.1"
+    id("com.github.ben-manes.versions") version "0.41.0"
+    id("org.jetbrains.intellij") version "1.3.1"
     id("com.google.protobuf") version "0.8.16"
     kotlin("jvm") version "1.4.32"
     java
@@ -25,11 +24,10 @@ apply(plugin = "org.jetbrains.intellij")
 
 repositories {
     mavenCentral()
-    maven("https://dl.bintray.com/kittinunf/maven")
 }
 
 dependencies {
-    implementation(kotlin("stdlib-jdk8"))
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.21")
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
     implementation("com.github.kittinunf.fuel:fuel:$fuelVersion")
@@ -59,9 +57,9 @@ sourceSets {
 }
 
 intellij {
-    version = "2021.1"
-    updateSinceUntilBuild = true
-    pluginName = "PLM Companion"
+    version.set("2021.3.2")
+    updateSinceUntilBuild.set(true)
+    pluginName.set("PLM Companion")
 }
 
 tasks {
@@ -80,21 +78,21 @@ tasks {
     }
 
     patchPluginXml {
-        changeNotes(closure { changelog.getLatest().toHTML() })
-        pluginDescription(htmlFixer("${project.projectDir}/src/main/resources/META-INF/description.html"))
-        sinceBuild("200")
+        changeNotes.set(provider{ changelog.getLatest().toHTML() })
+        pluginDescription.set(htmlFixer("${project.projectDir}/src/main/resources/META-INF/description.html"))
+        sinceBuild.set("210")
     }
 
 }
 
 changelog {
-    version = "${project.version}"
-    path = "${project.projectDir}/CHANGELOG.md"
-    header = closure{"[{0}]"}
-    headerParserRegex = """\d+\.\d+.\d+""".toRegex()
-    itemPrefix = "-"
-    unreleasedTerm = "[Unreleased]"
-    groups = listOf("Added", "Changed", "Fixed")
+    version.set("${project.version}")
+    path.set("${project.projectDir}/CHANGELOG.md")
+    header.set(provider{"[{0}]"})
+    headerParserRegex.set("""\d+\.\d+.\d+""".toRegex())
+    itemPrefix.set("-")
+    unreleasedTerm.set("[Unreleased]")
+    groups.set(listOf("Added", "Changed", "Fixed"))
 }
 
 idea {

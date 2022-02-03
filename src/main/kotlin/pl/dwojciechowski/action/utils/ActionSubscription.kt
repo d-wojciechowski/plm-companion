@@ -1,7 +1,6 @@
 package pl.dwojciechowski.action.utils
 
 import com.intellij.openapi.actionSystem.AnActionEvent
-import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
 import io.reactivex.rxjava3.disposables.Disposable
 import pl.dwojciechowski.configuration.ProjectPluginConfiguration
@@ -23,7 +22,7 @@ class ActionSubscription {
                 project.onValid {
                     method(
                         status,
-                        ServiceManager.getService(it, ProjectPluginConfiguration::class.java).statusControlled
+                        it.getService(ProjectPluginConfiguration::class.java).statusControlled
                     )
                 }
             }

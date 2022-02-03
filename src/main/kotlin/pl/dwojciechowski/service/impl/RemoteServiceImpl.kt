@@ -1,7 +1,6 @@
 package pl.dwojciechowski.service.impl
 
 import com.intellij.openapi.application.ApplicationManager
-import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.ui.Messages
 import io.reactivex.rxjava3.subjects.PublishSubject
@@ -23,7 +22,7 @@ import reactor.util.retry.Retry
 
 class RemoteServiceImpl(private val project: Project) : RemoteService {
 
-    private val config = ServiceManager.getService(project, ProjectPluginConfiguration::class.java)
+    private val config = project.getService(ProjectPluginConfiguration::class.java)
     private val connector = ConnectorService.getInstance(project)
     private val ideService = IdeControlService.getInstance(project)
     private val commandSubject = PublishSubject.create<CommandBean>()
@@ -71,7 +70,7 @@ class RemoteServiceImpl(private val project: Project) : RemoteService {
             val message =
                 getMessage("execution.process.exception", "${commandBean}\n${Exceptions.unwrap(e).message ?: ""}")
             commandBean.status = ExecutionStatus.STOPPED
-            commandBean.response.onNext(e.message)
+            commandBean.response.onNext(e.message ?: "")
             doFinally()
             ApplicationManager.getApplication().invokeLater {
                 Messages.showErrorDialog(project, message, getMessage("ui.dialog.error.connection"))

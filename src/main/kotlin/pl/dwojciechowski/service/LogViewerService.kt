@@ -1,6 +1,5 @@
 package pl.dwojciechowski.service
 
-import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
 import pl.dwojciechowski.proto.files.LogFileLocation
 import pl.dwojciechowski.proto.files.LogLine
@@ -10,7 +9,7 @@ interface LogViewerService {
 
     companion object {
         fun getInstance(project: Project): LogViewerService {
-            return ServiceManager.getService(project, LogViewerService::class.java)
+            return project.getService(LogViewerService::class.java)
         }
     }
 

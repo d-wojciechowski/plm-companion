@@ -1,8 +1,26 @@
 # Changelog
 
+## [1.0.6]
+
+### Fixed
+
+- Changed welcome screen to... well... end screen.
+## [1.0.5]
+
+### Fixed
+
+- Compatibility with Intellij 2021.3
+
+## [1.0.4]
+
+### Fixed
+
+- Compatibility with Intellij 2021.2
+
 ## [1.0.3]
 
 ### Fixed
+
 - Fix for issue with large payload
 - Compatibility with Intellij 2021.1
 

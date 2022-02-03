@@ -1,6 +1,5 @@
 package pl.dwojciechowski.service
 
-import com.intellij.openapi.components.ServiceManager
 import com.intellij.openapi.project.Project
 import io.reactivex.rxjava3.subjects.Subject
 import pl.dwojciechowski.model.HttpStatusConfig
@@ -10,7 +9,7 @@ interface StatusService {
 
     companion object {
         fun getInstance(project: Project): StatusService {
-            return ServiceManager.getService(project, StatusService::class.java)
+            return project.getService(StatusService::class.java)
         }
     }
 
